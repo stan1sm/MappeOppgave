@@ -39,7 +39,7 @@ public class TrainFactory {
     int track = input.nextInt();
     while (true) {
       System.out.println("Enter delay: ");
-      input.nextLine();
+      input.nextLine(); //consume newline
       String delayString = input.nextLine();
       try {
         delay = LocalTime.parse(delayString, formatter);
@@ -95,7 +95,7 @@ public class TrainFactory {
     }
   }
 
-  public String destinationFromNumber() {
+  public String departureFromNumber() {
     /*
     *Search for a departure by train number
     */
@@ -103,11 +103,41 @@ public class TrainFactory {
     int trainNumber = input.nextInt();
     for (TrainDeparture trainDeparture : trainDepartureList) {
       if (trainDeparture.getTrainNumber() == trainNumber) {
-        return trainDeparture.getDestination();
+        return trainDeparture.toString();
       } else {
         System.out.println("Train number not found");
       }
     }
     return null;
+  }
+
+  public String departureFromDestination() {
+    /*
+    *Search for a departure by destination
+    */
+    System.out.println("Enter destination: ");
+    String destination = input.nextLine();
+    for (TrainDeparture trainDeparture : trainDepartureList) {
+      if (trainDeparture.getDestination().equalsIgnoreCase(destination)) {
+        return trainDeparture.toString();
+      } else {
+        System.out.println("Destination not found");
+      }
+    }
+    return null;
+  }
+
+  public void updateSystemTime() {
+    /*
+    *Update the system time
+    */
+    System.out.println("Enter new system time (HH:mm): ");
+    String newSystemTimeString = input.nextLine();
+    try {
+      LocalTime newSystemTime = LocalTime.parse(newSystemTimeString, formatter);
+      LocalTime systemTime = newSystemTime;
+    } catch (Exception e) {
+      System.out.println("Invalid time format");
+    }
   }
 }

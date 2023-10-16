@@ -23,7 +23,7 @@ public class TrainDepartureUserInterface {
     });
     options.put("3", trainFactory::assignTrack);
     options.put("4", trainFactory::addDelay);
-    options.put("5", () -> System.out.println(trainFactory.destinationFromNumber()));
+    options.put("5", trainFactory::departureFromNumber);
     options.put("8", () -> System.exit(0));
     }
 

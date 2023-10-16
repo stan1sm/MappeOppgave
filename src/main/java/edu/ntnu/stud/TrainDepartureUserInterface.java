@@ -9,25 +9,34 @@ public class TrainDepartureUserInterface {
   *Create a user interface for the train departure system
   */
   Scanner input = new Scanner(System.in);
+  SystemTime systemTime = new SystemTime(null);
   Map<String, Runnable> options = new HashMap<>();
   public void init() {
-    ArrayList<TrainDeparture> TrainDepartureList = new ArrayList<>();
     TrainFactory trainFactory = new TrainFactory();
+    ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
+    trainFactory.updateSystemTime();
     options.put("1", () -> {
-      for (TrainDeparture trainDeparture : TrainDepartureList) {
+      for (TrainDeparture trainDeparture : trainDepartureList) {
         System.out.println(trainDeparture.toString());
       }
     });
     options.put("2", () -> {
-      TrainDepartureList.add(trainFactory.addDeparture());
+      trainDepartureList.add(trainFactory.addDeparture());
     });
     options.put("3", trainFactory::assignTrack);
     options.put("4", trainFactory::addDelay);
     options.put("5", trainFactory::departureFromNumber);
-    options.put("8", () -> System.exit(0));
-    }
+    options.put("6", trainFactory::departureFromDestination);
+    options.put("7", trainFactory::updateSystemTime);
+    options.put("8", trainFactory::fillTrainDepartureList);
+    options.put("9", () -> System.exit(0));
+  }
+
 
   public void start() {
+    /*
+     *Start the user interface
+     */
     while (true) {
       System.out.println("1. Overview of all departures");
       System.out.println("2. Add a Departure");
@@ -36,7 +45,8 @@ public class TrainDepartureUserInterface {
       System.out.println("5. Search for departure with Train Number");
       System.out.println("6. Search for departure with Destination");
       System.out.println("7. Update System Time");
-      System.out.println("8. Exit");
+      System.out.println("8. Fill train departure list with data");
+      System.out.println("9. Exit");
       String choice = input.nextLine();
 
 

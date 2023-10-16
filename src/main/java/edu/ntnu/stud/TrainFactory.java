@@ -9,10 +9,15 @@ import java.util.Scanner;
 public class TrainFactory {
   ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+  SystemTime systemTime = null;
   Scanner input = new Scanner(System.in);
   LocalTime delay = null;
   LocalTime departureTime = null;
   String line = null;
+
+  public ArrayList<TrainDeparture> getTrainDepartureList() {
+    return trainDepartureList;
+  }
 
 
   public TrainDeparture addDeparture() {
@@ -135,9 +140,26 @@ public class TrainFactory {
     String newSystemTimeString = input.nextLine();
     try {
       LocalTime newSystemTime = LocalTime.parse(newSystemTimeString, formatter);
-      LocalTime systemTime = newSystemTime;
+      systemTime.setSystemTime(newSystemTime);
     } catch (Exception e) {
       System.out.println("Invalid time format");
+    }
+  }
+
+  public void fillTrainDepartureList() {
+    Scanner read = new Scanner("Data.txt");
+    read.nextLine();
+    while (read.hasNextLine()) {
+      String line = read.nextLine();
+      String[] data = line.split(",");
+      LocalTime departureTime = LocalTime.parse(data[0], formatter);
+      String lineName = data[1];
+      String destination = data[2];
+      int trainNumber = Integer.parseInt(data[3]);
+      int track = Integer.parseInt(data[4]);
+      LocalTime delay = LocalTime.parse(data[5], formatter);
+      TrainDeparture trainDeparture = new TrainDeparture(departureTime, lineName, destination, trainNumber, track, delay);
+      trainDepartureList.add(trainDeparture);
     }
   }
 }

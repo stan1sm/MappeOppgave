@@ -30,9 +30,27 @@ public class TrainDeparture {
     return destination;
   }
 
-  private int getTrainNumber() {
+  public int getTrainNumber() {
     return trainNumber;
   }
 
+  public void setTrack(int track) {
+    this.track = track;
+  }
+
+  public void setDelay(LocalTime delay){
+    this.delay = delay;
+  }
+
+  public String toString(){
+    String info = "";
+    info += "Departure time: " + departureTime + "\n";
+    info += "Line: " + line + "\n";
+    info += "Destination: " + destination + "\n";
+    info += "Train number: " + trainNumber + "\n";
+    info += "Track: " + track + "\n";
+    info += "Delay: " + delay + "\n";
+    return info;
+  }
 
 }

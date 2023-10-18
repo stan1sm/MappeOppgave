@@ -10,6 +10,15 @@ public class TrainDeparture {
   private LocalTime delay;
 
   TrainDeparture(LocalTime departureTime, String line, String destination, int trainNumber, int track, LocalTime delay) {
+    if (trainNumber < 1) {
+      throw new IllegalArgumentException("Train number must be greater than 1");
+    }
+    if (track < 1) {
+      throw new IllegalArgumentException("Track must be greater than 1");
+    }
+    if (departureTime == null) {
+      this.departureTime = null;
+    }
     this.departureTime = departureTime;
     this.line = line;
     this.destination = destination;

@@ -4,7 +4,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import java.io.File;
 
 public class TrainFactory {
   ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
@@ -88,12 +88,11 @@ public class TrainFactory {
         String delayString = input.nextLine();
         try {
           delay = LocalTime.parse(delayString, formatter);
+          trainDeparture.setDelay(delay);
           break;
         } catch (Exception e) {
           System.out.println("Invalid time format");
         }
-        trainDeparture.setDelay(delay);
-
       } else {
         System.out.println("Train number not found");
       }
@@ -147,19 +146,24 @@ public class TrainFactory {
   }
 
   public void fillTrainDepartureList() {
-    Scanner read = new Scanner("Data.txt");
-    read.nextLine();
-    while (read.hasNextLine()) {
-      String line = read.nextLine();
-      String[] data = line.split(",");
-      LocalTime departureTime = LocalTime.parse(data[0], formatter);
-      String lineName = data[1];
-      String destination = data[2];
-      int trainNumber = Integer.parseInt(data[3]);
-      int track = Integer.parseInt(data[4]);
-      LocalTime delay = LocalTime.parse(data[5], formatter);
-      TrainDeparture trainDeparture = new TrainDeparture(departureTime, lineName, destination, trainNumber, track, delay);
-      trainDepartureList.add(trainDeparture);
+    try {
+      File datafile = new File("src/main/java/edu/ntnu/stud/Data.txt");
+      Scanner read = new Scanner(datafile);
+      read.nextLine();
+      while (read.hasNextLine()) {
+        String line = read.nextLine();
+        String[] data = line.split(",");
+        LocalTime departureTime = LocalTime.parse(data[0], formatter);
+        String lineName = data[1];
+        String destination = data[2];
+        int trainNumber = Integer.parseInt(data[3]);
+        int track = Integer.parseInt(data[4]);
+        LocalTime delay = LocalTime.parse(data[5], formatter);
+        TrainDeparture trainDeparture = new TrainDeparture(departureTime, lineName, destination, trainNumber, track, delay);
+        trainDepartureList.add(trainDeparture);
+      }
+    } catch (Exception e) {
+      System.out.println("File not found");
     }
   }
 }

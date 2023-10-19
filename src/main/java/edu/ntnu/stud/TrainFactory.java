@@ -9,12 +9,11 @@ import java.io.File;
 public class TrainFactory {
   ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-  SystemTime systemTime = null;
+  Time time = null;
   Scanner input = new Scanner(System.in);
   LocalTime delay = null;
   LocalTime departureTime = null;
   String line = null;
-
   public ArrayList<TrainDeparture> getTrainDepartureList() {
     return trainDepartureList;
   }
@@ -131,15 +130,14 @@ public class TrainFactory {
     return null;
   }
 
-  public void updateSystemTime() {
+  public void updateCurrentTime() {
     /*
     *Update the system time
     */
-    System.out.println("Enter new system time (HH:mm): ");
+    System.out.println("Enter current time (HH:mm): ");
     String newSystemTimeString = input.nextLine();
     try {
-      LocalTime newSystemTime = LocalTime.parse(newSystemTimeString, formatter);
-      systemTime.setSystemTime(newSystemTime);
+      time.setCurrentTime(LocalTime.parse(newSystemTimeString, formatter));
     } catch (Exception e) {
       System.out.println("Invalid time format");
     }

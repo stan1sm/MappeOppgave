@@ -80,6 +80,8 @@ public class TrainDeparture {
   public String toString() {
     StringBuilder info = new StringBuilder();
     int destinationLength = destination.length();
+    TrainFactory trainFactory = new TrainFactory();
+    LocalTime time = trainFactory.time.getCurrentTime();
 
     if (!staticPartPrinted) {
       info.append("+--------+--------------+--------+--------+---------------+-----------+\n");
@@ -87,14 +89,15 @@ public class TrainDeparture {
       info.append("+--------+--------------+--------+--------+---------------+-----------+\n");
       staticPartPrinted = true;
     }
-
-    info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
-    info.append(destination).append(String.format("%" + (15 - destinationLength) + "s", " | "));
-    info.append(track).append(String.format("%" + 8 + "s", " | "));
-    info.append(line).append(String.format("%" + 7 + "s", " | "));
-    info.append(trainNumber).append(String.format("%" + 15 + "s", " | "));
-    info.append(delay).append(String.format("%" + 7 + "s", "|")).append("\n");
-    info.append("+--------+--------------+--------+--------+---------------+-----------+");
+    if (departureTime.isBefore(time)) {
+      info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
+      info.append(destination).append(String.format("%" + (15 - destinationLength) + "s", " | "));
+      info.append(track).append(String.format("%" + 8 + "s", " | "));
+      info.append(line).append(String.format("%" + 7 + "s", " | "));
+      info.append(trainNumber).append(String.format("%" + 15 + "s", " | "));
+      info.append(delay).append(String.format("%" + 7 + "s", "|")).append("\n");
+      info.append("+--------+--------------+--------+--------+---------------+-----------+");
+    }
     return info.toString();
   }
 

@@ -147,7 +147,7 @@ public class TrainFactory {
 
   public void fillTrainDepartureList() {
     try {
-      File datafile = new File("src/main/java/edu/ntnu/stud/Data.txt");
+      File datafile = new File("Data.txt");
       Scanner read = new Scanner(datafile);
       read.nextLine();
       while (read.hasNextLine()) {

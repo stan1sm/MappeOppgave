@@ -15,14 +15,8 @@ public class TrainDepartureUserInterface {
     TrainFactory trainFactory = new TrainFactory();
     ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
     trainFactory.updateSystemTime();
-    options.put("1", () -> {
-      for (TrainDeparture trainDeparture : trainDepartureList) {
-        System.out.println(trainDeparture.toString());
-      }
-    });
-    options.put("2", () -> {
-      trainDepartureList.add(trainFactory.addDeparture());
-    });
+    options.put("1", () -> trainDepartureList.forEach(System.out::println));
+    options.put("2", trainFactory::addDeparture);
     options.put("3", trainFactory::assignTrack);
     options.put("4", trainFactory::addDelay);
     options.put("5", trainFactory::departureFromNumber);
@@ -30,6 +24,8 @@ public class TrainDepartureUserInterface {
     options.put("7", trainFactory::updateSystemTime);
     options.put("8", trainFactory::fillTrainDepartureList);
     options.put("9", () -> System.exit(0));
+    trainFactory.fillTrainDepartureList();
+
   }
 
 

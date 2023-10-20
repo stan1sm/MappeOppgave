@@ -16,7 +16,9 @@ public class TrainDeparture {
   private static final Pattern linePattern = Pattern.compile("[A-Z]\\d");
   private static final Pattern timePattern = Pattern.compile("\\d{2}:\\d{2}");
 
+
   DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+  TrainDepartureUserInterface userInterface = new TrainDepartureUserInterface();
 
   TrainDeparture(LocalTime departureTime, String line, String destination, int trainNumber, int track, LocalTime delay) {
     if (trainNumber < 1) {
@@ -77,19 +79,21 @@ public class TrainDeparture {
     return delay;
   }
 
+
   public String toString() {
     StringBuilder info = new StringBuilder();
     int destinationLength = destination.length();
     TrainFactory trainFactory = new TrainFactory();
-    LocalTime time = trainFactory.time.getCurrentTime();
+
 
     if (!staticPartPrinted) {
+      info.append("Current time: 1").append(trainFactory.getCurrentTime());
       info.append("+--------+--------------+--------+--------+---------------+-----------+\n");
       info.append("| Time   | Departures   |Track   | Line   |Train Number   |   Delay   |\n");
       info.append("+--------+--------------+--------+--------+---------------+-----------+\n");
       staticPartPrinted = true;
     }
-    if (departureTime.isBefore(time)) {
+    if (getDepartureTime().compareTo(trainFactory.getCurrentTime()) < 0) {
       info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
       info.append(destination).append(String.format("%" + (15 - destinationLength) + "s", " | "));
       info.append(track).append(String.format("%" + 8 + "s", " | "));

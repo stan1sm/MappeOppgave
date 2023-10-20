@@ -1,37 +1,46 @@
 package edu.ntnu.stud;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * A user interface for the train departure application.
+ */
 public class TrainDepartureUserInterface {
-  /*
-  *Create a user interface for the train departure system
-  */
+
   Scanner input = new Scanner(System.in);
   Map<String, Runnable> options = new HashMap<>();
+  TrainFactory trainFactory = new TrainFactory();
+  ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
+  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+
+  /**
+   * Initialize the user interface.
+   */
   public void init() {
-    TrainFactory trainFactory = new TrainFactory();
-    ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
-    trainFactory.updateCurrentTime();
+    trainFactory.setCurrentTime();
+    System.out.println(trainFactory.getCurrentTime());
     options.put("1", () -> trainDepartureList.forEach(System.out::println));
     options.put("2", trainFactory::addDeparture);
     options.put("3", trainFactory::assignTrack);
     options.put("4", trainFactory::addDelay);
     options.put("5", trainFactory::departureFromNumber);
     options.put("6", trainFactory::departureFromDestination);
-    options.put("7", trainFactory::updateCurrentTime);
+    options.put("7", trainFactory::setCurrentTime);
     options.put("8", trainFactory::fillTrainDepartureList);
     options.put("9", () -> System.exit(0));
     trainFactory.fillTrainDepartureList();
-
   }
 
-
+  /**
+   * Start the user interface.
+   */
   public void start() {
-    /*
-     *Start the user interface
-     */
+
     while (true) {
       System.out.println("1. Overview of all departures");
       System.out.println("2. Add a Departure");
@@ -48,7 +57,7 @@ public class TrainDepartureUserInterface {
       if (options.containsKey(choice)) {
         options.get(choice).run();
       } else {
-        System.out.println("Invalid choice");
+        throw new IllegalArgumentException("Invalid choice");
       }
     }
   }

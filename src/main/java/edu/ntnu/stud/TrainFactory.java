@@ -14,6 +14,8 @@ public class TrainFactory {
   LocalTime delay = null;
   LocalTime departureTime = null;
   String line = null;
+  LocalTime currentTime = null;
+
   public ArrayList<TrainDeparture> getTrainDepartureList() {
     return trainDepartureList;
   }
@@ -130,19 +132,20 @@ public class TrainFactory {
     return null;
   }
 
-  public void updateCurrentTime() {
-    /*
-    *Update the system time
-    */
+  public void setCurrentTime() {
     System.out.println("Enter current time (HH:mm): ");
-    String newSystemTimeString = input.nextLine();
-    try {
-      time.setCurrentTime(LocalTime.parse(newSystemTimeString, formatter));
-    } catch (Exception e) {
-      System.out.println("Invalid time format");
-    }
+    String currentTimeString = input.nextLine();
+    currentTime = LocalTime.parse(currentTimeString, formatter);
+
   }
 
+  public LocalTime getCurrentTime() {
+    return currentTime;
+  }
+
+  /**
+   * Fill the train departure list with data from a file.
+   */
   public void fillTrainDepartureList() {
     try {
       File datafile = new File("Data.txt");

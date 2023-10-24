@@ -167,4 +167,22 @@ public class TrainFactory {
       System.out.println("File not found");
     }
   }
+
+  /**
+   * Print an overview of all departures.
+   */
+  public void printDepartureOverview() {
+    trainDepartureList.removeIf(
+        trainDeparture -> trainDeparture.getDepartureTime().isAfter(currentTime));
+    String info = "Current time: " + currentTime + "\n";
+    info += "+--------+--------------+--------+--------+---------------+-----------+\n";
+    info += ("| Time   | Departures   |Track   | Line   |Train Number   |   Delay   |\n");
+    info += ("+--------+--------------+--------+--------+---------------+-----------+");
+    System.out.println(info);
+    for (TrainDeparture trainDeparture : trainDepartureList) {
+      System.out.println(trainDeparture);
+    }
+  }
+
 }
+

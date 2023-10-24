@@ -27,7 +27,7 @@ public class TrainDepartureUserInterface {
   public void init() {
     trainFactory.setCurrentTime();
     System.out.println(trainFactory.getCurrentTime());
-    options.put("1", () -> trainDepartureList.forEach(System.out::println));
+    options.put("1", trainFactory::printDepartureOverview);
     options.put("2", trainFactory::addDeparture);
     options.put("3", trainFactory::assignTrack);
     options.put("4", trainFactory::addDelay);

@@ -47,7 +47,7 @@ public class TrainDeparture {
     this.delay = delay;
   }
 
-  private LocalTime getDepartureTime() {
+  public LocalTime getDepartureTime() {
     return departureTime;
   }
 
@@ -80,28 +80,19 @@ public class TrainDeparture {
   }
 
 
+  /**
+   *  Returns a string representation of the train departure.
+   */
   public String toString() {
     StringBuilder info = new StringBuilder();
     int destinationLength = destination.length();
-    TrainFactory trainFactory = userInterface.getTrainFactory();
-
-
-    if (!staticPartPrinted) {
-      info.append("Current time: 1").append(trainFactory.getCurrentTime());
-      info.append("+--------+--------------+--------+--------+---------------+-----------+\n");
-      info.append("| Time   | Departures   |Track   | Line   |Train Number   |   Delay   |\n");
-      info.append("+--------+--------------+--------+--------+---------------+-----------+\n");
-      staticPartPrinted = true;
-    }
-    if (getDepartureTime().isBefore(trainFactory.getCurrentTime())) {
-      info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
-      info.append(destination).append(String.format("%" + (15 - destinationLength) + "s", " | "));
-      info.append(track).append(String.format("%" + 8 + "s", " | "));
-      info.append(line).append(String.format("%" + 7 + "s", " | "));
-      info.append(trainNumber).append(String.format("%" + 15 + "s", " | "));
-      info.append(delay).append(String.format("%" + 7 + "s", "|")).append("\n");
-      info.append("+--------+--------------+--------+--------+---------------+-----------+");
-    }
+    info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
+    info.append(destination).append(String.format("%" + (15 - destinationLength) + "s", " | "));
+    info.append(track).append(String.format("%" + 8 + "s", " | "));
+    info.append(line).append(String.format("%" + 7 + "s", " | "));
+    info.append(trainNumber).append(String.format("%" + 15 + "s", " | "));
+    info.append(delay).append(String.format("%" + 7 + "s", "|")).append("\n");
+    info.append("+--------+--------------+--------+--------+---------------+-----------+");
     return info.toString();
   }
 

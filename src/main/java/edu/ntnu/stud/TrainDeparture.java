@@ -83,7 +83,7 @@ public class TrainDeparture {
   public String toString() {
     StringBuilder info = new StringBuilder();
     int destinationLength = destination.length();
-    TrainFactory trainFactory = new TrainFactory();
+    TrainFactory trainFactory = userInterface.getTrainFactory();
 
 
     if (!staticPartPrinted) {
@@ -93,7 +93,7 @@ public class TrainDeparture {
       info.append("+--------+--------------+--------+--------+---------------+-----------+\n");
       staticPartPrinted = true;
     }
-    if (getDepartureTime().compareTo(trainFactory.getCurrentTime()) < 0) {
+    if (getDepartureTime().isBefore(trainFactory.getCurrentTime())) {
       info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
       info.append(destination).append(String.format("%" + (15 - destinationLength) + "s", " | "));
       info.append(track).append(String.format("%" + 8 + "s", " | "));

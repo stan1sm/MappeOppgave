@@ -17,6 +17,9 @@ public class TrainDepartureUserInterface {
   ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
+  public TrainFactory getTrainFactory() {
+    return trainFactory;
+  }
 
   /**
    * Initialize the user interface.

@@ -14,7 +14,7 @@ public class TrainDeparture {
   private int track;
   private LocalTime delay;
   private static final Pattern linePattern = Pattern.compile("[A-Z]\\d");
-  private static final Pattern timePattern = Pattern.compile("\\d{2}:\\d{2}");
+  private static final Pattern timePattern = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
 
 
   DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");

@@ -10,7 +10,6 @@ public class TrainFactory {
   HashMap<Integer, TrainDeparture> trainNumberMap = new HashMap<Integer, TrainDeparture>();
   HashMap<String, TrainDeparture> trainDestinationMap = new HashMap<String, TrainDeparture>();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-  Time time = null;
   Scanner input = new Scanner(System.in);
   LocalTime delay = null;
   LocalTime departureTime = null;
@@ -106,7 +105,7 @@ public class TrainFactory {
     }
   }
 
-  public String departureFromNumber() {
+  public void departureFromNumber() { //void or String return??
     /*
     *Search for a departure by train number
     */
@@ -115,34 +114,29 @@ public class TrainFactory {
     try{
       System.out.println(tableHeader());
       System.out.println(trainNumberMap.get(trainNumber).toString());
-      return trainNumberMap.get(trainNumber).toString();
     }catch (NoSuchElementException e){
       System.out.println("A train with this number doesnt exist");
     }
-    return null;
   }
 
-  public String departureFromDestination() {
+  public void departureFromDestination() { //Void or String return????
     /*
     *Search for a departure by destination
     */
     System.out.println("Enter destination: ");
     String destination = input.nextLine();
-    for (TrainDeparture trainDeparture : trainDepartureList) {
-      if (trainDeparture.getDestination().equalsIgnoreCase(destination)) {
-        return trainDeparture.toString();
-      } else {
-        System.out.println("Destination not found");
-      }
+    try{
+      System.out.println(tableHeader());
+      System.out.println(trainDestinationMap.get(destination).toString());
+    }catch (NoSuchElementException e){
+      System.out.println("A train with this number doesnt exist");
     }
-    return null;
   }
 
   public void setCurrentTime() {
     System.out.println("Enter current time (HH:mm): ");
     String currentTimeString = input.nextLine();
     currentTime = LocalTime.parse(currentTimeString, formatter);
-
   }
 
   public LocalTime getCurrentTime() {

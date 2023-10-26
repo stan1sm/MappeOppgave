@@ -12,9 +12,10 @@ import java.util.Scanner;
 public class TrainDepartureUserInterface {
 
   Scanner input = new Scanner(System.in);
-  Map<String, Runnable> options = new HashMap<>();
+  HashMap<String, Runnable> options = new HashMap<>();
   TrainFactory trainFactory = new TrainFactory();
   ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
+  HashMap<Integer, TrainDeparture> trainDepartureMap = trainFactory.getTrainNumberMap();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
   public TrainFactory getTrainFactory() {

@@ -10,7 +10,7 @@ public class TrainDeparture {
   private LocalTime departureTime;
   private String line;
   private String destination;
-  private  int trainNumber;
+  private int trainNumber;
   private int track;
   private LocalTime delay;
   private static final Pattern linePattern = Pattern.compile("[A-Z]\\d");
@@ -92,7 +92,6 @@ public class TrainDeparture {
     info.append(line).append(String.format("%" + 7 + "s", " | "));
     info.append(trainNumber).append(String.format("%" + 15 + "s", " | "));
     info.append(delay).append(String.format("%" + 7 + "s", "|")).append("\n");
-    info.append("+--------+--------------+--------+--------+---------------+-----------+");
     return info.toString();
   }
 

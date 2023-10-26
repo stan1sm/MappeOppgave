@@ -2,12 +2,13 @@ package edu.ntnu.stud;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 import java.io.File;
 
 public class TrainFactory {
   ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
+  HashMap<Integer, TrainDeparture> trainNumberMap = new HashMap<Integer, TrainDeparture>();
+  HashMap<String, TrainDeparture> trainDestinationMap = new HashMap<String, TrainDeparture>();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   Time time = null;
   Scanner input = new Scanner(System.in);
@@ -20,8 +21,12 @@ public class TrainFactory {
     return trainDepartureList;
   }
 
+  public HashMap<Integer, TrainDeparture> getTrainNumberMap(){
+    return trainNumberMap;
+  }
 
-  public TrainDeparture addDeparture() {
+
+  public void addDeparture() {
     /*
     *Create a new departure using user input
     */
@@ -56,7 +61,8 @@ public class TrainFactory {
     }
     TrainDeparture trainDeparture = new TrainDeparture(departureTime, line, destination, trainNumber, track, delay);
     trainDepartureList.add(trainDeparture);
-    return trainDeparture;
+    trainDestinationMap.put(destination,trainDeparture);
+    trainNumberMap.put(trainNumber,trainDeparture);
   }
 
   public void assignTrack() {
@@ -106,12 +112,12 @@ public class TrainFactory {
     */
     System.out.println("Enter train number: ");
     int trainNumber = input.nextInt();
-    for (TrainDeparture trainDeparture : trainDepartureList) {
-      if (trainDeparture.getTrainNumber() == trainNumber) {
-        return trainDeparture.toString();
-      } else {
-        System.out.println("Train number not found");
-      }
+    try{
+      System.out.println(tableHeader());
+      System.out.println(trainNumberMap.get(trainNumber).toString());
+      return trainNumberMap.get(trainNumber).toString();
+    }catch (NoSuchElementException e){
+      System.out.println("A train with this number doesnt exist");
     }
     return null;
   }
@@ -161,6 +167,8 @@ public class TrainFactory {
         int track = Integer.parseInt(data[4]);
         LocalTime delay = LocalTime.parse(data[5], formatter);
         TrainDeparture trainDeparture = new TrainDeparture(departureTime, lineName, destination, trainNumber, track, delay);
+        trainDestinationMap.put(destination,trainDeparture);
+        trainNumberMap.put(trainNumber, trainDeparture);
         trainDepartureList.add(trainDeparture);
       }
     } catch (Exception e) {
@@ -168,20 +176,25 @@ public class TrainFactory {
     }
   }
 
+  public String tableHeader(){
+    String info = "Current Time: " + currentTime + "\n";
+    info += "+--------+--------------+--------+--------+---------------+-----------+\n";
+    info += ("| Time   | Departures   |Track   | Line   |Train Number   |   Delay   |\n");
+    info += ("+--------+--------------+--------+--------+---------------+-----------+");
+    return info;
+  }
   /**
    * Print an overview of all departures.
    */
   public void printDepartureOverview() {
     trainDepartureList.removeIf(
-        trainDeparture -> trainDeparture.getDepartureTime().isAfter(currentTime));
-    String info = "Current time: " + currentTime + "\n";
-    info += "+--------+--------------+--------+--------+---------------+-----------+\n";
-    info += ("| Time   | Departures   |Track   | Line   |Train Number   |   Delay   |\n");
-    info += ("+--------+--------------+--------+--------+---------------+-----------+");
-    System.out.println(info);
+        trainDeparture -> trainDeparture.getDepartureTime().isBefore(currentTime));
+    System.out.println(tableHeader());
     for (TrainDeparture trainDeparture : trainDepartureList) {
       System.out.println(trainDeparture);
+      System.out.println("+--------+--------------+--------+--------+---------------+-----------+");
     }
+    System.out.println(trainNumberMap);
   }
 
 }

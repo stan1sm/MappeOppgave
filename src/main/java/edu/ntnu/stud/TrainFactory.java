@@ -7,8 +7,8 @@ import java.io.File;
 
 public class TrainFactory {
   ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
-  HashMap<Integer, TrainDeparture> trainNumberMap = new HashMap<Integer, TrainDeparture>();
-  HashMap<String, TrainDeparture> trainDestinationMap = new HashMap<String, TrainDeparture>();
+  HashMap<Integer, TrainDeparture> trainNumberMap = new HashMap<>();
+  HashMap<String, TrainDeparture> trainDestinationMap = new HashMap<>();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   Scanner input = new Scanner(System.in);
   LocalTime delay = null;
@@ -24,11 +24,10 @@ public class TrainFactory {
     return trainNumberMap;
   }
 
-
+  /**
+   *Create a new departure using user input
+   */
   public void addDeparture() {
-    /*
-    *Create a new departure using user input
-    */
     while (true) {
       System.out.println("Enter departure time (HH:mm): ");
       String departureTimeString = input.nextLine();

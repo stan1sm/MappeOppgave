@@ -1,10 +1,17 @@
 package edu.ntnu.stud;
 
+import java.io.File;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
+
+/**
+ * A factory for creating train departures.
+ */
 public class TrainFactory {
   ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
   HashMap<Integer, TrainDeparture> trainNumberMap = new HashMap<>();
@@ -20,12 +27,12 @@ public class TrainFactory {
     return trainDepartureList;
   }
 
-  public HashMap<Integer, TrainDeparture> getTrainNumberMap(){
+  public HashMap<Integer, TrainDeparture> getTrainNumberMap() {
     return trainNumberMap;
   }
 
   /**
-   *Create a new departure using user input
+   *Create a new departure using user input.
    */
   public void addDeparture() {
     while (true) {
@@ -41,7 +48,7 @@ public class TrainFactory {
     System.out.println("Enter line: ");
     line = input.nextLine();
     System.out.println("Enter destination: ");
-    String destination = input.nextLine();
+    final String destination = input.nextLine();
     System.out.println("Enter train number: ");
     int trainNumber = input.nextInt();
     System.out.println("Enter track: ");
@@ -59,8 +66,8 @@ public class TrainFactory {
     }
     TrainDeparture trainDeparture = new TrainDeparture(departureTime, line, destination, trainNumber, track, delay);
     trainDepartureList.add(trainDeparture);
-    trainDestinationMap.put(destination,trainDeparture);
-    trainNumberMap.put(trainNumber,trainDeparture);
+    trainDestinationMap.put(destination, trainDeparture);
+    trainNumberMap.put(trainNumber, trainDeparture);
   }
 
   public void assignTrack() {

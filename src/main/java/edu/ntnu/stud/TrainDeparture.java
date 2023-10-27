@@ -51,7 +51,7 @@ public class TrainDeparture {
     return departureTime;
   }
 
-  private String getLine() {
+  public String getLine() {
     return line;
   }
 
@@ -77,6 +77,10 @@ public class TrainDeparture {
 
   public LocalTime getDelay() {
     return delay;
+  }
+
+  public LocalTime getDepartureTimeWithDelay(){
+    return departureTime.plusHours(delay.getHour()).plusMinutes(delay.getMinute());
   }
 
 

@@ -1,9 +1,9 @@
 package edu.ntnu.stud;
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -15,26 +15,23 @@ public class TrainDepartureUserInterface {
   HashMap<String, Runnable> options = new HashMap<>();
   TrainFactory trainFactory = new TrainFactory();
   ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
-  HashMap<Integer, TrainDeparture> trainDepartureMap = trainFactory.getTrainNumberMap();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-  public TrainFactory getTrainFactory() {
-    return trainFactory;
-  }
+
 
   /**
    * Initialize the user interface.
    */
   public void init() {
-    trainFactory.setCurrentTime();
+    setCurrentTime();
     System.out.println(trainFactory.getCurrentTime());
-    options.put("1", trainFactory::printDepartureOverview);
-    options.put("2", trainFactory::addDeparture);
+    options.put("1", this::printDepartureOverview);
+    options.put("2", this::addTrainDeparture);
     options.put("3", trainFactory::assignTrack);
     options.put("4", trainFactory::addDelay);
-    options.put("5", trainFactory::departureFromNumber);
-    options.put("6", trainFactory::departureFromDestination);
-    options.put("7", trainFactory::setCurrentTime);
+    options.put("5", this::departureFromNumber);
+    options.put("6", this::departureFromDestination);
+    options.put("7", this::setCurrentTime);
     options.put("8", trainFactory::fillTrainDepartureList);
     options.put("9", () -> System.exit(0));
     trainFactory.fillTrainDepartureList();
@@ -62,6 +59,97 @@ public class TrainDepartureUserInterface {
         options.get(choice).run();
       } else {
         throw new IllegalArgumentException("Invalid choice");
+      }
+    }
+  }
+
+  public void addTrainDeparture(){
+    LocalTime departureTime;
+    LocalTime delay;
+    while (true) {
+      System.out.println("Enter departure time (HH:mm): ");
+      String departureTimeString = input.nextLine();
+      try {
+        departureTime = LocalTime.parse(departureTimeString, formatter);
+        break;
+      } catch (Exception e) {
+        System.out.println("Invalid time format");
+      }
+    }
+    System.out.println("Enter line: ");
+    String line = input.nextLine();
+    System.out.println("Enter destination: ");
+    final String destination = input.nextLine();
+    System.out.println("Enter train number: ");
+    int trainNumber = input.nextInt();
+    System.out.println("Enter track: ");
+    int track = input.nextInt();
+    while (true) {
+      System.out.println("Enter delay: ");
+      input.nextLine(); //consume newline
+      String delayString = input.nextLine();
+      try {
+        delay = LocalTime.parse(delayString, formatter);
+        break;
+      } catch (Exception e) {
+        System.out.println("Invalid time format");
+      }
+    }
+    trainFactory.addDeparture(departureTime, line, destination, trainNumber, track, delay);
+  }
+  public String tableHeader(){
+    String info = "Current Time: " + trainFactory.getCurrentTime() + "\n";
+    info += "+--------+--------------+--------+--------+---------------+-----------+\n";
+    info += ("| Time   | Departures   |Track   | Line   |Train Number   |   Delay   |\n");
+    info += ("+--------+--------------+--------+--------+---------------+-----------+");
+    return info;
+  }
+
+  /**
+   * Print an overview of all departures.
+   */
+  public void printDepartureOverview() {
+    trainDepartureList.removeIf(
+            trainDeparture -> trainDeparture.getDepartureTime().isBefore(trainFactory.getCurrentTime()));
+    System.out.println(tableHeader());
+    for (TrainDeparture trainDeparture : trainDepartureList) {
+      System.out.println(trainDeparture);
+      System.out.println("+--------+--------------+--------+--------+---------------+-----------+");
+    }
+  }
+
+  public void departureFromNumber(){
+    System.out.println("Enter train number");
+    int trainNumber = input.nextInt();
+    TrainDeparture trainDeparture = trainFactory.departureFromNumber(trainNumber);
+    if(trainDeparture != null){
+      System.out.println(trainDeparture);
+    }else{
+      System.out.println("Train number not found");
+    }
+  }
+
+  public void departureFromDestination(){
+    System.out.println("Enter destination");
+    String destination = input.nextLine();
+    TrainDeparture trainDeparture = trainFactory.departureFromDestination(destination);
+    if(trainDeparture != null){
+      System.out.println(trainDeparture);
+    }else{
+      System.out.println("Train number not found");
+    }
+  }
+
+  public void setCurrentTime(){
+    while (true) {
+      System.out.println("Enter departure time (HH:mm): ");
+      String departureTimeString = input.nextLine();
+      try {
+        LocalTime departureTime = LocalTime.parse(departureTimeString, formatter);
+        trainFactory.setCurrentTime(departureTime);
+        break;
+      } catch (Exception e) {
+        System.out.println("Invalid time format");
       }
     }
   }

@@ -31,49 +31,20 @@ public class TrainFactory {
     return trainNumberMap;
   }
 
+  public HashMap<String, TrainDeparture> getTrainDestinationMap() {
+    return trainDestinationMap;
+  }
+
   /**
    *Create a new departure using user input.
    */
-  public void addDeparture() {
-    while (true) {
-      System.out.println("Enter departure time (HH:mm): ");
-      String departureTimeString = input.nextLine();
-      try {
-        departureTime = LocalTime.parse(departureTimeString, formatter);
-        break;
-      } catch (Exception e) {
-        System.out.println("Invalid time format");
-      }
-    }
-    System.out.println("Enter line: ");
-    line = input.nextLine();
-    System.out.println("Enter destination: ");
-    final String destination = input.nextLine();
-    System.out.println("Enter train number: ");
-    int trainNumber = input.nextInt();
-    System.out.println("Enter track: ");
-    int track = input.nextInt();
-    while (true) {
-      System.out.println("Enter delay: ");
-      input.nextLine(); //consume newline
-      String delayString = input.nextLine();
-      try {
-        delay = LocalTime.parse(delayString, formatter);
-        break;
-      } catch (Exception e) {
-        System.out.println("Invalid time format");
-      }
-    }
+  public void addDeparture(LocalTime departureTime, String line, String destination, int trainNumber, int track, LocalTime delay) {
     TrainDeparture trainDeparture = new TrainDeparture(departureTime, line, destination, trainNumber, track, delay);
     trainDepartureList.add(trainDeparture);
-    trainDestinationMap.put(destination, trainDeparture);
     trainNumberMap.put(trainNumber, trainDeparture);
   }
 
   public void assignTrack() {
-    /*
-    *Assign a track to a departure
-   */
     System.out.println("Enter train number: ");
     int trainNumber = input.nextInt();
     for (TrainDeparture trainDeparture : trainDepartureList) {
@@ -111,38 +82,26 @@ public class TrainFactory {
     }
   }
 
-  public void departureFromNumber() { //void or String return??
-    /*
-    *Search for a departure by train number
-    */
-    System.out.println("Enter train number: ");
-    int trainNumber = input.nextInt();
-    try{
-      System.out.println(tableHeader());
-      System.out.println(trainNumberMap.get(trainNumber).toString());
-    }catch (NoSuchElementException e){
-      System.out.println("A train with this number doesnt exist");
+  public TrainDeparture departureFromNumber(int trainNumber) {
+    for(TrainDeparture trainDeparture : trainDepartureList){
+      if(trainDeparture.getTrainNumber() == trainNumber) {
+        return trainDeparture;
+      }
     }
+    return null;
   }
 
-  public void departureFromDestination() { //Void or String return????
-    /*
-    *Search for a departure by destination
-    */
-    System.out.println("Enter destination: ");
-    String destination = input.nextLine();
+  public TrainDeparture departureFromDestination(String destination) {
     try{
-      System.out.println(tableHeader());
-      System.out.println(trainDestinationMap.get(destination).toString());
+      return trainDestinationMap.get(destination);
     }catch (NoSuchElementException e){
-      System.out.println("A train with this number doesnt exist");
+      System.out.println("A train with this destination doesnt exist");
     }
+    return null;
   }
 
-  public void setCurrentTime() {
-    System.out.println("Enter current time (HH:mm): ");
-    String currentTimeString = input.nextLine();
-    currentTime = LocalTime.parse(currentTimeString, formatter);
+  public void setCurrentTime(LocalTime Time) {
+    currentTime = Time;
   }
 
   public LocalTime getCurrentTime() {
@@ -176,26 +135,6 @@ public class TrainFactory {
     }
   }
 
-  public String tableHeader(){
-    String info = "Current Time: " + currentTime + "\n";
-    info += "+--------+--------------+--------+--------+---------------+-----------+\n";
-    info += ("| Time   | Departures   |Track   | Line   |Train Number   |   Delay   |\n");
-    info += ("+--------+--------------+--------+--------+---------------+-----------+");
-    return info;
-  }
-  /**
-   * Print an overview of all departures.
-   */
-  public void printDepartureOverview() {
-    trainDepartureList.removeIf(
-        trainDeparture -> trainDeparture.getDepartureTime().isBefore(currentTime));
-    System.out.println(tableHeader());
-    for (TrainDeparture trainDeparture : trainDepartureList) {
-      System.out.println(trainDeparture);
-      System.out.println("+--------+--------------+--------+--------+---------------+-----------+");
-    }
-    System.out.println(trainNumberMap);
-  }
 
 }
 

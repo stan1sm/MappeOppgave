@@ -49,6 +49,8 @@ public class TrainDeparture {
   }
 
   /**
+   * Returns noe...
+   *
    * @param departureTime The time of departure
    * @param line The line the train is on
    * @param destination The destination of the train

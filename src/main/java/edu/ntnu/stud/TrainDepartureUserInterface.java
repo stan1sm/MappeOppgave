@@ -27,8 +27,8 @@ public class TrainDepartureUserInterface {
     System.out.println(trainFactory.getCurrentTime());
     options.put("1", this::printDepartureOverview);
     options.put("2", this::addTrainDeparture);
-    options.put("3", trainFactory::assignTrack);
-    options.put("4", trainFactory::addDelay);
+    options.put("3", this::assignTrack);
+    options.put("4", this::addDelay);
     options.put("5", this::departureFromNumber);
     options.put("6", this::departureFromDestination);
     options.put("7", this::setCurrentTime);
@@ -63,7 +63,7 @@ public class TrainDepartureUserInterface {
     }
   }
 
-  public void addTrainDeparture(){
+  public void addTrainDeparture() {
     LocalTime departureTime;
     LocalTime delay;
     while (true) {
@@ -77,7 +77,7 @@ public class TrainDepartureUserInterface {
       }
     }
     System.out.println("Enter line: ");
-    String line = input.nextLine();
+    final String line = input.nextLine();
     System.out.println("Enter destination: ");
     final String destination = input.nextLine();
     System.out.println("Enter train number: ");
@@ -97,7 +97,8 @@ public class TrainDepartureUserInterface {
     }
     trainFactory.addDeparture(departureTime, line, destination, trainNumber, track, delay);
   }
-  public String tableHeader(){
+
+  public String tableHeader() {
     String info = "Current Time: " + trainFactory.getCurrentTime() + "\n";
     info += "+--------+--------------+--------+--------+---------------+-----------+\n";
     info += ("| Time   | Departures   |Track   | Line   |Train Number   |   Delay   |\n");
@@ -109,8 +110,8 @@ public class TrainDepartureUserInterface {
    * Print an overview of all departures.
    */
   public void printDepartureOverview() {
-    trainDepartureList.removeIf(
-            trainDeparture -> trainDeparture.getDepartureTime().isBefore(trainFactory.getCurrentTime()));
+    trainDepartureList.removeIf(trainDeparture ->
+            trainDeparture.getDepartureTime().isBefore(trainFactory.getCurrentTime()));
     System.out.println(tableHeader());
     for (TrainDeparture trainDeparture : trainDepartureList) {
       System.out.println(trainDeparture);
@@ -118,29 +119,29 @@ public class TrainDepartureUserInterface {
     }
   }
 
-  public void departureFromNumber(){
+  public void departureFromNumber() {
     System.out.println("Enter train number");
     int trainNumber = input.nextInt();
     TrainDeparture trainDeparture = trainFactory.departureFromNumber(trainNumber);
-    if(trainDeparture != null){
+    if (trainDeparture != null) {
       System.out.println(trainDeparture);
-    }else{
+    } else {
       System.out.println("Train number not found");
     }
   }
 
-  public void departureFromDestination(){
+  public void departureFromDestination() {
     System.out.println("Enter destination");
     String destination = input.nextLine();
     TrainDeparture trainDeparture = trainFactory.departureFromDestination(destination);
-    if(trainDeparture != null){
+    if (trainDeparture != null) {
       System.out.println(trainDeparture);
-    }else{
+    } else {
       System.out.println("Train number not found");
     }
   }
 
-  public void setCurrentTime(){
+  public void setCurrentTime() {
     while (true) {
       System.out.println("Enter departure time (HH:mm): ");
       String departureTimeString = input.nextLine();
@@ -151,6 +152,34 @@ public class TrainDepartureUserInterface {
       } catch (Exception e) {
         System.out.println("Invalid time format");
       }
+    }
+  }
+
+  public void assignTrack() {
+    System.out.println("Enter train number: ");
+    int trainNumber = input.nextInt();
+    if (trainFactory.departureFromNumber(trainNumber) != null) {
+      System.out.println("Enter track: ");
+      int track = input.nextInt();
+      trainFactory.assignTrack(trainNumber, track);
+    } else {
+      System.out.println("Train number not found");
+      assignTrack();
+    }
+  }
+
+
+  public void addDelay() {
+    System.out.println("Enter train number: ");
+    int trainNumber = input.nextInt();
+    if (trainFactory.departureFromNumber(trainNumber) != null) {
+      System.out.println("Enter delay: ");
+      input.nextLine(); //consume newline
+      String delayString = input.nextLine();
+      LocalTime delay = LocalTime.parse(delayString, formatter);
+      trainFactory.addDelay(trainNumber, delay);
+    } else {
+      System.out.println("Train number not found");
     }
   }
 }

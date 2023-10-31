@@ -17,18 +17,10 @@ public class TrainFactory {
   HashMap<Integer, TrainDeparture> trainNumberMap = new HashMap<>();
   HashMap<String, TrainDeparture> trainDestinationMap = new HashMap<>();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-  Scanner input = new Scanner(System.in);
-  LocalTime delay = null;
-  LocalTime departureTime = null;
-  String line = null;
   LocalTime currentTime = null;
 
   public ArrayList<TrainDeparture> getTrainDepartureList() {
     return trainDepartureList;
-  }
-
-  public HashMap<Integer, TrainDeparture> getTrainNumberMap() {
-    return trainNumberMap;
   }
 
   public HashMap<String, TrainDeparture> getTrainDestinationMap() {
@@ -41,45 +33,20 @@ public class TrainFactory {
   public void addDeparture(LocalTime departureTime, String line, String destination, int trainNumber, int track, LocalTime delay) {
     TrainDeparture trainDeparture = new TrainDeparture(departureTime, line, destination, trainNumber, track, delay);
     trainDepartureList.add(trainDeparture);
-    trainNumberMap.put(trainNumber, trainDeparture);
+    trainDestinationMap.put(destination, trainDeparture);
   }
 
-  public void assignTrack() {
-    System.out.println("Enter train number: ");
-    int trainNumber = input.nextInt();
-    for (TrainDeparture trainDeparture : trainDepartureList) {
-      if (trainDeparture.getTrainNumber() == trainNumber) {
-        System.out.println("Enter track: ");
-        int track = input.nextInt();
-        trainDeparture.setTrack(track);
-      } else {
-        System.out.println("Train number not found");
-        assignTrack();
-      }
-    }
+  public TrainDeparture assignTrack(int trainNumber, int track) {
+    departureFromNumber(trainNumber).setTrack(track);
+    return departureFromNumber(trainNumber);
   }
 
-  public void addDelay() {
+  public TrainDeparture addDelay(int trainNumber, LocalTime delay) {
     /*
     *Add delay to a departure
     */
-    System.out.println("Enter train number: ");
-    int trainNumber = input.nextInt();
-    for (TrainDeparture trainDeparture : trainDepartureList) {
-      if (trainDeparture.getTrainNumber() == trainNumber) {
-        System.out.println("Enter delay (HH:mm): ");
-        String delayString = input.nextLine();
-        try {
-          delay = LocalTime.parse(delayString, formatter);
-          trainDeparture.setDelay(delay);
-          break;
-        } catch (Exception e) {
-          System.out.println("Invalid time format");
-        }
-      } else {
-        System.out.println("Train number not found");
-      }
-    }
+    departureFromNumber(trainNumber).setDelay(delay);
+    return departureFromNumber(trainNumber);
   }
 
   public TrainDeparture departureFromNumber(int trainNumber) {
@@ -100,8 +67,8 @@ public class TrainFactory {
     return null;
   }
 
-  public void setCurrentTime(LocalTime Time) {
-    currentTime = Time;
+  public void setCurrentTime(LocalTime time) {
+    currentTime = time;
   }
 
   public LocalTime getCurrentTime() {

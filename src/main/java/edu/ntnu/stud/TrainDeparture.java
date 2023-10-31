@@ -1,43 +1,44 @@
 package edu.ntnu.stud;
 
-import java.util.ArrayList;
-import java.util.regex.*;
+import java.time.DateTimeException;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
+
+/**
+ * A class that represents a train departure.
+ */
 public class TrainDeparture {
 
-  private static boolean staticPartPrinted = false;
+
   private LocalTime departureTime;
-  private String line;
-  private String destination;
-  private int trainNumber;
+  private final String line;
+  private final String destination;
+  private final int trainNumber;
   private int track;
   private LocalTime delay;
-  private static final Pattern linePattern = Pattern.compile("[A-Z]\\d");
   private static final Pattern timePattern = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
 
 
-  DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-  TrainDepartureUserInterface userInterface = new TrainDepartureUserInterface();
-
-  TrainDeparture(LocalTime departureTime, String line, String destination, int trainNumber, int track, LocalTime delay) {
-    if (trainNumber < 1) {
-      throw new IllegalArgumentException("Train number must be greater than 1");
-    }
-    if (track < 1) {
-      throw new IllegalArgumentException("Track must be greater than 1");
-    }
-    if (departureTime == null) {
-      throw new IllegalArgumentException("Departure time cannot be null");
-    }
-    if (!linePattern.matcher(line).matches()) {
-      throw new IllegalArgumentException("Line must be a capital letter followed by a number");
-    }
+  /**
+   * @param departureTime The time of departure.
+   * @param line The line the train is on.
+   * @param destination The destination of the train.
+   * @param trainNumber The train number.
+   * @param track The track the train is on.
+   * @param delay The delay of the train.
+   * @throws DateTimeException if the departure time or delay is not in the format HH:mm.
+   * @throws NullPointerException if the destination is null.
+   */
+  TrainDeparture(LocalTime departureTime, String line, String destination,
+          int trainNumber, int track, LocalTime delay) {
     if (!timePattern.matcher(departureTime.toString()).matches()) {
-      throw new IllegalArgumentException("Departure time must be in the format HH:mm");
+      throw new DateTimeException("Departure time must be in the format HH:mm");
     }
     if (!timePattern.matcher(delay.toString()).matches()) {
-      throw new IllegalArgumentException("Delay must be in the format HH:mm");
+      throw new DateTimeException("Delay must be in the format HH:mm");
+    }
+    if (destination == null) {
+      throw new NullPointerException("Destination cannot be null");
     }
     this.departureTime = departureTime;
     this.line = line;
@@ -46,6 +47,19 @@ public class TrainDeparture {
     this.track = track;
     this.delay = delay;
   }
+
+  /**
+   * @param departureTime The time of departure
+   * @param line The line the train is on
+   * @param destination The destination of the train
+   * @param trainNumber The train number
+   * @param delay The delay of the train
+   */
+  TrainDeparture(LocalTime departureTime, String line, String destination,
+                 int trainNumber, LocalTime delay) {
+    this(departureTime, line, destination, trainNumber, -1, delay);
+  }
+
 
   public LocalTime getDepartureTime() {
     return departureTime;
@@ -63,11 +77,26 @@ public class TrainDeparture {
     return trainNumber;
   }
 
+  /**
+   * @param track The track the train is on.
+   * @throws IllegalArgumentException if the track is less than -1.
+   */
   public void setTrack(int track) {
-    this.track = track;
+    if (track <= 0) {
+      throw new IllegalArgumentException("Track cannot be less than 0");
+    } else {
+      this.track = track;
+    }
   }
 
+  /**
+   * @param delay The delay of the train.
+   * @throws DateTimeException if the delay is not in the format HH:mm.
+   */
   public void setDelay(LocalTime delay) {
+    if (delay == LocalTime.of(0, 0)) {
+      throw new DateTimeException("Delay cannot be null");
+    }
     this.delay = delay;
   }
 
@@ -79,7 +108,7 @@ public class TrainDeparture {
     return delay;
   }
 
-  public LocalTime getDepartureTimeWithDelay(){
+  public LocalTime getDepartureTimeWithDelay() {
     return departureTime.plusHours(delay.getHour()).plusMinutes(delay.getMinute());
   }
 

@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  * A user interface for the train departure application.
@@ -16,6 +17,8 @@ public class TrainDepartureUserInterface {
   TrainFactory trainFactory = new TrainFactory();
   ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+  private static final Pattern digits = Pattern.compile("\\D+");
+  private static final Pattern letters = Pattern.compile("[a-zA-Z]+");
 
 
 
@@ -66,6 +69,8 @@ public class TrainDepartureUserInterface {
   public void addTrainDeparture() {
     LocalTime departureTime;
     LocalTime delay;
+    String destination;
+    int trainNumber;
     while (true) {
       System.out.println("Enter departure time (HH:mm): ");
       String departureTimeString = input.nextLine();
@@ -78,10 +83,31 @@ public class TrainDepartureUserInterface {
     }
     System.out.println("Enter line: ");
     final String line = input.nextLine();
-    System.out.println("Enter destination: ");
-    final String destination = input.nextLine();
-    System.out.println("Enter train number: ");
-    int trainNumber = input.nextInt();
+    while (true) {
+      System.out.println("Enter destination: ");
+      String tempDestination = input.nextLine();
+      if (digits.matcher(tempDestination).matches() && line.length() > 0) {
+        destination = tempDestination;
+        break;
+      } else {
+        System.out.println("Destination cannot be empty or contain digits");
+      }
+    }
+    while (true) {
+      try{
+        System.out.println("Enter train number: ");
+        int temptrainNumber = Integer.parseInt(input.nextLine());
+        if(trainFactory.departureFromNumber(temptrainNumber) != null) {
+          System.out.println("Train number already exists");
+        }else{
+          trainNumber = temptrainNumber;
+          break;
+        }
+      } catch (Exception e) {
+        System.out.println("Invalid train number");
+      }
+    }
+
     System.out.println("Enter track: ");
     int track = input.nextInt();
     while (true) {

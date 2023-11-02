@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class TrainDepartureUserInterface {
 
   Scanner input = new Scanner(System.in);
-  HashMap<String, Runnable> options = new HashMap<>();
+  HashMap<Integer, Runnable> options = new HashMap<>();
   TrainFactory trainFactory = new TrainFactory();
   ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -28,15 +28,15 @@ public class TrainDepartureUserInterface {
   public void init() {
     setCurrentTime();
     System.out.println(trainFactory.getCurrentTime());
-    options.put("1", this::printDepartureOverview);
-    options.put("2", this::addTrainDeparture);
-    options.put("3", this::assignTrack);
-    options.put("4", this::addDelay);
-    options.put("5", this::departureFromNumber);
-    options.put("6", this::departureFromDestination);
-    options.put("7", this::setCurrentTime);
-    options.put("8", trainFactory::fillTrainDepartureList);
-    options.put("9", () -> System.exit(0));
+    options.put(1, this::printDepartureOverview);
+    options.put(2, this::addTrainDeparture);
+    options.put(3, this::assignTrack);
+    options.put(4, this::addDelay);
+    options.put(5, this::departureFromNumber);
+    options.put(6, this::departureFromDestination);
+    options.put(7, this::setCurrentTime);
+    options.put(8, trainFactory::fillTrainDepartureList);
+    options.put(9, () -> System.exit(0));
     trainFactory.fillTrainDepartureList();
   }
 
@@ -55,13 +55,15 @@ public class TrainDepartureUserInterface {
       System.out.println("7. Update Current Time");
       System.out.println("8. Fill train departure list with data");
       System.out.println("9. Exit");
-      String choice = input.nextLine();
 
-
-      if (options.containsKey(choice)) {
+      try {
+        int choice = Integer.parseInt(input.nextLine());
         options.get(choice).run();
-      } else {
-        throw new IllegalArgumentException("Invalid choice");
+        if (choice == 9) {
+          System.exit(0);
+        }
+      } catch (Exception e) {
+        System.out.println("Invalid input");
       }
     }
   }
@@ -71,13 +73,14 @@ public class TrainDepartureUserInterface {
    * to input departure time, destination, train number, track, and delay. It validates
    * the user input and ensures that valid information is provided before adding the
    * departure to the train schedule.
-   *
-   * Each parameter is validated individually in seperate while loops.
+   * <p>
+   * Each parameter is validated individually in separate while loops.
    * If the user input is invalid, a message is displayed explaining what is wrong with the input.
    * If the user input is valid, the while loop is exited and the user can input the next parameter.
-   * values for trainNumber and destination assign to temporary variables which get checked for validity.
+   * values for trainNumber and destination assign to temporary variables
+   * which get checked for validity.
    * before the actual values are assigned to the train departure.
-   *
+   *<p>
    * once all parameters are valid, they are sent to the "addTrainDeparture" method in the trainFactory class.
    * where a train departure object is created and added to the train departure list.
    *
@@ -203,18 +206,29 @@ public class TrainDepartureUserInterface {
   }
 
 
-
+  /**
+   * Prompts the user to input a destination. User input sent to
+   * "departureFromDestination" method in the trainFactory class.
+   * if the return from this method is not equal to null, the departure prints (with the table header above it)
+   * if the method in trainFactory returns null, ("No departure with this destination") is displayed.
+   */
   public void departureFromDestination() {
     System.out.println("Enter destination");
     String destination = input.nextLine();
     TrainDeparture trainDeparture = trainFactory.departureFromDestination(destination);
     if (trainDeparture != null) {
+      tableHeader();
       System.out.println(trainDeparture);
     } else {
-      System.out.println("Train number not found");
+      System.out.println("No departure with this destination");
     }
   }
 
+    /**
+     * Prompts the user to input a new current time. User input is validated in a try catch block.
+     * if the input is invalid, a message is displayed and the user is prompted to input a new current time.
+     * if the input is valid, the input is parsed to a local time and sent to the "setCurrentTime" method in the trainFactory class.
+     */
   public void setCurrentTime() {
     while (true) {
       System.out.println("Enter current time (HH:mm): ");
@@ -229,30 +243,56 @@ public class TrainDepartureUserInterface {
     }
   }
 
+  /**
+   * Prompts the user to input a train number, which gets sent to the "departureFromNumber" method in the trainFactory class.
+   * If the return from this method is not null, it means that a departure with this train number exists.
+   * and the user is prompted to input a track number, which is sent to the assignTrack method in the trainFactory class.
+   * which sets the track number for the departure.
+   * if a departure with this train number does not exist, the user is prompted to input a new train number.
+   */
   public void assignTrack() {
-    System.out.println("Enter train number: ");
-    int trainNumber = input.nextInt();
-    if (trainFactory.departureFromNumber(trainNumber) != null) {
-      System.out.println("Enter track: ");
-      int track = input.nextInt();
-      trainFactory.assignTrack(trainNumber, track);
-    } else {
-      System.out.println("Train number not found");
-      assignTrack();
+    while (true) {
+      System.out.println("Enter train number (0 to exit): ");
+      try {
+        int trainNumber = Integer.parseInt(input.nextLine());
+        if (trainFactory.departureFromNumber(trainNumber) != null) {
+          System.out.println("Enter track: ");
+          int track = input.nextInt();
+          trainFactory.assignTrack(trainNumber, track);
+        } else if (trainNumber == 0) {
+          break;
+        } else {
+          System.out.println("Train number not found");
+          assignTrack();
+        }
+      } catch (Exception e) {
+        System.out.println("Invalid train number");
+      }
     }
   }
 
 
+  /**
+   * Prompts the user to enter a train number which is sent to the "departureFromNumber" method in the trainFactory class.
+   * if the return from this method is not null, it means that a departure with this train number exists.
+   * and the user is prompted to input a delay, which is sent to the addDelay method in the trainFactory class.
+   * which adds the delay to the departure.
+   * if a departure with this train number does not exist, the user is prompted to input a new train number.
+   */
   public void addDelay() {
     System.out.println("Enter train number: ");
-    int trainNumber = input.nextInt();
-    if (trainFactory.departureFromNumber(trainNumber) != null) {
-      System.out.println("Enter delay: ");
-      String delayString = input.nextLine();
-      LocalTime delay = LocalTime.parse(delayString, formatter);
-      trainFactory.addDelay(trainNumber, delay);
-    } else {
-      System.out.println("Train number not found");
+    try{
+      int trainNumber = Integer.parseInt(input.nextLine());
+      if (trainFactory.departureFromNumber(trainNumber) != null) {
+        System.out.println("Enter delay: ");
+        String delayString = input.nextLine();
+        LocalTime delay = LocalTime.parse(delayString, formatter);
+        trainFactory.addDelay(trainNumber, delay);
+      } else {
+        System.out.println("Train number not found");
+      }
+    } catch (Exception e) {
+      System.out.println("Invalid train number");
     }
   }
 }

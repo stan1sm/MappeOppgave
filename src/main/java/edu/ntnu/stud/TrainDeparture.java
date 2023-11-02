@@ -107,7 +107,9 @@ public class TrainDeparture {
   }
 
   /**
-   * Sets the track number for the train.
+   * Sets the track number for the train. Throws a IllegalArgumentException if the track number
+   * is less than or equal to 0, because this will only be used on methods where the track number
+   * was not set when the TrainDeparture object was created.
    *
    * @param track The track number from which the train departs.
    * @throws IllegalArgumentException If the track number is less than or equal to 0.
@@ -121,7 +123,8 @@ public class TrainDeparture {
   }
 
   /**
-   * Sets the delay time for the train.
+   * Sets the delay time for the train. Throws a DateTimeException if the delay time format is
+   * invalid. Cheks whether the time format is valid by using a regular expression. ("timePattern").
    *
    * @param delay The delay time in HH:mm.
    * @throws DateTimeException If the delay time format is invalid.

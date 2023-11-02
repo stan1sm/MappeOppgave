@@ -23,7 +23,9 @@ public class TrainDepartureUserInterface {
 
 
   /**
-   * Initialize the user interface.
+   * Runs the setCURentTime method, which prompts the user to input a current time.
+   * Initialize the user interface. Fills the "options" hashmap, with keys and different methods.
+   * fills the train departure list with data from the "Data.txt" file.
    */
   public void init() {
     setCurrentTime();
@@ -34,17 +36,19 @@ public class TrainDepartureUserInterface {
     options.put(4, this::addDelay);
     options.put(5, this::departureFromNumber);
     options.put(6, this::departureFromDestination);
-    options.put(7, this::setCurrentTime);
+    options.put(7, this::updateCurrentTime);
     options.put(8, trainFactory::fillTrainDepartureList);
-    options.put(9, () -> System.exit(0));
     trainFactory.fillTrainDepartureList();
   }
 
   /**
-   * Start the user interface.
+   * Start the user interface. Prints a menu with different options for the user.
+   * Uses a try catch block to prevent the input of non-number characters.
+   * If the input is not a number, a message is displayed and the user is prompted to input a new number.
+   * If the input is a number, the corresponding method is called.
+   * If the input is 9, the program exits.
    */
   public void start() {
-
     while (true) {
       System.out.println("1. Overview of all departures");
       System.out.println("2. Add a Departure");
@@ -163,14 +167,14 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Removes all departures from the trainDepartureList if their departure time is later than the current time.
-   * which indicated that they have already departed and are no longer relevant.
+   * Calls the "removeDeparted" method in the trainFactory class.
+   * which removes all departures that have already departed.
+   * (Their departure time + delay is less than the current time).
    * Prints the table header first using the "tableHeader()" method.
    * Prints the departure overview using a for loop to iterate through the trainDepartureList.
    */
   public void printDepartureOverview() {
-    trainDepartureList.removeIf(trainDeparture ->
-            trainDeparture.getDepartureTime().isBefore(trainFactory.getCurrentTime()));
+    trainFactory.removeDeparted();
     System.out.println(tableHeader());
     for (TrainDeparture trainDeparture : trainDepartureList) {
       System.out.println(trainDeparture);
@@ -235,8 +239,32 @@ public class TrainDepartureUserInterface {
       String departureTimeString = input.nextLine();
       try {
         LocalTime departureTime = LocalTime.parse(departureTimeString, formatter);
-        trainFactory.setCurrentTime(departureTime);
-        break;
+            trainFactory.setCurrentTime(departureTime);
+            break;
+      } catch (Exception e) {
+        System.out.println("Invalid time format");
+      }
+    }
+  }
+
+  /**
+   * Prompts the user to input a new current time. User input is validated in a try catch block.
+   * if the time format is invalid, a message is displayed, prompts user for a different time.
+   * if the time is before the current time, a message is displayed, prompts user for a different time.
+   * if time is valid and before current time, the time is sent to the "setCurrentTime" method in the trainFactory class.
+   */
+  public void updateCurrentTime() {
+    while (true) {
+      System.out.println("Enter current time (HH:mm): ");
+      String departureTimeString = input.nextLine();
+      try {
+        LocalTime departureTime = LocalTime.parse(departureTimeString, formatter);
+        if (departureTime.isBefore(trainFactory.getCurrentTime())) {
+          System.out.println("Cannot set time before current time");
+        } else {
+          trainFactory.setCurrentTime(departureTime);
+          break;
+        }
       } catch (Exception e) {
         System.out.println("Invalid time format");
       }

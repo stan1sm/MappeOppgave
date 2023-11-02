@@ -23,9 +23,6 @@ public class TrainFactory {
     return trainDepartureList;
   }
 
-  public HashMap<String, TrainDeparture> getTrainDestinationMap() {
-    return trainDestinationMap;
-  }
 
   /**
    *Create a new departure using user input.
@@ -73,6 +70,15 @@ public class TrainFactory {
 
   public LocalTime getCurrentTime() {
     return currentTime;
+  }
+
+  public void removeDeparted(){
+    for(TrainDeparture trainDeparture : trainDepartureList){
+      if(trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime)){
+        trainDepartureList.remove(trainDeparture);
+        trainDestinationMap.remove(trainDeparture.getDestination());
+      }
+    }
   }
 
   /**

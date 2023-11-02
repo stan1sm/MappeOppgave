@@ -10,25 +10,44 @@ import java.util.Scanner;
 
 
 /**
- * A factory for creating train departures.
+ * The TrainFactory represents a registry for train departures.
+ * it is responsible for storing all created train departures and
+ * performing actions on them which alter their state.
+ *
  */
 public class TrainFactory {
   ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
-  HashMap<Integer, TrainDeparture> trainNumberMap = new HashMap<>();
   HashMap<String, TrainDeparture> trainDestinationMap = new HashMap<>();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   LocalTime currentTime = null;
 
+  /**
+   * Returns the list of train departures.
+   * @return trainDepartureList
+   */
   public ArrayList<TrainDeparture> getTrainDepartureList() {
     return trainDepartureList;
   }
 
-
   /**
-   *Create a new departure using user input.
+   * Creates a new trainDeparture using the given parameters and adds it to the list of train departures.
+   * also adds the train departure to the hashmap with the destination as key.
+   * receives parameters from the addDeparture() method in the user interface class.
+   *
+   * @param departureTime the departuretime of the train
+   * @param line the line the train is operating on
+   * @param destination the destination of the train
+   * @param trainNumber
+   * @param track
+   * @param delay
    */
   public void addDeparture(LocalTime departureTime, String line, String destination, int trainNumber, int track, LocalTime delay) {
-    TrainDeparture trainDeparture = new TrainDeparture(departureTime, line, destination, trainNumber, track, delay);
+    TrainDeparture trainDeparture;
+    if (track == 0){
+      trainDeparture = new TrainDeparture(departureTime, line, destination, trainNumber, delay);
+    }else{
+      trainDeparture = new TrainDeparture(departureTime, line, destination, trainNumber, track, delay);
+    }
     trainDepartureList.add(trainDeparture);
     trainDestinationMap.put(destination, trainDeparture);
   }
@@ -100,7 +119,6 @@ public class TrainFactory {
         LocalTime delay = LocalTime.parse(data[5], formatter);
         TrainDeparture trainDeparture = new TrainDeparture(departureTime, lineName, destination, trainNumber, track, delay);
         trainDestinationMap.put(destination,trainDeparture);
-        trainNumberMap.put(trainNumber, trainDeparture);
         trainDepartureList.add(trainDeparture);
       }
     } catch (Exception e) {

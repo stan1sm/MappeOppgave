@@ -44,14 +44,20 @@ public class TrainDeparture {
     if (destination == null) {
       throw new NullPointerException("Destination cannot be null");
     }
+    if (track <= 0) {
+      this.track = -1;
+    } else {
+      this.track = track;
+    }
     this.departureTime = departureTime;
     this.line = line;
     this.destination = destination;
     this.trainNumber = trainNumber;
-    this.track = track;
     this.delay = delay;
   }
 
+
+  //THIS ONE MIGHT BE UNNCESSECARY, DECIDE LATER.
   /**
    * Constructs a TrainDeparture object with the specified departure time, line, destination,
    * train number, and delay. The track number is set to -1 as it is unknown.
@@ -176,7 +182,11 @@ public class TrainDeparture {
     int destinationLength = destination.length();
     info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
     info.append(destination).append(String.format("%" + (15 - destinationLength) + "s", " | "));
-    info.append(track).append(String.format("%" + 8 + "s", " | "));
+    if (track == -1) {
+      info.append("No Track Yet").append(String.format("%" + 1 + "s", " | "));
+    } else {
+      info.append(track).append(String.format("%" + 8 + "s", " | "));
+    }
     info.append(line).append(String.format("%" + 7 + "s", " | "));
     info.append(trainNumber).append(String.format("%" + 15 + "s", " | "));
     info.append(delay).append(String.format("%" + 7 + "s", "|")).append("\n");

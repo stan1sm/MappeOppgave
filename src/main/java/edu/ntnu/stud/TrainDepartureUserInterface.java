@@ -133,7 +133,7 @@ public class TrainDepartureUserInterface {
     }
     while (true) {
       try {
-        System.out.println("Enter track: ");
+        System.out.println("Enter track (0 if not set): ");
         track = Integer.parseInt(input.nextLine());
         break;
       } catch (Exception e) {

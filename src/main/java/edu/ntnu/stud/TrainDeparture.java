@@ -180,7 +180,11 @@ public class TrainDeparture {
   public String toString() {
     StringBuilder info = new StringBuilder();
     int destinationLength = destination.length();
-    info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
+    if(delay != LocalTime.of(0,0)){
+      info.append("| ").append(departureTime + "(+"+delay+")").append(String.format("%" + 4 + "s", " | "));
+    }else{
+      info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
+    }
     info.append(destination).append(String.format("%" + (15 - destinationLength) + "s", " | "));
     if (track == -1) {
       info.append("No Track Yet").append(String.format("%" + 1 + "s", " | "));

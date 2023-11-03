@@ -52,11 +52,27 @@ public class TrainFactory {
     trainDestinationMap.put(destination, trainDeparture);
   }
 
+  /**
+   * Finds a specific train-departure using the train number,
+   * and sets its track to the given track.
+   *
+   * @param trainNumber the train number of the train departure to be assigned a track.
+   * @param track the track number to be assigned to the train departure.
+   * @return the train departure that was assigned a track.
+   */
   public TrainDeparture assignTrack(int trainNumber, int track) {
     departureFromNumber(trainNumber).setTrack(track);
     return departureFromNumber(trainNumber);
   }
 
+  /**
+   * Finds a specific train-departure using the train number,
+   * and sets its delay to the given delay.
+   *
+   * @param trainNumber the train number of the train departure to be assigned a delay.
+   * @param delay the delay to be assigned to the train departure.
+   * @return the train departure that was assigned a delay.
+   */
   public TrainDeparture addDelay(int trainNumber, LocalTime delay) {
     /*
     *Add delay to a departure
@@ -64,6 +80,13 @@ public class TrainFactory {
     departureFromNumber(trainNumber).setDelay(delay);
     return departureFromNumber(trainNumber);
   }
+
+  /**
+   * Loops through the TrainDeparture list and find a departure using the train number.
+   * returns null if a departure with the given train number doesn't exist.
+   * @param trainNumber the train number for the train-departure to be found.
+   * @return trainDeparture
+   */
 
   public TrainDeparture departureFromNumber(int trainNumber) {
     for(TrainDeparture trainDeparture : trainDepartureList){
@@ -74,6 +97,13 @@ public class TrainFactory {
     return null;
   }
 
+  /**
+   * returns a train departure using the destination as key.
+   * returns null if a train departure with the given destination doesn't exist.
+   *
+   * @param destination the destination of the train departure to be found.
+   * @return trainDeparture
+   */
   public TrainDeparture departureFromDestination(String destination) {
     try{
       return trainDestinationMap.get(destination);
@@ -83,14 +113,27 @@ public class TrainFactory {
     return null;
   }
 
+    /**
+     * Sets the current time to the given time.
+     * @param time the time to be set as current time.
+     */
   public void setCurrentTime(LocalTime time) {
     currentTime = time;
   }
 
+    /**
+     * Returns the current time.
+     * @return currentTime
+     */
   public LocalTime getCurrentTime() {
     return currentTime;
   }
 
+  /**
+   * Loops through the TrainDeparture list and removes train departures,
+   * if their departure time + delay is before the current time.
+   * also removes these departures from the trainDestinationMap.
+   */
   public void removeDeparted(){
     for(TrainDeparture trainDeparture : trainDepartureList){
       if(trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime)){

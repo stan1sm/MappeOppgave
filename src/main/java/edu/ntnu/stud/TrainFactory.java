@@ -3,10 +3,7 @@ package edu.ntnu.stud;
 import java.io.File;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 
 /**
@@ -133,10 +130,13 @@ public class TrainFactory {
    * if their departure time + delay is before the current time.
    * also removes these departures from the trainDestinationMap.
    */
+  //FOR THE REPORT: Used iterator to avoid ConcurrentModificationException
   public void removeDeparted(){
-    for(TrainDeparture trainDeparture : trainDepartureList){
-      if(trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime)){
-        trainDepartureList.remove(trainDeparture);
+    Iterator<TrainDeparture> iterator = trainDepartureList.iterator();
+    while (iterator.hasNext()){
+      TrainDeparture trainDeparture = iterator.next();
+      if (trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime)){
+        iterator.remove();
         trainDestinationMap.remove(trainDeparture.getDestination());
       }
     }

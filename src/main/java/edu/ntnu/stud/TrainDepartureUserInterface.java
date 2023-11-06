@@ -64,12 +64,11 @@ public class TrainDepartureUserInterface {
       System.out.println("9. Exit");
 
       System.out.print("Enter your choice: ");
-
-      try {
-        int choice = Integer.parseInt(menuChoice.nextLine());
+      int choice = Integer.parseInt(menuChoice.nextLine());
+      if(choice > 0 && choice <= options.size()){
         options.get(choice).run();
-      } catch (InputMismatchException e) {
-        System.out.println("Invalid input. Please enter a number.");
+      } else {
+        System.out.println("Invalid choice");
       }
     }
   }

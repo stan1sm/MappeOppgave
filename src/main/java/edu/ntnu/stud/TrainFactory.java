@@ -73,10 +73,14 @@ public class TrainFactory {
    * @param delay the delay to be assigned to the train departure.
    * @return the train departure that was assigned a delay.
    */
+
+  /**
+   * Finds a specific train-departure using the train number, and sets its delay to the given delay.
+   * @param trainNumber the train number of the train departure to be assigned a delay.
+   * @param delay the delay to be assigned to the train departure.
+   * @return the train departure that was assigned a delay.
+   */
   public TrainDeparture addDelay(int trainNumber, LocalTime delay) {
-    /*
-    *Add delay to a departure
-    */
     departureFromNumber(trainNumber).setDelay(delay);
     return departureFromNumber(trainNumber);
   }
@@ -105,12 +109,7 @@ public class TrainFactory {
    * @return trainDeparture
    */
   public TrainDeparture departureFromDestination(String destination) {
-    try{
-      return trainDestinationMap.get(destination);
-    }catch (NoSuchElementException e){
-      System.out.println("A train with this destination doesnt exist");
-    }
-    return null;
+    return trainDestinationMap.get(destination);
   }
 
     /**

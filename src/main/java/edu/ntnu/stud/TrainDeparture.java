@@ -57,7 +57,7 @@ public class TrainDeparture {
   }
 
 
-  //THIS ONE MIGHT BE UNNCESSECARY, DECIDE LATER.
+  //NEED?
   /**
    * Constructs a TrainDeparture object with the specified departure time, line, destination,
    * train number, and delay. The track number is set to -1 as it is unknown.

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import java.util.InputMismatchException;
 
 /**
  * A user interface for the train departure application.
@@ -38,6 +39,7 @@ public class TrainDepartureUserInterface {
     options.put(6, this::departureFromDestination);
     options.put(7, this::updateCurrentTime);
     options.put(8, trainFactory::fillTrainDepartureList);
+    options.put(9, () -> System.exit(0));
     trainFactory.fillTrainDepartureList();
   }
 
@@ -49,6 +51,7 @@ public class TrainDepartureUserInterface {
    * If the input is 9, the program exits.
    */
   public void start() {
+    Scanner menuChoice = new Scanner(System.in);
     while (true) {
       System.out.println("1. Overview of all departures");
       System.out.println("2. Add a Departure");
@@ -60,17 +63,17 @@ public class TrainDepartureUserInterface {
       System.out.println("8. Fill train departure list with data");
       System.out.println("9. Exit");
 
+      System.out.print("Enter your choice: ");
+
       try {
-        int choice = Integer.parseInt(input.nextLine());
+        int choice = Integer.parseInt(menuChoice.nextLine());
         options.get(choice).run();
-        if (choice == 9) {
-          System.exit(0);
-        }
-      } catch (Exception e) {
-        System.out.println("Invalid input");
+      } catch (InputMismatchException e) {
+        System.out.println("Invalid input. Please enter a number.");
       }
     }
   }
+
 
   /**
    * Adds a new train departure to the train schedule. The method prompts the user
@@ -90,66 +93,12 @@ public class TrainDepartureUserInterface {
    *
    */
   public void addTrainDeparture() {
-    LocalTime departureTime;
-    LocalTime delay;
-    String destination;
-    int trainNumber;
-    int track;
-    while (true) {
-      System.out.println("Enter departure time (HH:mm): ");
-      String departureTimeString = input.nextLine();
-      try {
-        departureTime = LocalTime.parse(departureTimeString, formatter);
-        break;
-      } catch (Exception e) {
-        System.out.println("Invalid time format");
-      }
-    }
-    System.out.println("Enter line: ");
-    final String line = input.nextLine();
-    while (true) {
-      System.out.println("Enter destination: ");
-      String tempDestination = input.nextLine();
-      if (digits.matcher(tempDestination).matches() && !line.isEmpty()) {
-        destination = tempDestination;
-        break;
-      } else {
-        System.out.println("Destination cannot be empty or contain digits");
-      }
-    }
-    while (true) {
-      try {
-        System.out.println("Enter train number: ");
-        int tempTrainNumber = Integer.parseInt(input.nextLine());
-        if (trainFactory.departureFromNumber(tempTrainNumber) != null) {
-          System.out.println("Train number already exists");
-        } else {
-          trainNumber = tempTrainNumber;
-          break;
-        }
-      } catch (Exception e) {
-        System.out.println("Invalid train number");
-      }
-    }
-    while (true) {
-      try {
-        System.out.println("Enter track (0 if not set): ");
-        track = Integer.parseInt(input.nextLine());
-        break;
-      } catch (Exception e) {
-        System.out.println("Invalid track number");
-      }
-    }
-    while (true) {
-      System.out.println("Enter delay(HH:mm): ");
-      String delayString = input.nextLine();
-      try {
-        delay = LocalTime.parse(delayString, formatter);
-        break;
-      } catch (Exception e) {
-        System.out.println("Invalid time format");
-      }
-    }
+    LocalTime departureTime = departureTimeFromInput();
+    LocalTime delay = delayFromInput();
+    String line = lineFromInput();
+    String destination = destinationFromInput();
+    int trainNumber = trainNumberFromInput();
+    int track = trackFromInput();
     trainFactory.addDeparture(departureTime, line, destination, trainNumber, track, delay);
   }
 
@@ -322,5 +271,89 @@ public class TrainDepartureUserInterface {
     } catch (Exception e) {
       System.out.println("Invalid train number");
     }
+  }
+
+  public LocalTime departureTimeFromInput(){
+    LocalTime departureTime;
+    while (true) {
+      System.out.println("Enter departure time (HH:mm): ");
+      String departureTimeString = input.nextLine();
+      try {
+        departureTime = LocalTime.parse(departureTimeString, formatter);
+        break;
+      } catch (Exception e) {
+        System.out.println("Invalid time format");
+      }
+    }
+    return departureTime;
+  }
+
+  public String lineFromInput(){
+    System.out.println("Enter line: ");
+    String line = input.nextLine();
+    return line;
+  }
+
+  public String destinationFromInput(){
+    String destination;
+    while (true) {
+      System.out.println("Enter destination: ");
+      String tempDestination = input.nextLine();
+      if (digits.matcher(tempDestination).matches()) {
+        destination = tempDestination;
+        break;
+      } else {
+        System.out.println("Destination cannot be empty or contain digits");
+      }
+    }
+    return destination;
+  }
+
+  public int trainNumberFromInput(){
+    int trainNumber;
+    while (true) {
+      try {
+        System.out.println("Enter train number: ");
+        int tempTrainNumber = Integer.parseInt(input.nextLine());
+        if (trainFactory.departureFromNumber(tempTrainNumber) != null) {
+          System.out.println("Train number already exists");
+        } else {
+          trainNumber = tempTrainNumber;
+          break;
+        }
+      } catch (Exception e) {
+        System.out.println("Invalid train number");
+      }
+    }
+    return trainNumber;
+  }
+
+  public int trackFromInput(){
+    int track;
+    while (true) {
+      try {
+        System.out.println("Enter track (0 if not set): ");
+        track = Integer.parseInt(input.nextLine());
+        break;
+      } catch (Exception e) {
+        System.out.println("Invalid track number");
+      }
+    }
+    return track;
+  }
+
+  public LocalTime delayFromInput(){
+    LocalTime delay;
+    while (true) {
+      System.out.println("Enter delay(HH:mm): ");
+      String delayString = input.nextLine();
+      try {
+        delay = LocalTime.parse(delayString, formatter);
+        break;
+      } catch (Exception e) {
+        System.out.println("Invalid time format");
+      }
+    }
+    return delay;
   }
 }

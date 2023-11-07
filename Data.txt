@@ -1,5 +1,5 @@
 //TrainDeparture(LocalTime departureTime, String line, String destination, int trainNumber, int track, LocalTime delay)
-10:20,A1,Trondheim,1,1,00:00
+10:20,A1,Oslo,1,1,00:00
 12:30,F1,Oslo,2,5,00:00
 13:00,B1,Bergen,3,7,00:15
 17:25,C4,Stavanger,4,3,02:00

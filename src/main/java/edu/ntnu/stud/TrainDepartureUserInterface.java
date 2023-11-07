@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-import java.util.InputMismatchException;
 
 /**
  * A user interface for the train departure application.
@@ -167,12 +166,15 @@ public class TrainDepartureUserInterface {
   public void departureFromDestination() {
     System.out.println("Enter destination");
     String destination = input.nextLine();
-    TrainDeparture trainDeparture = trainFactory.departureFromDestination(destination);
-    if (trainDeparture != null) {
-      tableHeader();
-      System.out.println(trainDeparture);
+    ArrayList<TrainDeparture> foundDepartures = trainFactory.departureFromDestination(destination);
+    if (foundDepartures != null) {
+        System.out.println(tableHeader());
+        for (TrainDeparture trainDeparture : foundDepartures) {
+            System.out.println(trainDeparture);
+            System.out.println("+--------+--------------+--------+--------+---------------+-----------+");
+        }
     } else {
-      System.out.println("No departure with this destination");
+      System.out.println("No departures with this destination");
     }
   }
 
@@ -289,8 +291,7 @@ public class TrainDepartureUserInterface {
 
   public String lineFromInput(){
     System.out.println("Enter line: ");
-    String line = input.nextLine();
-    return line;
+    return input.nextLine();
   }
 
   public String destinationFromInput(){

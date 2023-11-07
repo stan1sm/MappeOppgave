@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class TrainFactory {
   ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
-  HashMap<String, TrainDeparture> trainDestinationMap = new HashMap<>();
+  Map<String, TrainDeparture> trainDestinationMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   LocalTime currentTime = null;
 
@@ -105,8 +105,18 @@ public class TrainFactory {
    * @param destination the destination of the train departure to be found.
    * @return trainDeparture
    */
-  public TrainDeparture departureFromDestination(String destination) {
-    return trainDestinationMap.get(destination);
+  public ArrayList<TrainDeparture> departureFromDestination(String destination) {
+    ArrayList<TrainDeparture> foundDepartures = new ArrayList<>();
+    this.trainDepartureList.forEach((traindeparture)-> {
+      if (traindeparture.getDestination().equalsIgnoreCase(destination)) {
+        foundDepartures.add(traindeparture);
+      }
+    });
+    if (foundDepartures.isEmpty()){
+      return null;
+    }else{
+      return foundDepartures;
+    }
   }
 
     /**
@@ -137,7 +147,6 @@ public class TrainFactory {
       TrainDeparture trainDeparture = iterator.next();
       if (trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime)){
         iterator.remove();
-        trainDestinationMap.remove(trainDeparture.getDestination());
       }
     }
   }

@@ -44,13 +44,17 @@ public class TrainDeparture {
     if (destination == null) {
       throw new NullPointerException("Destination cannot be null");
     }
+    if (line.isEmpty()) {
+      throw new NullPointerException("Line cannot be empty");
+    } else {
+      this.line = line;
+    }
     if (track <= 0) {
       this.track = -1;
     } else {
       this.track = track;
     }
     this.departureTime = departureTime;
-    this.line = line;
     this.destination = destination;
     this.trainNumber = trainNumber;
     this.delay = delay;
@@ -136,8 +140,8 @@ public class TrainDeparture {
    * @throws DateTimeException If the delay time format is invalid.
    */
   public void setDelay(LocalTime delay) {
-    if (!timePattern.matcher(delay.toString()).matches()) {
-      throw new DateTimeException("Delay must be in the format HH:mm");
+    if (delay == LocalTime.of(0,0)) {
+      throw new DateTimeException("Cannot update delay to 00:00");
     } else {
       this.delay = delay;
     }
@@ -181,7 +185,7 @@ public class TrainDeparture {
     StringBuilder info = new StringBuilder();
     int destinationLength = destination.length();
     if(delay != LocalTime.of(0,0)){
-      info.append("| ").append(departureTime + "(+"+delay+")").append(String.format("%" + 4 + "s", " | "));
+      info.append("| ").append(departureTime).append("(+").append(delay).append(")").append(String.format("%" + 4 + "s", " | "));
     }else{
       info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
     }
@@ -192,7 +196,7 @@ public class TrainDeparture {
       info.append(track).append(String.format("%" + 8 + "s", " | "));
     }
     info.append(line).append(String.format("%" + 7 + "s", " | "));
-    info.append(trainNumber).append(String.format("%" + 15 + "s", " | "));
+    info.append(trainNumber).append(String.format("%" + 4 + "s", " | "));
     info.append(delay).append(String.format("%" + 7 + "s", "|")).append("\n");
     return info.toString();
   }

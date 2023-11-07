@@ -289,9 +289,16 @@ public class TrainDepartureUserInterface {
     return departureTime;
   }
 
-  public String lineFromInput(){
-    System.out.println("Enter line: ");
-    return input.nextLine();
+  public String lineFromInput() {
+    while (true) {
+      System.out.println("Enter line: ");
+      String line = input.nextLine();
+      if (line.isEmpty()) {
+        System.out.println("Line cannot be empty");
+      }else{
+        return line.toUpperCase();
+      }
+    }
   }
 
   public String destinationFromInput(){

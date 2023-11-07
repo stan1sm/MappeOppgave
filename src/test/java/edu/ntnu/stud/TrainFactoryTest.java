@@ -7,18 +7,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 
 public class TrainFactoryTest {
-
+    private ArrayList<TrainDeparture> trainDepartureList;
     private TrainFactory trainFactory;
     private TrainDeparture trainDeparture;
 
     @BeforeEach
     void setUp() {
         trainFactory = new TrainFactory();
+        trainDepartureList = new ArrayList<>();
         trainDeparture = new TrainDeparture(LocalTime.of(12,0), "L1", "Trondheim", 1,  LocalTime.of(0, 0));
         trainFactory.addDeparture(LocalTime.of(12,0), "L1", "Trondheim", 1, 1, LocalTime.of(0, 0));
-
+        trainDepartureList.add(trainDeparture);
     }
 
     @Test
@@ -45,7 +47,10 @@ public class TrainFactoryTest {
 
     @Test
     void departureFromDestination() {
-        assertEquals(trainDeparture, trainFactory.departureFromDestination("Trondheim"));
+        ArrayList<TrainDeparture> foundDepartures = trainFactory.departureFromDestination("Trondheim");
+        assertNotNull(foundDepartures);
+        assertEquals(1, foundDepartures.size());
+        assertEquals("Trondheim", foundDepartures.get(0).getDestination());
     }
 
     @Test

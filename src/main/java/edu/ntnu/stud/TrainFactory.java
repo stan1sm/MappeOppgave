@@ -14,7 +14,6 @@ import java.util.*;
  */
 public class TrainFactory {
   ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
-  Map<String, TrainDeparture> trainDestinationMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   LocalTime currentTime = null;
 
@@ -34,9 +33,9 @@ public class TrainFactory {
    * @param departureTime the departuretime of the train
    * @param line the line the train is operating on
    * @param destination the destination of the train
-   * @param trainNumber
-   * @param track
-   * @param delay
+   * @param trainNumber the train number of the train
+   * @param track the track number of the train
+   * @param delay the delay of the train
    */
   public void addDeparture(LocalTime departureTime, String line, String destination, int trainNumber, int track, LocalTime delay) {
     TrainDeparture trainDeparture;
@@ -46,7 +45,6 @@ public class TrainFactory {
       trainDeparture = new TrainDeparture(departureTime, line, destination, trainNumber, track, delay);
     }
     trainDepartureList.add(trainDeparture);
-    trainDestinationMap.put(destination, trainDeparture);
   }
 
   /**
@@ -73,13 +71,13 @@ public class TrainFactory {
 
   /**
    * Finds a specific train-departure using the train number, and sets its delay to the given delay.
+   *
    * @param trainNumber the train number of the train departure to be assigned a delay.
-   * @param delay the delay to be assigned to the train departure.
-   * @return the train departure that was assigned a delay.
+   * @param delay       the delay to be assigned to the train departure.
    */
-  public TrainDeparture addDelay(int trainNumber, LocalTime delay) {
+  public void addDelay(int trainNumber, LocalTime delay) {
     departureFromNumber(trainNumber).setDelay(delay);
-    return departureFromNumber(trainNumber);
+    departureFromNumber(trainNumber);
   }
 
   /**
@@ -169,7 +167,6 @@ public class TrainFactory {
         int track = Integer.parseInt(data[4]);
         LocalTime delay = LocalTime.parse(data[5], formatter);
         TrainDeparture trainDeparture = new TrainDeparture(departureTime, lineName, destination, trainNumber, track, delay);
-        trainDestinationMap.put(destination,trainDeparture);
         trainDepartureList.add(trainDeparture);
       }
     } catch (Exception e) {

@@ -30,7 +30,7 @@ public class TrainFactory {
    * also adds the train departure to the hashmap with the destination as key.
    * receives parameters from the addDeparture() method in the user interface class.
    *
-   * @param departureTime the departuretime of the train
+   * @param departureTime the departure time of the train
    * @param line the line the train is operating on
    * @param destination the destination of the train
    * @param trainNumber the train number of the train
@@ -52,22 +52,13 @@ public class TrainFactory {
    * and sets its track to the given track.
    *
    * @param trainNumber the train number of the train departure to be assigned a track.
-   * @param track the track number to be assigned to the train departure.
-   * @return the train departure that was assigned a track.
+   * @param track       the track number to be assigned to the train departure.
    */
-  public TrainDeparture assignTrack(int trainNumber, int track) {
+  public void assignTrack(int trainNumber, int track) {
     departureFromNumber(trainNumber).setTrack(track);
-    return departureFromNumber(trainNumber);
+    departureFromNumber(trainNumber);
   }
 
-  /**
-   * Finds a specific train-departure using the train number,
-   * and sets its delay to the given delay.
-   *
-   * @param trainNumber the train number of the train departure to be assigned a delay.
-   * @param delay the delay to be assigned to the train departure.
-   * @return the train departure that was assigned a delay.
-   */
 
   /**
    * Finds a specific train-departure using the train number, and sets its delay to the given delay.
@@ -140,13 +131,7 @@ public class TrainFactory {
    */
   //FOR THE REPORT: Used iterator to avoid ConcurrentModificationException
   public void removeDeparted(){
-    Iterator<TrainDeparture> iterator = trainDepartureList.iterator();
-    while (iterator.hasNext()){
-      TrainDeparture trainDeparture = iterator.next();
-      if (trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime)){
-        iterator.remove();
-      }
-    }
+      trainDepartureList.removeIf(trainDeparture -> trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime));
   }
 
   /**

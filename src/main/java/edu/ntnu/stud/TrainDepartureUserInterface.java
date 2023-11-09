@@ -3,6 +3,7 @@ package edu.ntnu.stud;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -15,7 +16,7 @@ public class TrainDepartureUserInterface {
   private final Scanner input = new Scanner(System.in);
   private final HashMap<Integer, Runnable> options = new HashMap<>();
   private final TrainFactory trainFactory = new TrainFactory();
-  private final ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
+  private final Collection<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartures();
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   private static final Pattern digits = Pattern.compile("\\D+");
 
@@ -129,6 +130,13 @@ public class TrainDepartureUserInterface {
     }
   }
 
+  public void printAnyDepartures(ArrayList<TrainDeparture> DepartureList){
+    System.out.println(tableHeader());
+    for (TrainDeparture trainDeparture : DepartureList) {
+      System.out.println(trainDeparture);
+      System.out.println("+--------+--------------+--------+--------+---------------+-----------+");
+    }
+  }
 
   /**
    * Prompts the user to input a train number, input is validated in a try catch block.
@@ -166,13 +174,9 @@ public class TrainDepartureUserInterface {
   public void departureFromDestination() {
     System.out.println("Enter destination");
     String destination = input.nextLine();
-    ArrayList<TrainDeparture> foundDepartures = trainFactory.testLoop(destination);
+    ArrayList<TrainDeparture> foundDepartures = trainFactory.departureFromDestination(destination);
     if (foundDepartures != null) {
-        System.out.println(tableHeader());
-        for (TrainDeparture trainDeparture : foundDepartures) {
-            System.out.println(trainDeparture);
-            System.out.println("+--------+--------------+--------+--------+---------------+-----------+");
-        }
+        printAnyDepartures(foundDepartures);
     } else {
       System.out.println("No departures with this destination");
     }

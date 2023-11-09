@@ -130,12 +130,25 @@ public class TrainDepartureUserInterface {
     }
   }
 
+  /**
+   * Prints a list of departures using the table header and the toString method in the trainDeparture class.
+   * @param DepartureList the list of departures to be printed.
+   */
   public void printAnyDepartures(ArrayList<TrainDeparture> DepartureList){
     System.out.println(tableHeader());
     for (TrainDeparture trainDeparture : DepartureList) {
       System.out.println(trainDeparture);
       System.out.println("+--------+--------------+--------+--------+---------------+-----------+");
     }
+  }
+
+  /**
+   * Prints a single departure using the table header and the toString method in the trainDeparture class.
+   * @param departure the departure to be printed.
+   */
+  public void printSingleDeparture(TrainDeparture departure){
+    System.out.println(tableHeader());
+    System.out.println(departure);
   }
 
   /**
@@ -152,8 +165,7 @@ public class TrainDepartureUserInterface {
         int trainNumber = Integer.parseInt(input.nextLine());
         TrainDeparture trainDeparture = trainFactory.departureFromNumber(trainNumber);
         if (trainDeparture != null) {
-          tableHeader();
-          System.out.println(trainDeparture);
+            printSingleDeparture(trainDeparture);
           break;
         } else {
           System.out.println("Train number not found");
@@ -186,6 +198,8 @@ public class TrainDepartureUserInterface {
      * Prompts the user to input a new current time. User input is validated in a try catch block.
      * if the input is invalid, a message is displayed and the user is prompted to input a new current time.
      * if the input is valid, the input is parsed to a local time and sent to the "setCurrentTime" method in the trainFactory class.
+     * which sets the current time to the input.
+     * calls "removeDeparted" method in the trainFactory class, which removes all departures that departed before the current time.
      */
   public void setCurrentTime() {
     while (true) {
@@ -194,6 +208,7 @@ public class TrainDepartureUserInterface {
       try {
         LocalTime departureTime = LocalTime.parse(departureTimeString, formatter);
             trainFactory.setCurrentTime(departureTime);
+            trainFactory.removeDeparted();
             break;
       } catch (Exception e) {
         System.out.println("Invalid time format");
@@ -278,6 +293,10 @@ public class TrainDepartureUserInterface {
     }
   }
 
+  /**
+   * Prompts the user to input a departure time, which is validated in a try catch block.
+   * @return departureTime
+   */
   public LocalTime departureTimeFromInput(){
     LocalTime departureTime;
     while (true) {
@@ -293,6 +312,10 @@ public class TrainDepartureUserInterface {
     return departureTime;
   }
 
+  /**
+   * Prompts the user to input a line, which is validated in a while loop.
+   * @return line in uppercase
+   */
   public String lineFromInput() {
     while (true) {
       System.out.println("Enter line: ");
@@ -305,6 +328,10 @@ public class TrainDepartureUserInterface {
     }
   }
 
+  /**
+   * Prompts the user to input a destination, which is validated in a while loop.
+   * @return destination
+   */
   public String destinationFromInput(){
     String destination;
     while (true) {
@@ -320,6 +347,11 @@ public class TrainDepartureUserInterface {
     return destination;
   }
 
+  /**
+   * Prompts the user to input a train number, which is validated in a try catch block.
+   * if the input is invalid, prompts the user for a new train number.
+   * @return trainNumber
+   */
   public int trainNumberFromInput(){
     int trainNumber;
     while (true) {
@@ -339,6 +371,11 @@ public class TrainDepartureUserInterface {
     return trainNumber;
   }
 
+  /**
+   * Prompts the user to input a track number, which is validated in a try catch block.
+   * if the input is invalid, prompts the user for a new track number.
+   * @return track
+   */
   public int trackFromInput(){
     int track;
     while (true) {
@@ -353,6 +390,11 @@ public class TrainDepartureUserInterface {
     return track;
   }
 
+  /**
+   * Prompts the user to input a delay, which is validated in a try catch block.
+   * if the input is invalid, prompts the user for a new delay.
+   * @return delay
+   */
   public LocalTime delayFromInput(){
     LocalTime delay;
     while (true) {

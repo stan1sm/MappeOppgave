@@ -13,8 +13,8 @@ import java.util.*;
  *
  */
 public class TrainFactory {
-  public HashMap<Integer, TrainDeparture> numberToDepartureMap = new HashMap<>();
-  public Collection<TrainDeparture> trainDepartures = numberToDepartureMap.values();
+  private final HashMap<Integer, TrainDeparture> numberToDepartureMap = new HashMap<>();
+  private final Collection<TrainDeparture> trainDepartures = numberToDepartureMap.values();
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   private LocalTime currentTime = null;
   Iterator<TrainDeparture> trainDepartureIterator = trainDepartures.iterator();

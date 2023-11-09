@@ -13,9 +13,11 @@ import java.util.*;
  *
  */
 public class TrainFactory {
-  ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
-  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-  LocalTime currentTime = null;
+  public ArrayList<TrainDeparture> trainDepartureList = new ArrayList<>();
+  public HashMap<Integer, TrainDeparture> trainNumberMap = new HashMap<>();
+  public Collection<TrainDeparture> values = trainNumberMap.values();
+  private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+  private LocalTime currentTime = null;
 
   /**
    * Returns the list of train departures.
@@ -59,6 +61,16 @@ public class TrainFactory {
     departureFromNumber(trainNumber);
   }
 
+  public ArrayList<TrainDeparture> testLoop(String destination){
+    Iterator<TrainDeparture> iterator = values.iterator();
+    ArrayList<TrainDeparture> foundDepartures = new ArrayList<>();
+    while(iterator.hasNext()){
+      if (iterator.next().getDestination().equalsIgnoreCase(destination)){
+        foundDepartures.add(iterator.next());
+      }
+    }
+    return foundDepartures;
+  }
 
   /**
    * Finds a specific train-departure using the train number, and sets its delay to the given delay.
@@ -153,6 +165,7 @@ public class TrainFactory {
         LocalTime delay = LocalTime.parse(data[5], formatter);
         TrainDeparture trainDeparture = new TrainDeparture(departureTime, lineName, destination, trainNumber, track, delay);
         trainDepartureList.add(trainDeparture);
+        trainNumberMap.put(trainNumber, trainDeparture);
       }
     } catch (Exception e) {
       System.out.println("File not found");

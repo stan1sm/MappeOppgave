@@ -12,11 +12,11 @@ import java.util.regex.Pattern;
  */
 public class TrainDepartureUserInterface {
 
-  Scanner input = new Scanner(System.in);
-  HashMap<Integer, Runnable> options = new HashMap<>();
-  TrainFactory trainFactory = new TrainFactory();
-  ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
-  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+  private final Scanner input = new Scanner(System.in);
+  private final HashMap<Integer, Runnable> options = new HashMap<>();
+  private final TrainFactory trainFactory = new TrainFactory();
+  private final ArrayList<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartureList();
+  private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   private static final Pattern digits = Pattern.compile("\\D+");
 
 
@@ -166,7 +166,7 @@ public class TrainDepartureUserInterface {
   public void departureFromDestination() {
     System.out.println("Enter destination");
     String destination = input.nextLine();
-    ArrayList<TrainDeparture> foundDepartures = trainFactory.departureFromDestination(destination);
+    ArrayList<TrainDeparture> foundDepartures = trainFactory.testLoop(destination);
     if (foundDepartures != null) {
         System.out.println(tableHeader());
         for (TrainDeparture trainDeparture : foundDepartures) {

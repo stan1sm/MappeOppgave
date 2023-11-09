@@ -37,12 +37,18 @@ public class TrainDeparture {
           int trainNumber, int track, LocalTime delay) {
     if (!timePattern.matcher(departureTime.toString()).matches()) {
       throw new DateTimeException("Departure time must be in the format HH:mm");
+    } else {
+        this.departureTime = departureTime;
     }
     if (!timePattern.matcher(delay.toString()).matches()) {
       throw new DateTimeException("Delay must be in the format HH:mm");
+    } else {
+        this.delay = delay;
     }
     if (destination == null) {
       throw new NullPointerException("Destination cannot be null");
+    } else {
+        this.destination = destination;
     }
     if (line.isEmpty()) {
       throw new NullPointerException("Line cannot be empty");
@@ -54,10 +60,7 @@ public class TrainDeparture {
     } else {
       this.track = track;
     }
-    this.departureTime = departureTime;
-    this.destination = destination;
     this.trainNumber = trainNumber;
-    this.delay = delay;
   }
 
 

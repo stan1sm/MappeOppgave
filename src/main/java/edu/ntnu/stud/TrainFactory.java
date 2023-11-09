@@ -17,7 +17,6 @@ public class TrainFactory {
   private final Collection<TrainDeparture> trainDepartures = numberToDepartureMap.values();
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   private LocalTime currentTime = null;
-  Iterator<TrainDeparture> trainDepartureIterator = trainDepartures.iterator();
 
   /**
    * Returns the Collection of train departures.

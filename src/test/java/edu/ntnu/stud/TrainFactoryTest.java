@@ -25,7 +25,7 @@ public class TrainFactoryTest {
 
     @Test
     void addDeparture() {
-        assertEquals(1, trainFactory.getTrainDepartureList().size());
+        assertEquals(1, trainFactory.getTrainDepartures().size());
     }
 
     @Test
@@ -62,6 +62,6 @@ public class TrainFactoryTest {
     @Test
     void fillTrainDepartureList() {
         trainFactory.fillTrainDepartureList();
-        assertEquals(5, trainFactory.getTrainDepartureList().size());
+        assertEquals(5, trainFactory.getTrainDepartures().size());
     }
 }

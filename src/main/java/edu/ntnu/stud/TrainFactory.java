@@ -144,6 +144,16 @@ public class TrainFactory {
             trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime));
   }
 
+  public String toString(){
+    StringBuilder info = new StringBuilder();
+    this.trainDepartures.forEach((traindeparture) -> {
+      info.append(traindeparture.toString());
+      info.append("\n");
+      info.append("+----------+-----------------+------------+----------+-------------------+------------+\n");
+    });
+    return info.toString();
+  }
+
   /**
    * Fill the train departure list with data from a file.
    */

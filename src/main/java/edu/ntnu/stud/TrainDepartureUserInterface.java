@@ -3,7 +3,6 @@ package edu.ntnu.stud;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -16,7 +15,6 @@ public class TrainDepartureUserInterface {
   private final Scanner input = new Scanner(System.in);
   private final HashMap<Integer, Runnable> options = new HashMap<>();
   private final TrainFactory trainFactory = new TrainFactory();
-  private final Collection<TrainDeparture> trainDepartureList = trainFactory.getTrainDepartures();
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   private static final Pattern digits = Pattern.compile("\\D+");
 
@@ -116,9 +114,9 @@ public class TrainDepartureUserInterface {
    */
   public String tableHeader() {
     String info = "Current Time: " + trainFactory.getCurrentTime() + "\n";
-    info += "+--------+--------------+--------+--------+---------------+-----------+\n";
-    info += ("| Time   | Departures   |Track   | Line   |Train Number   |   Delay   |\n");
-    info += ("+--------+--------------+--------+--------+---------------+-----------+");
+    info += ("+----------+-----------------+------------+----------+-------------------+------------+\n");
+    info += ("|   Time   |    Departures   |    Track   |   Line   |    Train Number   |    Delay   |\n");
+    info += ("+----------+-----------------+------------+----------+-------------------+------------+");
     return info;
   }
 
@@ -132,10 +130,7 @@ public class TrainDepartureUserInterface {
   public void printDepartureOverview() {
     trainFactory.removeDeparted();
     System.out.println(tableHeader());
-    for (TrainDeparture trainDeparture : trainDepartureList) {
-      System.out.println(trainDeparture);
-      System.out.println("+--------+--------------+--------+--------+---------------+-----------+");
-    }
+    System.out.println(trainFactory);
   }
 
   /**
@@ -148,7 +143,7 @@ public class TrainDepartureUserInterface {
     System.out.println(tableHeader());
     for (TrainDeparture trainDeparture : departureList) {
       System.out.println(trainDeparture);
-      System.out.println("+--------+--------------+--------+--------+---------------+-----------+");
+      System.out.println("+----------+-----------------+------------+----------+-------------------+------------+");
     }
   }
 
@@ -293,7 +288,8 @@ public class TrainDepartureUserInterface {
    * the user is prompted to input a new train number.
    */
   public void addDelay() {
-    int trainNumber = trainNumberFromInput();
+    System.out.println("Enter train number: ");
+    int trainNumber = numberInput();
     if (trainFactory.departureFromNumber(trainNumber) != null) {
       System.out.println("Enter delay: ");
       LocalTime delay = timeInput();
@@ -303,42 +299,6 @@ public class TrainDepartureUserInterface {
     }
   }
 
-  /**
-   * Prompts the user to input a line, which is validated in a while loop.
-   *
-   * @return line in uppercase
-   */
-  public String lineFromInput() {
-    while (true) {
-      System.out.println("Enter line: ");
-      String line = input.nextLine();
-      if (line.isEmpty()) {
-        System.out.println("Line cannot be empty");
-      } else {
-        return line.toUpperCase();
-      }
-    }
-  }
-
-  /**
-   * Prompts the user to input a destination, which is validated in a while loop.
-   *
-   * @return destination
-   */
-  public String destinationFromInput() {
-    String destination;
-    while (true) {
-      System.out.println("Enter destination: ");
-      String tempDestination = input.nextLine();
-      if (digits.matcher(tempDestination).matches()) {
-        destination = tempDestination;
-        break;
-      } else {
-        System.out.println("Destination cannot be empty or contain digits");
-      }
-    }
-    return destination;
-  }
 
   /**
    * Prompts the user to input a train number, which is validated in a try catch block.

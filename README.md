@@ -11,20 +11,22 @@ A train departure overview application written in Java. Produces a formatted ove
 ## Project structure
 
 [//]: # (TODO: Describe the structure of your project here. How have you used packages in your structure. Where are all sourcefiles stored. Where are all JUnit-test classes stored. etc.)
-Used Packages:
-<br>
-'java.util' Package:
-<br>
-Used for managing data structures, ArrayLists, HashMaps and Collections which store and sort different train departure information.
-Also used to implement a Scanner object which is used to retrieve user input.
-<br>
-'java.time' Package:
-<br>
-Used to create and mofidy LocalTime objects which manage departure times, delays and the applications internal system time.
-<br>
-Project Files Path: src/main/java/edu/ntnu/stud
-<br>
-Test Files Path: src/test/java/edu/ntnu/stud
+<p>
+  Used Packages:
+  <br>
+  'java.util' Package:
+  <br>
+  Used for managing data structures, ArrayLists, HashMaps and Collections which store and sort different train departure information.
+  Also used to implement a Scanner object which is used to retrieve user input.
+  <br>
+  'java.time' Package:
+  <br>
+  Used to create and mofidy LocalTime objects which manage departure times, delays and the applications internal system time.
+  <br>
+  Project Files Path: src/main/java/edu/ntnu/stud
+  <br>
+  Test Files Path: src/test/java/edu/ntnu/stud
+</p>
 ## Link to repository
 
 [//]: # (TODO: Include a link to your repository here.)

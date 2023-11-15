@@ -38,17 +38,17 @@ public class TrainDeparture {
     if (!timePattern.matcher(departureTime.toString()).matches()) {
       throw new DateTimeException("Departure time must be in the format HH:mm");
     } else {
-        this.departureTime = departureTime;
+      this.departureTime = departureTime;
     }
     if (!timePattern.matcher(delay.toString()).matches()) {
       throw new DateTimeException("Delay must be in the format HH:mm");
     } else {
-        this.delay = delay;
+      this.delay = delay;
     }
     if (destination == null) {
       throw new NullPointerException("Destination cannot be null");
     } else {
-        this.destination = destination;
+      this.destination = destination;
     }
     if (line.isEmpty()) {
       throw new NullPointerException("Line cannot be empty");
@@ -187,9 +187,9 @@ public class TrainDeparture {
   public String toString() {
     StringBuilder info = new StringBuilder();
     int destinationLength = destination.length();
-    if(delay != LocalTime.of(0,0)){
+    if (delay != LocalTime.of(0, 0)) {
       info.append("| ").append(departureTime).append("(+").append(delay).append(")").append(String.format("%" + 4 + "s", " | "));
-    }else{
+    } else {
       info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
     }
     info.append(destination).append(String.format("%" + (15 - destinationLength) + "s", " | "));

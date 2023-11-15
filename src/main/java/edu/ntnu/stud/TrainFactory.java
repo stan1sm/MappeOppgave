@@ -144,7 +144,7 @@ public class TrainFactory {
             trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime));
   }
 
-  public String toString(){
+  public String toString() {
     StringBuilder info = new StringBuilder();
     this.trainDepartures.forEach((traindeparture) -> {
       info.append(traindeparture.toString());

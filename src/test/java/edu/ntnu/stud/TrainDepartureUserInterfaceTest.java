@@ -1,64 +1,114 @@
 package edu.ntnu.stud;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.LocalTime;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TrainDepartureUserInterfaceTest {
 
-    private TrainDepartureUserInterface userInterface;
-    private InputStream originalSystemIn;
-
     @BeforeEach
     void setUp() {
-        userInterface = new TrainDepartureUserInterface();
-        originalSystemIn = System.in;
-    }
 
-    @AfterEach
-    void tearDown() {
-        System.setIn(originalSystemIn);
+    }
+    @Test
+    void testTimeInputValidInput() {
+        // Arrange
+        String inputString = "12:30";
+        InputStream inputStream = new ByteArrayInputStream(inputString.getBytes());
+        System.setIn(inputStream);
+
+        TrainDepartureUserInterface trainDepartureUI = new TrainDepartureUserInterface();
+
+        // Act
+        LocalTime result = trainDepartureUI.timeInput();
+
+        // Assert
+        assertEquals(LocalTime.of(12, 30), result);
     }
 
     @Test
-    void addTrainDeparture_ValidInput_ShouldAddToTrainDepartureList() {
-        String simulatedInput = "10:00\n00:15\nTestLine\nTestDestination\n123\n1\n";
+    void testTimeInputInvalidThenValid() {
+        // Arrange
+        String inputString = "invalid\n12:30";
+        InputStream inputStream = new ByteArrayInputStream(inputString.getBytes());
+        System.setIn(inputStream);
 
-        userInterface.addTrainDeparture();
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-        assertEquals(1, userInterface.tableHeader().split("\n").length);
+        TrainDepartureUserInterface trainDepartureUI = new TrainDepartureUserInterface();
+
+        // Act
+        LocalTime result = trainDepartureUI.timeInput();
+
+        // Assert
+        assertEquals(LocalTime.of(12, 30), result);
     }
 
     @Test
-    void printDepartureOverview_ShouldPrintTableHeader() {
-        userInterface.printDepartureOverview();
+    void testNumberInputValidInput(){
+        int inputInt = 1;
+        InputStream inputStream = new ByteArrayInputStream(String.valueOf(inputInt).getBytes());
+        System.setIn(inputStream);
 
-        assertEquals(1, userInterface.tableHeader().split("\n").length);
+        TrainDepartureUserInterface trainDepartureUI = new TrainDepartureUserInterface();
+
+        int result = trainDepartureUI.numberInput();
+
+        assertEquals(inputInt, result);
     }
 
     @Test
-    void departureFromNumber_ValidTrainNumber_ShouldPrintDeparture() {
-        String simulatedInput = "123\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+    void testNumberInputInvalidThenValid(){
+        String inputString = "invalid\n1";
+        InputStream inputStream = new ByteArrayInputStream(inputString.getBytes());
+        System.setIn(inputStream);
 
-        userInterface.departureFromNumber();
+        TrainDepartureUserInterface trainDepartureUI = new TrainDepartureUserInterface();
 
-        assertEquals(1, userInterface.tableHeader().split("\n").length);
+        int result = trainDepartureUI.numberInput();
+
+        assertEquals(1, result);
     }
 
     @Test
-    void departureFromNumber_InvalidTrainNumber_ShouldPrintErrorMessage() {
-        String simulatedInput = "invalid\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+    void testTextInputValidInput(){
+        String inputString = "valid";
+        InputStream inputStream = new ByteArrayInputStream(inputString.getBytes());
+        System.setIn(inputStream);
 
-        userInterface.departureFromNumber();
+        TrainDepartureUserInterface trainDepartureUI = new TrainDepartureUserInterface();
 
-        assertEquals(1, userInterface.tableHeader().split("\n").length);
+        String result = trainDepartureUI.textInput();
+
+        assertEquals(inputString, result);
+    }
+
+    @Test
+    void testTextInputInvalidThenValid(){
+        String inputString = "123\nvalid";
+        InputStream inputStream = new ByteArrayInputStream(inputString.getBytes());
+        System.setIn(inputStream);
+
+        TrainDepartureUserInterface trainDepartureUI = new TrainDepartureUserInterface();
+
+        String result = trainDepartureUI.textInput();
+
+        assertEquals("valid", result);
+    }
+
+    @Test
+    void testTrainNumberFromInput(){
+        int inputInt = 1;
+        InputStream inputStream = new ByteArrayInputStream(String.valueOf(inputInt).getBytes());
+        System.setIn(inputStream);
+
+        TrainDepartureUserInterface trainDepartureUI = new TrainDepartureUserInterface();
+
+        int result = trainDepartureUI.trainNumberFromInput();
+
+        assertEquals(inputInt, result);
     }
 }

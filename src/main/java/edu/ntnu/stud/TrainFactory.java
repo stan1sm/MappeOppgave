@@ -5,9 +5,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
-
 
 /**
  * The TrainFactory represents a registry for train departures.
@@ -144,14 +145,15 @@ public class TrainFactory {
             trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime));
   }
 
-  public String toString() {
-    StringBuilder info = new StringBuilder();
-    this.trainDepartures.forEach((traindeparture) -> {
-      info.append(traindeparture.toString());
-      info.append("\n");
-      info.append("+----------+-----------------+------------+----------+-------------------+------------+\n");
-    });
-    return info.toString();
+  /**
+   * Sorts the train departure list by ascending departure time.
+   */
+  public void sortByDepartureTime() {
+    List<TrainDeparture> departureList = new ArrayList<>(trainDepartures);
+    departureList.sort(new TrainDepartureComparator());
+
+    trainDepartures.clear();
+    trainDepartures.addAll(departureList);
   }
 
   /**
@@ -177,6 +179,16 @@ public class TrainFactory {
       }
     } catch (Exception e) {
       System.out.println("File not found");
+    }
+  }
+  /**
+   * Comparator class for sorting train departures by departure time.
+   */
+
+  public static class TrainDepartureComparator implements Comparator<TrainDeparture> {
+    @Override
+    public int compare(TrainDeparture o1, TrainDeparture o2) {
+      return o1.getDepartureTime().compareTo(o2.getDepartureTime());
     }
   }
 }

@@ -143,7 +143,7 @@ public class TrainDeparture {
    * @throws DateTimeException If the delay time format is invalid.
    */
   public void setDelay(LocalTime delay) {
-    if (delay == LocalTime.of(0,0)) {
+    if (delay == LocalTime.of(0, 0)) {
       throw new DateTimeException("Cannot update delay to 00:00");
     } else {
       this.delay = delay;
@@ -188,18 +188,23 @@ public class TrainDeparture {
     StringBuilder info = new StringBuilder();
     int destinationLength = destination.length();
     if (delay != LocalTime.of(0, 0)) {
-      info.append("| ").append(departureTime).append("(+").append(delay).append(")").append(String.format("%" + 4 + "s", " | "));
+      info.append("| ").append(departureTime).append("(+")
+        .append(delay).append(")").append(String.format("%" + 2 + "s", " | "));
     } else {
-      info.append("| ").append(departureTime).append(String.format("%" + 4 + "s", " | "));
+      info.append("| ").append(String.format("%" + 4 + "s", " "))
+        .append(departureTime).append(String.format("%" + 7 + "s", " | "));
     }
-    info.append(destination).append(String.format("%" + (15 - destinationLength) + "s", " | "));
+    info.append(destination).append(String.format("%" + (18 - destinationLength) + "s", " | "));
     if (track == -1) {
-      info.append("No Track Yet").append(String.format("%" + 1 + "s", " | "));
+      info.append("No Track Yet").append(String.format("%" + 2 + "s", " | "));
     } else {
-      info.append(track).append(String.format("%" + 8 + "s", " | "));
+      info.append(String.format("%" + 6 + "s", " "))
+        .append(track).append(String.format("%" + 8 + "s", " | "));
     }
-    info.append(line).append(String.format("%" + 7 + "s", " | "));
-    info.append(trainNumber).append(String.format("%" + 4 + "s", " | "));
+    info.append(String.format("%" + 3 + "s", " "))
+      .append(line).append(String.format("%" + 6 + "s", " | "));
+    info.append(String.format("%" + 8 + "s", " "))
+      .append(trainNumber).append(String.format("%" + 11 + "s", " | "));
     info.append(delay).append(String.format("%" + 7 + "s", "|")).append("\n");
     return info.toString();
   }

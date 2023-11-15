@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * A user interface for the train departure application.
@@ -37,7 +38,7 @@ public class TrainDepartureUserInterface {
     options.put(6, this::departureFromDestination);
     options.put(7, this::updateCurrentTime);
     options.put(8, trainFactory::fillTrainDepartureList);
-    options.put(9, () -> System.exit(0));
+    options.put(9, trainFactory::sortByDepartureTime);
     trainFactory.fillTrainDepartureList();
   }
 
@@ -59,12 +60,16 @@ public class TrainDepartureUserInterface {
       System.out.println("6. Search for departure with Destination");
       System.out.println("7. Update Current Time");
       System.out.println("8. Fill train departure list with data");
-      System.out.println("9. Exit");
+      System.out.println("9. Sort train departure list by ascending departure time");
+      System.out.println("0. Exit");
 
       System.out.print("Enter your choice: ");
       int choice = numberInput();
       if (choice > 0 && choice <= options.size()) {
         options.get(choice).run();
+      } else if (choice == 0) {
+        System.out.println("Exiting...");
+        System.exit(0);
       } else {
         System.out.println("Invalid choice");
       }
@@ -114,9 +119,12 @@ public class TrainDepartureUserInterface {
    */
   public String tableHeader() {
     String info = "Current Time: " + trainFactory.getCurrentTime() + "\n";
-    info += ("+----------+-----------------+------------+----------+-------------------+------------+\n");
-    info += ("|   Time   |    Departures   |    Track   |   Line   |    Train Number   |    Delay   |\n");
-    info += ("+----------+-----------------+------------+----------+-------------------+------------+");
+    info += ("+---------------+-----------------+--------"
+      + "------+----------+-------------------+------------+\n");
+    info += ("|      Time     |    Departures   |     Track"
+      + "    |   Line   |    Train Number   |    Delay   |\n");
+    info += ("+---------------+-----------------+--------"
+      + "------+----------+-------------------+------------+");
     return info;
   }
 
@@ -130,7 +138,12 @@ public class TrainDepartureUserInterface {
   public void printDepartureOverview() {
     trainFactory.removeDeparted();
     System.out.println(tableHeader());
-    System.out.println(trainFactory);
+
+    System.out.println(trainFactory.getTrainDepartures().stream()
+        .map(trainDeparture -> trainDeparture.toString()
+          + "+---------------+-----------------+--------------"
+          + "+----------+-------------------+------------+")
+        .collect(Collectors.joining("\n")));
   }
 
   /**
@@ -143,7 +156,8 @@ public class TrainDepartureUserInterface {
     System.out.println(tableHeader());
     for (TrainDeparture trainDeparture : departureList) {
       System.out.println(trainDeparture);
-      System.out.println("+----------+-----------------+------------+----------+-------------------+------------+");
+      System.out.println("+----------+-----------------+------------"
+          + "+----------+-------------------+------------+");
     }
   }
 

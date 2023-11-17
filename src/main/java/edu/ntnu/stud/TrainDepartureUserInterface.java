@@ -97,18 +97,24 @@ public class TrainDepartureUserInterface {
    *
    */
   public void addTrainDeparture() {
-    System.out.println("Enter departure time (HH:mm): ");
-    final LocalTime departureTime = timeInput();
+    LocalTime departureTime = null;
+    System.out.println("Enter line: ");
+    final String line = lineInput();
+    System.out.println("Enter track (0 if not set): ");
+    final int track = numberInput();
+    if (trainFactory.checkLineExists(line)){
+      System.out.println("Enter departure time (HH:mm): ");
+      departureTime = departureTimeExistingLine(line);
+    } else if (trainFactory.checkTrackExists(track) && track != 0){
+        System.out.println("Enter departure time (HH:mm): ");
+        departureTime = departureTimeExistingTrack(track);
+    }
     System.out.println("Enter delay (HH:mm): ");
     final LocalTime delay = timeInput();
-    System.out.println("Enter line: ");
-    final String line = textInput().toUpperCase();
     System.out.println("Enter destination: ");
     final String destination = textInput();
     System.out.println("Enter train number: ");
     final int trainNumber = trainNumberFromInput();
-    System.out.println("Enter track (0 if not set): ");
-    final int track = numberInput();
     trainFactory.addDeparture(departureTime, line, destination, trainNumber, track, delay);
   }
 
@@ -331,6 +337,47 @@ public class TrainDepartureUserInterface {
       }
     }
     return trainNumber;
+  }
+
+  public String lineInput() {
+    String line;
+    while (true) {
+      line = input.nextLine();
+      if (line.isEmpty()) {
+        System.out.println("Line Cannot be empty.\nTry again: ");
+      } else {
+        break;
+      }
+    }
+    return line.toUpperCase();
+  }
+
+  public LocalTime departureTimeExistingLine(String line){
+    LocalTime finalDepartureTime = timeInput();
+    trainFactory.departureTimesFromLine(line).forEach(time -> {
+      if (time.equals(finalDepartureTime)) {
+        System.out.println("Departure time already exists\nTry Again: ");
+        departureTimeExistingLine(line);
+      } else {
+        System.out.println("Departure time added");
+      }
+    });
+    return finalDepartureTime;
+  }
+
+  public LocalTime departureTimeExistingTrack(int track){
+    LocalTime departureTime;
+    while (true) {
+      departureTime = timeInput();
+      if(trainFactory.checkDepartureTimeExistsTrack(track, departureTime)){
+        System.out.println("Departure time already exists\nTry Again: ");
+        departureTimeExistingTrack(track);
+      } else {
+        System.out.println("Departure time added");
+        break;
+      }
+    }
+    return departureTime;
   }
 
   /**

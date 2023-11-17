@@ -156,6 +156,48 @@ public class TrainFactory {
     trainDepartures.addAll(departureList);
   }
 
+  public boolean checkLineExists(String line) {
+    return trainDepartures.stream()
+            .anyMatch(trainDeparture -> trainDeparture.getLine().equalsIgnoreCase(line));
+  }
+
+  public boolean checkTrackExists(int track) {
+    return trainDepartures.stream()
+            .anyMatch(trainDeparture -> trainDeparture.getTrack() == track);
+  }
+
+  public ArrayList<LocalTime> departureTimesFromLine(String line) {
+    if (checkLineExists(line)){
+        ArrayList<LocalTime> departureTimes = new ArrayList<>();
+        trainDepartures.forEach((trainDeparture) -> {
+            if (trainDeparture.getLine().equalsIgnoreCase(line)) {
+            departureTimes.add(trainDeparture.getDepartureTime());
+            }
+        });
+        return departureTimes;
+        } else {
+        return null;
+    }
+  }
+
+  public ArrayList<LocalTime> departureTimesFromTrack(int track){
+    if (checkTrackExists(track)) {
+        ArrayList<LocalTime> departureTimes = new ArrayList<>();
+        trainDepartures.forEach((trainDeparture) -> {
+            if (trainDeparture.getTrack() == track) {
+            departureTimes.add(trainDeparture.getDepartureTime());
+            }
+        });
+        return departureTimes;
+        } else {
+        return null;
+    }
+  }
+
+  public boolean checkDepartureTimeExistsTrack(int track, LocalTime time){
+    return departureTimesFromTrack(track).contains(time);
+  }
+
   /**
    * Fill the train departure list with data from a file.
    */

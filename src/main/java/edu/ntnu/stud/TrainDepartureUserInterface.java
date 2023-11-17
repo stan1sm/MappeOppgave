@@ -102,12 +102,15 @@ public class TrainDepartureUserInterface {
     final String line = lineInput();
     System.out.println("Enter track (0 if not set): ");
     final int track = numberInput();
-    if (trainFactory.checkLineExists(line)){
+    if (trainFactory.checkLineExists(line)) {
       System.out.println("Enter departure time (HH:mm): ");
       departureTime = departureTimeExistingLine(line);
-    } else if (trainFactory.checkTrackExists(track) && track != 0){
-        System.out.println("Enter departure time (HH:mm): ");
-        departureTime = departureTimeExistingTrack(track);
+    } else if (trainFactory.checkTrackExists(track) && track != 0) {
+      System.out.println("Enter departure time (HH:mm): ");
+      departureTime = departureTimeExistingTrack(track);
+    } else {
+      System.out.println("Enter departure time (HH:mm): ");
+      departureTime = timeInput();
     }
     System.out.println("Enter delay (HH:mm): ");
     final LocalTime delay = timeInput();
@@ -339,6 +342,13 @@ public class TrainDepartureUserInterface {
     return trainNumber;
   }
 
+  /**
+   * Prompts the user to input a line, which is validated in a while loop.
+   * if the input is invalid, prompts the user for a new line.
+   * if the input is valid, the line is made into uppercase and returned
+   *
+   * @return line.toUpperCase()
+   */
   public String lineInput() {
     String line;
     while (true) {
@@ -352,30 +362,46 @@ public class TrainDepartureUserInterface {
     return line.toUpperCase();
   }
 
-  public LocalTime departureTimeExistingLine(String line){
-    LocalTime finalDepartureTime = timeInput();
-    trainFactory.departureTimesFromLine(line).forEach(time -> {
-      if (time.equals(finalDepartureTime)) {
-        System.out.println("Departure time already exists\nTry Again: ");
-        departureTimeExistingLine(line);
-      } else {
-        System.out.println("Departure time added");
-      }
-    });
-    return finalDepartureTime;
+  /**
+   * Method that is used if the line for the train departure that is being created
+   * already exists. Prompts the user to input a departure time, the input is sent to
+   * the "checkDepartureTimeExistsLine" method in the trainFactory class.
+   * if the return from this method is true, it means that a departure with this departure time
+   * already exists, and the user is prompted to input a new departure time.
+   * if the return is false, the departure time is added to the train departure.
+   *
+   * @param line the line for the train departure that is being created
+   * @return departureTime
+   */
+  public LocalTime departureTimeExistingLine(String line) {
+    LocalTime departureTime = timeInput();
+    if (trainFactory.checkDepartureTimeExistsLine(line, departureTime)) {
+      System.out.println("Departure time on this line already exists\nTry Again: ");
+      departureTime = departureTimeExistingLine(line);
+    } else {
+      System.out.println("Departure time added");
+    }
+    return departureTime;
   }
 
-  public LocalTime departureTimeExistingTrack(int track){
-    LocalTime departureTime;
-    while (true) {
-      departureTime = timeInput();
-      if(trainFactory.checkDepartureTimeExistsTrack(track, departureTime)){
-        System.out.println("Departure time already exists\nTry Again: ");
-        departureTimeExistingTrack(track);
-      } else {
-        System.out.println("Departure time added");
-        break;
-      }
+  /**
+   * Method that is used if the track for the train departure that is being created
+   * already exists. Prompts the user to input a departure time, the input is sent to
+   * the "checkDepartureTimeExistsTrack" method in the trainFactory class.
+   * if the return from this method is true, it means that a departure with this departure time
+   * already exists, and the user is prompted to input a new departure time.
+   * if the return is false, the departure time is added to the train departure.
+   *
+   * @param track the track for the train departure that is being created
+   * @return departureTime
+   */
+  public LocalTime departureTimeExistingTrack(int track) {
+    LocalTime departureTime = timeInput();
+    if (trainFactory.checkDepartureTimeExistsTrack(track, departureTime)) {
+      System.out.println("Departure time on this track already exists\nTry Again: ");
+      departureTime = departureTimeExistingTrack(track);
+    } else {
+      System.out.println("Departure time added");
     }
     return departureTime;
   }

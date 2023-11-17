@@ -20,7 +20,8 @@ import java.util.Scanner;
  */
 public class TrainFactory {
   private final HashMap<Integer, TrainDeparture> numberToDepartureMap = new HashMap<>();
-  private final Collection<TrainDeparture> trainDepartures = numberToDepartureMap.values();
+  private final ArrayList<TrainDeparture> trainDepartures
+      = new ArrayList<>(numberToDepartureMap.values());
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   private LocalTime currentTime = null;
 
@@ -29,7 +30,7 @@ public class TrainFactory {
    *
    * @return trainDepartureList
    */
-  public Collection<TrainDeparture> getTrainDepartures() {
+  public ArrayList<TrainDeparture> getTrainDepartures() {
     return trainDepartures;
   }
 
@@ -56,6 +57,7 @@ public class TrainFactory {
               destination, trainNumber, track, delay);
     }
     numberToDepartureMap.put(trainNumber, trainDeparture);
+    updateTrainDepartureList();
   }
 
   /**
@@ -152,10 +154,8 @@ public class TrainFactory {
    */
 
   public void sortByDepartureTime() {
-    List<TrainDeparture> sortedList = new ArrayList<>(trainDepartures);
-    sortedList.sort(new TrainDepartureComparator());
-    trainDepartures.clear();
-    trainDepartures.addAll(sortedList);
+    System.out.println(trainDepartures);
+    trainDepartures.sort(new TrainDepartureComparator());
   }
 
   public boolean checkLineExists(String line) {
@@ -205,6 +205,11 @@ public class TrainFactory {
     return departureTimesFromLine(line).contains(time);
   }
 
+  private void updateTrainDepartureList() {
+    trainDepartures.clear();
+    trainDepartures.addAll(numberToDepartureMap.values());
+  }
+
   /**
    * Fill the train departure list with data from a file.
    */
@@ -225,6 +230,7 @@ public class TrainFactory {
         TrainDeparture trainDeparture = new TrainDeparture(departureTime, lineName, destination,
                 trainNumber, track, delay);
         numberToDepartureMap.put(trainNumber, trainDeparture);
+        updateTrainDepartureList();
       }
     } catch (Exception e) {
       System.out.println("File not found");

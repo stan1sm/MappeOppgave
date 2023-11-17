@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
+
+
 /**
  * The TrainFactory represents a registry for train departures.
  * it is responsible for storing all created train departures and
@@ -148,12 +150,12 @@ public class TrainFactory {
   /**
    * Sorts the train departure list by ascending departure time.
    */
-  public void sortByDepartureTime() {
-    List<TrainDeparture> departureList = new ArrayList<>(trainDepartures);
-    departureList.sort(new TrainDepartureComparator());
 
+  public void sortByDepartureTime() {
+    List<TrainDeparture> sortedList = new ArrayList<>(trainDepartures);
+    sortedList.sort(new TrainDepartureComparator());
     trainDepartures.clear();
-    trainDepartures.addAll(departureList);
+    trainDepartures.addAll(sortedList);
   }
 
   public boolean checkLineExists(String line) {
@@ -166,36 +168,41 @@ public class TrainFactory {
             .anyMatch(trainDeparture -> trainDeparture.getTrack() == track);
   }
 
+
   public ArrayList<LocalTime> departureTimesFromLine(String line) {
-    if (checkLineExists(line)){
-        ArrayList<LocalTime> departureTimes = new ArrayList<>();
-        trainDepartures.forEach((trainDeparture) -> {
-            if (trainDeparture.getLine().equalsIgnoreCase(line)) {
-            departureTimes.add(trainDeparture.getDepartureTime());
-            }
-        });
-        return departureTimes;
-        } else {
-        return null;
+    if (checkLineExists(line)) {
+      ArrayList<LocalTime> departureTimes = new ArrayList<>();
+      trainDepartures.forEach((trainDeparture) -> {
+        if (trainDeparture.getLine().equalsIgnoreCase(line)) {
+          departureTimes.add(trainDeparture.getDepartureTime());
+        }
+      });
+      return departureTimes;
+    } else {
+      return null;
     }
   }
 
-  public ArrayList<LocalTime> departureTimesFromTrack(int track){
+  public ArrayList<LocalTime> departureTimesFromTrack(int track) {
     if (checkTrackExists(track)) {
-        ArrayList<LocalTime> departureTimes = new ArrayList<>();
-        trainDepartures.forEach((trainDeparture) -> {
-            if (trainDeparture.getTrack() == track) {
-            departureTimes.add(trainDeparture.getDepartureTime());
-            }
-        });
-        return departureTimes;
-        } else {
-        return null;
+      ArrayList<LocalTime> departureTimes = new ArrayList<>();
+      trainDepartures.forEach((trainDeparture) -> {
+        if (trainDeparture.getTrack() == track) {
+          departureTimes.add(trainDeparture.getDepartureTime());
+        }
+      });
+      return departureTimes;
+    } else {
+      return null;
     }
   }
 
-  public boolean checkDepartureTimeExistsTrack(int track, LocalTime time){
+  public boolean checkDepartureTimeExistsTrack(int track, LocalTime time) {
     return departureTimesFromTrack(track).contains(time);
+  }
+
+  public boolean checkDepartureTimeExistsLine(String line, LocalTime time) {
+    return departureTimesFromLine(line).contains(time);
   }
 
   /**

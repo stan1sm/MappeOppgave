@@ -95,7 +95,6 @@ public class TrainFactory {
    * @param trainNumber the train number for the train-departure to be found.
    * @return trainDeparture
    */
-
   public TrainDeparture departureFromNumber(int trainNumber) {
     try {
       return numberToDepartureMap.get(trainNumber);
@@ -248,15 +247,36 @@ public class TrainFactory {
     }
   }
 
-  //TODO: finish all javadocs below this line
+  /**
+   * Returns true if there are any trainDepartures on the given track,
+   * that have the given departure time.
+   * if not, the method returns false.
+   *
+   * @param track the track to be checked for.
+   * @param time the departure time to be checked for.
+   * @return boolean
+   */
   public boolean checkDepartureTimeExistsTrack(int track, LocalTime time) {
     return departureTimesFromTrack(track).contains(time);
   }
 
+  /**
+   * Returns true if there are any trainDepartures on the given line,
+   * that have the given departure time.
+   * if not, the method returns false.
+   *
+   * @param line the line to be checked for.
+   * @param time the departure time to be checked for.
+   * @return boolean
+   */
   public boolean checkDepartureTimeExistsLine(String line, LocalTime time) {
     return departureTimesFromLine(line).contains(time);
   }
 
+  /**
+   * clears the TrainDepartures ArrayList,
+   * and then adds all values from the numberToDepartureMap to the ArrayList.
+   */
   private void updateTrainDepartureList() {
     trainDepartures.clear();
     trainDepartures.addAll(numberToDepartureMap.values());
@@ -288,10 +308,11 @@ public class TrainFactory {
       System.out.println("File not found");
     }
   }
+
   /**
    * Comparator class for sorting train departures by departure time.
+   * Used in the sortByDepartureTime() method.
    */
-
   public static class TrainDepartureComparator implements Comparator<TrainDeparture> {
     @Override
     public int compare(TrainDeparture o1, TrainDeparture o2) {

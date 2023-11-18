@@ -119,7 +119,7 @@ public class TrainDepartureUserInterface {
     String info = "Current Time: " + trainFactory.getCurrentTime() + "\n";
     info += ("+---------------+-----------------+--------"
       + "------+----------+-------------------+------------+\n");
-    info += ("|      Time     |    Departures   |     Track"
+    info += ("|      Time     |    Destination  |     Track"
       + "    |   Line   |    Train Number   |    Delay   |\n");
     info += ("+---------------+-----------------+--------"
       + "------+----------+-------------------+------------+");
@@ -154,8 +154,8 @@ public class TrainDepartureUserInterface {
   public void printAnyDepartures(ArrayList<TrainDeparture> departureList) {
     System.out.println(tableHeader());
     for (TrainDeparture trainDeparture : departureList) {
-      System.out.println(trainDeparture);
-      System.out.println("+----------+-----------------+------------"
+      System.out.print(trainDeparture);
+      System.out.println("+---------------+-----------------+--------------"
           + "+----------+-------------------+------------+");
     }
   }

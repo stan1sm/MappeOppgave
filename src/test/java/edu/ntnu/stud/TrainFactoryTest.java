@@ -5,14 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalTime;
 import static org.junit.jupiter.api.Assertions.*;
-
-
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
 public class TrainFactoryTest {
     private TrainFactory trainFactory;
-    private TrainDeparture trainDeparture;
+
     ArrayList<TrainDeparture> trainDepartureList;
     HashMap<Integer, TrainDeparture> numberToDepartureMap;
 
@@ -43,6 +40,7 @@ public class TrainFactoryTest {
         assertEquals(LocalTime.of(0, 10), trainFactory.departureFromNumber(1).getDelay());
     }
 
+    //TODO: FIX THIS TEST
     @Test
     void testDepartureFromNumber() {
         System.out.println(numberToDepartureMap);

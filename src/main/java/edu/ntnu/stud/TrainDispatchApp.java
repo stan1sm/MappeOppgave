@@ -11,6 +11,7 @@ public class TrainDispatchApp {
   /**
    * The main method of the application.
    * creates a new user interface object, initializes it and starts it.
+   *
    * @param args command line arguments
    */
   public static void main(String[] args) {
@@ -19,5 +20,5 @@ public class TrainDispatchApp {
     userInterface.init();
     System.out.println("Starting...");
     userInterface.start();
-    }
+  }
 }

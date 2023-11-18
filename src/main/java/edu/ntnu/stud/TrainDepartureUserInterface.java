@@ -48,7 +48,7 @@ public class TrainDepartureUserInterface {
    * If the input is not a number, a message is displayed,
    * and the user is prompted to input a new number.
    * If the input is a number, the corresponding method is called.
-   * If the input is 9, the program exits.
+   * If the input is 0, the program exits.
    */
   public void start() {
     while (true) {
@@ -78,23 +78,12 @@ public class TrainDepartureUserInterface {
 
 
   /**
-   * Adds a new train departure to the train schedule. The method prompts the user
-   * to input departure time, destination, train number, track, and delay. It validates
-   * the user input and ensures that valid information is provided before adding the
-   * departure to the train schedule.
-   *
-   *
-   *<p>Each parameter is validated individually in separate while loops.
-   * If the user input is invalid, a message is displayed explaining what is wrong with the input.
-   * If the user input is valid, the while loop is exited and the user can input the next parameter.
-   * values for trainNumber and destination assign to temporary variables
-   * which get checked for validity.
-   * before the actual values are assigned to the train departure.
-   *
-   *<p>once all parameters are valid,
-   * they are sent to the "addTrainDeparture" method in the trainFactory class.
-   * where a train departure object is created and added to the train departure list.
-   *
+   * Prompts the user to input a line, track, departure time, delay, destination and train number.
+   * Using the respective methods for each input.
+   * If the line or track already exists, the departure time is received using methods
+   * that are specific for each case.
+   * Once all variables are set, the "addDeparture" method in the trainFactory class is called,
+   * which creates a new train departure using the given parameters.
    */
   public void addTrainDeparture() {
     LocalTime departureTime = null;
@@ -142,7 +131,8 @@ public class TrainDepartureUserInterface {
    * which removes all departures that have already departed.
    * (Their departure time + delay is less than the current time).
    * Prints the table header first using the "tableHeader()" method.
-   * Prints the departure overview using a for loop to iterate through the trainDepartureList.
+   * Prints the departure overview using a stream
+   * and the toString method in the trainDeparture class.
    */
   public void printDepartureOverview() {
     trainFactory.removeDeparted();
@@ -182,29 +172,23 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a train number, input is validated in a try catch block.
-   * if the input is invalid,
-   * a message is displayed and the user is prompted to input a new train number.
-   * the input is parsed to an integer,
-   * and sent to the "departureFromNumber" method in the trainFactory class.
+    * Prompts the user to input a train number, which is sent to
+   * "departureFromNumber" method in the trainFactory class.
    * if the return from this method is not equal to null,
    * the departure prints (with the table header above it)
-   * if the method in trainFactory returns null, ("Train Number not found") is displayed.
+   * if the method in trainFactory returns null,
+   * ("Train number not found") is displayed.
    */
   public void departureFromNumber() {
     while (true) {
       System.out.println("Enter train number");
-      try {
-        int trainNumber = Integer.parseInt(input.nextLine());
-        TrainDeparture trainDeparture = trainFactory.departureFromNumber(trainNumber);
-        if (trainDeparture != null) {
-          printSingleDeparture(trainDeparture);
-          break;
-        } else {
-          System.out.println("Train number not found");
-        }
-      } catch (Exception e) {
-        System.out.println("Invalid train number");
+      int trainNumber = numberInput();
+      TrainDeparture trainDeparture = trainFactory.departureFromNumber(trainNumber);
+      if (trainDeparture != null) {
+        printSingleDeparture(trainDeparture);
+        break;
+      } else {
+        System.out.println("Train number not found");
       }
     }
   }
@@ -220,7 +204,7 @@ public class TrainDepartureUserInterface {
    */
   public void departureFromDestination() {
     System.out.println("Enter destination");
-    String destination = input.nextLine();
+    String destination = textInput();
     ArrayList<TrainDeparture> foundDepartures = trainFactory.departureFromDestination(destination);
     if (foundDepartures != null) {
       printAnyDepartures(foundDepartures);
@@ -230,15 +214,10 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a new current time.
-   * User input is validated in a try catch block.
-   * if the input is invalid, a message is displayed,
-   * and the user is prompted to input a new current time.
-   * if the input is valid, the input is parsed to a local time,
-   * and sent to the "setCurrentTime" method in the trainFactory class.
-   * which sets the current time to the input.
-   * calls "removeDeparted" method in the trainFactory class,
-   * which removes all departures that departed before the current time.
+    * Prompts the user to input a current time, which is sent to the "setCurrentTime" method
+   * in the trainFactory class. The "removeDeparted" method in the trainFactory class is called,
+   * which removes all departures that have already departed.
+   * (Their departure time + delay is less than the current time).
    */
   public void setCurrentTime() {
     System.out.println("Enter current time (HH:mm): ");
@@ -247,12 +226,11 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a new current time. User input is validated in a try catch block.
-   * if the time format is invalid, a message is displayed, prompts user for a different time.
-   * if the time is before the current time,
-   * a message is displayed, prompts user for a different time.
-   * if time is valid and before current time,
-   * the time is sent to the "setCurrentTime" method in the trainFactory class.
+    * Prompts the user to input a new current time, which is sent to the "setCurrentTime" method
+   * in the trainFactory class. If the input is before the current time,
+   * the user is prompted to input a new time.
+   * If the input is equal to the current time, the user is prompted to input a new time.
+   * If the input is after the current time, the current time is set to the input.
    */
   public void updateCurrentTime() {
     while (true) {
@@ -270,15 +248,12 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a train number,
-   * which gets sent to the "departureFromNumber" method in the trainFactory class.
-   * If the return from this method is not null,
-   * it means that a departure with this train number exists.
-   * and the user is prompted to input a track number,
-   * which is sent to the assignTrack method in the trainFactory class.
-   * which sets the track number for the departure.
-   * if a departure with this train number does not exist,
+    * Prompts the user to input a train number, which is sent to the "departureFromNumber" method
+   * in the trainFactory class. If the return from this method is not null,
+   * the user is prompted to input a track, which is sent to the "assignTrack" method
+   * in the trainFactory class. If the return from the "departureFromNumber" method is null,
    * the user is prompted to input a new train number.
+   * If the input is 0, the user is returned to the main menu.
    */
   public void assignTrack() {
     while (true) {
@@ -300,25 +275,27 @@ public class TrainDepartureUserInterface {
 
 
   /**
-   * Prompts the user to enter a train number,
-   * which is sent to the "departureFromNumber" method in the trainFactory class.
-   * if the return from this method is not null,
-   * it means that a departure with this train number exists.
-   * and the user is prompted to input a delay,
-   * which is sent to the addDelay method in the trainFactory class.
-   * which adds the delay to the departure.
-   * if a departure with this train number does not exist,
+   * Prompts the user to input a train number, which is sent to the "departureFromNumber" method
+   * in the trainFactory class. If the return from this method is not null,
+   * the user is prompted to input a delay, which is sent to the "addDelay" method
+   * in the trainFactory class. If the return from the "departureFromNumber" method is null,
    * the user is prompted to input a new train number.
+   * If the input is 0, the user is returned to the main menu.
    */
   public void addDelay() {
-    System.out.println("Enter train number: ");
-    int trainNumber = numberInput();
-    if (trainFactory.departureFromNumber(trainNumber) != null) {
-      System.out.println("Enter delay: ");
-      LocalTime delay = timeInput();
-      trainFactory.addDelay(trainNumber, delay);
-    } else {
-      System.out.println("Train number not found");
+    while (true) {
+      System.out.println("Enter train number (0 to exit): ");
+      int trainNumber = numberInput();
+      if (trainFactory.departureFromNumber(trainNumber) != null) {
+        System.out.println("Enter delay: ");
+        LocalTime delay = timeInput();
+        trainFactory.addDelay(trainNumber, delay);
+      } else if (trainNumber == 0) {
+        break;
+      } else {
+        System.out.println("Train number not found");
+        addDelay();
+      }
     }
   }
 
@@ -366,9 +343,10 @@ public class TrainDepartureUserInterface {
    * Method that is used if the line for the train departure that is being created
    * already exists. Prompts the user to input a departure time, the input is sent to
    * the "checkDepartureTimeExistsLine" method in the trainFactory class.
-   * if the return from this method is true, it means that a departure with this departure time
+   * if the return from this method is true,
+   * it means that a departure on this line with this departure time
    * already exists, and the user is prompted to input a new departure time.
-   * if the return is false, the departure time is added to the train departure.
+   * if the return is false, this method returns the departure time.
    *
    * @param line the line for the train departure that is being created
    * @return departureTime
@@ -388,9 +366,10 @@ public class TrainDepartureUserInterface {
    * Method that is used if the track for the train departure that is being created
    * already exists. Prompts the user to input a departure time, the input is sent to
    * the "checkDepartureTimeExistsTrack" method in the trainFactory class.
-   * if the return from this method is true, it means that a departure with this departure time
+   * if the return from this method is true,
+   * it means that a departure on this track with this departure time
    * already exists, and the user is prompted to input a new departure time.
-   * if the return is false, the departure time is added to the train departure.
+   * if the return is false, this method returns the departure time.
    *
    * @param track the track for the train departure that is being created
    * @return departureTime
@@ -407,7 +386,9 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a time, which is validated in a while loop.
+   * Prompts the user to input a time, which is validated in a try catch block.
+   * the try catch is in a while loop, so if the input is invalid,
+   * the user is prompted to input a new time.
    *
    * @return time
    */
@@ -426,7 +407,9 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a number, which is validated in a while loop.
+   * Prompts the user to input a number, which is validated in a try catch block.
+   * the try catch is in a while loop, so if the input is invalid,
+   * the user is prompted to input a new number.
    *
    * @return number
    */
@@ -447,6 +430,7 @@ public class TrainDepartureUserInterface {
    * Prompts the user to input a text, which is validated in a while loop,
    * using a pattern matcher to check if the input contains digits.
    * if the input is invalid, prompts the user for a new text.
+   * if the input is valid, the text is returned.
    *
    * @return text
    */

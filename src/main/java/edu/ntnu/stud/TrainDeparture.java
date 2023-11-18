@@ -64,7 +64,6 @@ public class TrainDeparture {
   }
 
 
-  //NEED?
   /**
    * Constructs a TrainDeparture object with the specified departure time, line, destination,
    * train number, and delay. The track number is set to -1 as it is unknown.
@@ -137,7 +136,8 @@ public class TrainDeparture {
 
   /**
    * Sets the delay time for the train. Throws a DateTimeException if the delay time format is
-   * invalid. Cheks whether the time format is valid by using a regular expression. ("timePattern").
+   * invalid. Checks whether the time format is valid
+   * by using a regular expression. ("timePattern").
    *
    * @param delay The delay time in HH:mm.
    * @throws DateTimeException If the delay time format is invalid.

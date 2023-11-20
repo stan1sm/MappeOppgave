@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -82,11 +83,13 @@ public class TrainDepartureUserInterface {
    * Using the respective methods for each input.
    * If the line or track already exists, the departure time is received using methods
    * that are specific for each case.
-   * Once all variables are set, the "addDeparture" method in the trainFactory class is called,
+   * Once all variables are set, the
+   * {@link edu.ntnu.stud.TrainFactory#addDeparture(LocalTime, String, String, int, int, LocalTime)}
+   * is called
    * which creates a new train departure using the given parameters.
    */
   public void addTrainDeparture() {
-    LocalTime departureTime = null;
+    LocalTime departureTime;
     System.out.println("Enter line: ");
     final String line = lineInput();
     System.out.println("Enter track (0 if not set): ");
@@ -127,12 +130,14 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Calls the "removeDeparted" method in the trainFactory class.
+   * Calls
+   * {@link edu.ntnu.stud.TrainFactory#removeDeparted()}
    * which removes all departures that have already departed.
    * (Their departure time + delay is less than the current time).
-   * Prints the table header first using the "tableHeader()" method.
+   * <p>
+   * Prints the table header first using the {@link #tableHeader()} method.
    * Prints the departure overview using a stream
-   * and the toString method in the trainDeparture class.
+   * and {@link edu.ntnu.stud.TrainDeparture#toString()}
    */
   public void printDepartureOverview() {
     trainFactory.removeDeparted();
@@ -146,18 +151,17 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prints a list of departures using the table header,
-   * and the toString method in the trainDeparture class.
-   *
+   * First prints the table header using the {@link #tableHeader()} method.
+   * <p>
    * @param departureList the list of departures to be printed.
    */
   public void printAnyDepartures(ArrayList<TrainDeparture> departureList) {
     System.out.println(tableHeader());
-    for (TrainDeparture trainDeparture : departureList) {
-      System.out.print(trainDeparture);
-      System.out.println("+---------------+-----------------+--------------"
-          + "+----------+-------------------+------------+");
-    }
+    System.out.println(departureList.stream()
+            .map(trainDeparture -> trainDeparture.toString()
+                    + "+---------------+-----------------+--------------"
+                    + "+----------+-------------------+------------+")
+            .collect(Collectors.joining("\n")));
   }
 
   /**
@@ -173,9 +177,10 @@ public class TrainDepartureUserInterface {
 
   /**
     * Prompts the user to input a train number, which is sent to
-   * "departureFromNumber" method in the trainFactory class.
+   * {@link edu.ntnu.stud.TrainFactory#departureFromNumber(int)}
    * if the return from this method is not equal to null,
    * the departure prints (with the table header above it)
+   * @see #printSingleDeparture(TrainDeparture)
    * if the method in trainFactory returns null,
    * ("Train number not found") is displayed.
    */
@@ -196,9 +201,10 @@ public class TrainDepartureUserInterface {
 
   /**
    * Prompts the user to input a destination. User input sent to
-   * "departureFromDestination" method in the trainFactory class.
+   * {@link edu.ntnu.stud.TrainFactory#departureFromDestination(String)}
    * if the return from this method is not equal to null,
    * the departure prints (with the table header above it)
+   * @see #printAnyDepartures(ArrayList)
    * if the method in trainFactory returns null,
    * ("No departure with this destination") is displayed.
    */
@@ -214,10 +220,14 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-    * Prompts the user to input a current time, which is sent to the "setCurrentTime" method
-   * in the trainFactory class. The "removeDeparted" method in the trainFactory class is called,
-   * which removes all departures that have already departed.
-   * (Their departure time + delay is less than the current time).
+   * Prompts the user to input a current time,
+   * @see #timeInput()
+   * which is sent to
+   * {@link edu.ntnu.stud.TrainFactory#setCurrentTime(LocalTime)}
+   * <p>
+   * After this the
+   * {@link edu.ntnu.stud.TrainFactory#removeDeparted()}
+   * is called.
    */
   public void setCurrentTime() {
     System.out.println("Enter current time (HH:mm): ");
@@ -226,8 +236,12 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-    * Prompts the user to input a new current time, which is sent to the "setCurrentTime" method
-   * in the trainFactory class. If the input is before the current time,
+   * Prompts the user to input a new current time,
+   * @see #timeInput()
+   * input sent to
+   * {@link edu.ntnu.stud.TrainFactory#setCurrentTime(LocalTime)}
+   * <p>
+   *If the input is before the current time,
    * the user is prompted to input a new time.
    * If the input is equal to the current time, the user is prompted to input a new time.
    * If the input is after the current time, the current time is set to the input.
@@ -248,10 +262,16 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-    * Prompts the user to input a train number, which is sent to the "departureFromNumber" method
+   * Prompts the user to input a train number,
+   * @see #numberInput()
+   * input sent to
+   * {@link edu.ntnu.stud.TrainFactory#departureFromNumber(int)}
    * in the trainFactory class. If the return from this method is not null,
-   * the user is prompted to input a track, which is sent to the "assignTrack" method
-   * in the trainFactory class. If the return from the "departureFromNumber" method is null,
+   * the user is prompted to input a track, then both inputs are sent to
+   * {@link edu.ntnu.stud.TrainFactory#assignTrack(int, int)}
+   * If the return from
+   * {@link edu.ntnu.stud.TrainFactory#departureFromNumber(int)}
+   * is null,
    * the user is prompted to input a new train number.
    * If the input is 0, the user is returned to the main menu.
    */
@@ -275,11 +295,21 @@ public class TrainDepartureUserInterface {
 
 
   /**
-   * Prompts the user to input a train number, which is sent to the "departureFromNumber" method
-   * in the trainFactory class. If the return from this method is not null,
-   * the user is prompted to input a delay, which is sent to the "addDelay" method
-   * in the trainFactory class. If the return from the "departureFromNumber" method is null,
+   * Prompts the user to input a train number,
+   * @see #numberInput()
+   * input sent to
+   * {@link edu.ntnu.stud.TrainFactory#departureFromNumber(int)}
+   * If the return is not null,
+   * the user is prompted to input a delay,
+   * @see #timeInput()
+   * and both inputs are sent to
+   * {@link edu.ntnu.stud.TrainFactory#addDelay(int, LocalTime)}
+   *
+   * If the return from
+   * {@link edu.ntnu.stud.TrainFactory#departureFromNumber(int)}
+   * method is null,
    * the user is prompted to input a new train number.
+   *
    * If the input is 0, the user is returned to the main menu.
    */
   public void addDelay() {
@@ -301,7 +331,9 @@ public class TrainDepartureUserInterface {
 
 
   /**
-   * Prompts the user to input a train number, which is validated in a try catch block.
+   * Prompts the user to input a train number,
+   * @see #numberInput()
+   * which is validated in a try catch block.
    * if the input is invalid, prompts the user for a new train number.
    *
    * @return trainNumber
@@ -341,8 +373,10 @@ public class TrainDepartureUserInterface {
 
   /**
    * Method that is used if the line for the train departure that is being created
-   * already exists. Prompts the user to input a departure time, the input is sent to
-   * the "checkDepartureTimeExistsLine" method in the trainFactory class.
+   * already exists. Prompts the user to input a departure time,
+   * @see #timeInput()
+   * input is sent to
+   * {@link edu.ntnu.stud.TrainFactory#checkDepartureTimeExistsLine(String, LocalTime)}
    * if the return from this method is true,
    * it means that a departure on this line with this departure time
    * already exists, and the user is prompted to input a new departure time.
@@ -364,8 +398,10 @@ public class TrainDepartureUserInterface {
 
   /**
    * Method that is used if the track for the train departure that is being created
-   * already exists. Prompts the user to input a departure time, the input is sent to
-   * the "checkDepartureTimeExistsTrack" method in the trainFactory class.
+   * already exists. Prompts the user to input a departure time,
+   * @see #timeInput()
+   * input is sent to
+   * {@link edu.ntnu.stud.TrainFactory#checkDepartureTimeExistsTrack(int, LocalTime)}
    * if the return from this method is true,
    * it means that a departure on this track with this departure time
    * already exists, and the user is prompted to input a new departure time.

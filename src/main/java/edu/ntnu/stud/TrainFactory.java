@@ -37,8 +37,9 @@ public class TrainFactory {
   /**
    * Creates a new trainDeparture using the given parameters,
    * and adds it to the numberToDepartureMap.
-   * also calls the updateTrainDepartureList() method, so that the trainDepartureList is updated.
-   * receives parameters from the addDeparture() method in the user interface class.
+   * also calls the {@link #updateTrainDepartureList()}
+   * receives parameters from
+   * {@link TrainDepartureUserInterface#addTrainDeparture()}
    *
    * @param departureTime the departure time of the train
    * @param line the line the train is operating on
@@ -63,7 +64,8 @@ public class TrainFactory {
   /**
    * Finds a specific train-departure using the train number,
    * and sets its track to the given track.
-   * receives parameters from the assignTrack() method in the user interface class.
+   * receives parameters from
+   * {@link TrainDepartureUserInterface#assignTrack()}
    *
    * @param trainNumber the train number of the train departure to be assigned a track.
    * @param track       the track number to be assigned to the train departure.
@@ -76,7 +78,8 @@ public class TrainFactory {
 
   /**
    * Finds a specific train-departure using the train number, and sets its delay to the given delay.
-   * receives parameters from the addDelay() method in the user interface class.
+   * receives parameters from
+   * {@link TrainDepartureUserInterface#addDelay()}
    *
    * @param trainNumber the train number of the train departure to be assigned a delay.
    * @param delay       the delay to be assigned to the train departure.
@@ -87,8 +90,8 @@ public class TrainFactory {
   }
 
   /**
-   * Receives a train number parameter from the departureFromNumber() method,
-   * in the user interface class.
+   * Receives a train number parameter from
+   * {@link TrainDepartureUserInterface#departureFromNumber()}
    * and returns the train departure with the given train number.
    * returns null if a train departure with the given train number doesn't exist.
    *
@@ -104,8 +107,8 @@ public class TrainFactory {
   }
 
   /**
-   * Receives a destination parameter from the departureFromDestination() method,
-   * in the user interface class.
+   * Receives a destination parameter from
+   * {@link TrainDepartureUserInterface#departureFromDestination()}
    * Uses a lambda expression to loop through the train departure list,
    * and add all train departures with the given destination to a new list,
    * and returns the list of trainDepartures with the given destination.

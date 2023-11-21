@@ -4,7 +4,6 @@ import java.io.File;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class TrainFactory {
   private final HashMap<Integer, TrainDeparture> numberToDepartureMap = new HashMap<>();
-  private final ArrayList<TrainDeparture> trainDepartures
+  private final ArrayList<TrainDeparture> trainDepartureList
       = new ArrayList<>(numberToDepartureMap.values());
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   private LocalTime currentTime = null;
@@ -31,11 +30,14 @@ public class TrainFactory {
    * @return trainDepartureList
    */
   public ArrayList<TrainDeparture> getTrainDepartures() {
-    return trainDepartures;
+    return trainDepartureList;
   }
 
   /**
-   * Creates a new trainDeparture using the given parameters,
+   * Adds a new train departure with provided parameters to the system.
+   *
+   *
+   *<p>Creates a new trainDeparture using the given parameters,
    * and adds it to the numberToDepartureMap.
    * also calls the {@link #updateTrainDepartureList()}
    * receives parameters from
@@ -107,34 +109,29 @@ public class TrainFactory {
   }
 
   /**
+   *
    * Receives a destination parameter from
    * {@link TrainDepartureUserInterface#departureFromDestination()}
-   * Uses a lambda expression to loop through the train departure list,
-   * and add all train departures with the given destination to a new list,
-   * and returns the list of trainDepartures with the given destination.
+   * converts the trainDepartureList ArrayList to a stream, checks Objects
+   * in the stream for the given destination, and collects them to a list.
    * if the list is empty, the method returns null.
+   * if not, the method returns the list.
    *
    * @param destination the destination of the train departure to be found.
    * @return trainDeparture
    */
-  public ArrayList<TrainDeparture> departureFromDestination(String destination) {
-    ArrayList<TrainDeparture> foundDepartures = new ArrayList<>();
-    this.trainDepartures.forEach((traindeparture) -> {
-      if (traindeparture.getDestination().equalsIgnoreCase(destination)) {
-        foundDepartures.add(traindeparture);
-      }
-    });
-    if (foundDepartures.isEmpty()) {
-      return null;
-    } else {
-      return foundDepartures;
-    }
+  public List<TrainDeparture> departureFromDestination(String destination) {
+    List<TrainDeparture> foundDepartures = trainDepartureList.stream()
+            .filter(trainDeparture -> trainDeparture.getDestination().equalsIgnoreCase(destination))
+            .collect(Collectors.toList());
+
+    return foundDepartures.isEmpty() ? null : foundDepartures;
   }
 
   /**
-   * Receives a time parameter from the setCurrentTime() method,
-   * in the user interface class.
-   * and sets the current time to the given time.
+   * Receives a time parameter from
+   * {@link TrainDepartureUserInterface#setCurrentTime()}
+   *and sets the current time to the given time.
    *
    * @param time the time to be set as current time.
    */
@@ -152,149 +149,150 @@ public class TrainFactory {
   }
 
   /**
-   * Loops through the TrainDeparture list and removes train departures,
-   * if their departure time + delay is before the current time.
-   * the numberToDepartureMap keys for these values are added to a List,
-   * and then the values with these keys are removed from the numberToDepartureMap.
+   * Removed departures that have departed from the system.
+   *
+   *<p>This method uses a stream to check if any train departures have departed.
+   * <ul>
+   *   <li>Identifies departures where departure time + delay is less then the current time</li>
+   *   <li>Adds these departures to a List "toRemove"</li>
+   *   <li>Removes all departures in "toRemove" from the numberToDepartureMap
+   *   and the "trainDepartureList" arraylist</li>
+   * </ul>
    */
   public void removeDeparted() {
-    List<Integer> toRemove = new ArrayList<>();
-    numberToDepartureMap.forEach((key, value) -> {
-      if (value.getDepartureTimeWithDelay().isBefore(currentTime)) {
-        toRemove.add(key);
-      }
-    });
+    List<Integer> toRemove = numberToDepartureMap.keySet().stream()
+            .filter(key -> numberToDepartureMap.get(key).getDepartureTimeWithDelay()
+              .isBefore(currentTime))
+            .toList();
     toRemove.forEach(numberToDepartureMap::remove);
 
-    trainDepartures.removeIf(trainDeparture ->
+    trainDepartureList.removeIf(trainDeparture ->
             trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime));
   }
 
   /**
    * Sorts the train departure list by ascending departure time,
-   * using the TrainDepartureComparator class.
+   *
+   *<p>this method uses the {@link TrainDepartureComparator} class to sort the list.
+   * note that the {@link #numberToDepartureMap} is not sorted, as it is not used in the
+   * user interface.
    */
   public void sortByDepartureTime() {
-    trainDepartures.sort(new TrainDepartureComparator());
+    trainDepartureList.sort(new TrainDepartureComparator());
   }
 
   /**
-   * Receives a line parameter from the user interface class,
-   * uses a stream to check if there are any train departures with the given line.
-   * if there are, the method returns true, if not, it returns false.
+   * Returns departure times for departures on a specific line.
    *
-   * @param line the line to be checked for.
-   * @return boolean
-   */
-  public boolean checkLineExists(String line) {
-    return trainDepartures.stream()
-            .anyMatch(trainDeparture -> trainDeparture.getLine().equalsIgnoreCase(line));
-  }
-
-  /**
-   * Receives a track parameter from the user interface class,
-   * uses a stream to check if there are any train departures with the given track.
-   * if there are, the method returns true, if not, it returns false.
-   *
-   * @param track the track to be checked for.
-   * @return boolean
-   */
-  public boolean checkTrackExists(int track) {
-    return trainDepartures.stream()
-            .anyMatch(trainDeparture -> trainDeparture.getTrack() == track);
-  }
-
-  /**
-   * Receives a line parameter from the user interface class,
-   * adds the departure times of departures with the given line to a list,
-   * and returns the list.
-   * if the list is empty, the method returns null.
+   *<p><ul>
+   *   <li>Receives a line parameter from {@link TrainDepartureUserInterface}</li>
+   *   <li>Filters {@link #trainDepartureList} by line</li>
+   *   <li>Collects all LocalTime values to a list</li>
+   *   </ul>
    *
    * @param line the line of which departure times are to be found.
-   * @return departureTimes
+   * @return a list of departure times for departures on the given line.
    */
-  public ArrayList<LocalTime> departureTimesFromLine(String line) {
-    ArrayList<LocalTime> departureTimes = new ArrayList<>();
-    trainDepartures.forEach((trainDeparture) -> {
-      if (trainDeparture.getLine().equalsIgnoreCase(line)) {
-        departureTimes.add(trainDeparture.getDepartureTime());
-      }
-    });
-    if (departureTimes.isEmpty()) {
-      return null;
-    } else {
-      return departureTimes;
-    }
+  public List<LocalTime> departureTimesFromLine(String line) {
+    return trainDepartureList.stream()
+            .filter(trainDeparture -> trainDeparture.getLine().equalsIgnoreCase(line))
+            .map(TrainDeparture::getDepartureTime)
+            .toList();
   }
 
   /**
-   * Receives a track parameter from the user interface class,
-   * adds the departure times of departures with the given track to a list,
-   * and returns the list.
-   * if the list is empty, the method returns null.
+   * Returns departure times for departures on a specific track.
+   *
+   *<p><ul>
+   *   <li>Receives a track parameter from {@link TrainDepartureUserInterface}</li>
+   *   <li>Filters {@link #trainDepartureList} by track</li>
+   *   <li>Collects all LocalTime values to a list</li>
+   *   </ul>
    *
    * @param track the track of which departure times are to be found.
-   * @return departureTimes
+   * @return a list of departure times for departures on the given track.
    */
-  public ArrayList<LocalTime> departureTimesFromTrack(int track) {
-    ArrayList<LocalTime> departureTimes = new ArrayList<>();
-    trainDepartures.forEach((trainDeparture) -> {
-      if (trainDeparture.getTrack() == track) {
-        departureTimes.add(trainDeparture.getDepartureTime());
-      }
-    });
-    if (departureTimes.isEmpty()) {
-      return null;
-    } else {
-      return departureTimes;
-    }
+  public List<LocalTime> departureTimesFromTrack(int track) {
+    return trainDepartureList.stream()
+      .filter(trainDeparture -> trainDeparture.getTrack() == track)
+      .map(TrainDeparture::getDepartureTime)
+      .toList();
   }
 
   /**
-   * Returns true if there are any trainDepartures on the given track,
-   * that have the given departure time.
-   * if not, the method returns false.
+   * Checks if a given departure time exists on a given track.
    *
-   * @param track the track to be checked for.
+   * <p>Retrieves a list from {@link #departureTimesFromTrack(int)} and checks if the list
+   * contains the given departure time.
+   *
+   * @param track the line to be checked for.
    * @param time the departure time to be checked for.
-   * @return boolean
+   * @return {@code true} if the departure time exists on the given track,
+   *         {@code false} otherwise.
    */
   public boolean checkDepartureTimeExistsTrack(int track, LocalTime time) {
     return departureTimesFromTrack(track).contains(time);
   }
 
   /**
-   * Returns true if there are any trainDepartures on the given line,
-   * that have the given departure time.
-   * if not, the method returns false.
+   * Checks if a given departure time exists on a given line.
+   *
+   * <p>Retrieves a list from {@link #departureTimesFromLine(String)} and checks if the list
+   * contains the given departure time.
    *
    * @param line the line to be checked for.
    * @param time the departure time to be checked for.
-   * @return boolean
+   * @return {@code true} if the departure time exists on the given line,
+   *         {@code false} otherwise.
    */
   public boolean checkDepartureTimeExistsLine(String line, LocalTime time) {
     return departureTimesFromLine(line).contains(time);
   }
 
   /**
-   * clears the TrainDepartures ArrayList,
-   * and then adds all values from the numberToDepartureMap to the ArrayList.
+   * Updates the train departure list.
+   *
+   *<p><ul>
+   *   <li>Clears the trainDepartureList</li>
+   *   <li>Adds all values from {@link #numberToDepartureMap} to the ArrayList</li>
+   *   <li>Sorts the {@link #trainDepartureList} using {@link #sortByDepartureTime()}</li>
+   *</ul>
+   * This method ensures that the {@link #trainDepartureList} correctly reflects
+   * the values in {@link #numberToDepartureMap}
    */
   private void updateTrainDepartureList() {
-    trainDepartures.clear();
-    trainDepartures.addAll(numberToDepartureMap.values());
+    trainDepartureList.clear();
+    trainDepartureList.addAll(numberToDepartureMap.values());
+    sortByDepartureTime();
   }
 
   /**
-   * Fill the train departure list with data from a file.
+   * Reads data from a file and adds the information to the system.
+   *
+   * <p>Creates a new File object from,
+   * <a href="\MappeOppgave\TrainDepartureData.txt">TrainDepartureData.txt</a>
+   * and a new Scanner object from the file.
+   * The first line of the file is skipped, as it contains the column names.
+   * Each line is split into an array of strings, and variables are created
+   * from the array values. A new {@link TrainDeparture} object is created
+   *
+   * <p><ul>
+   *   <li>Creates a new {@link TrainDeparture} object</li>
+   *   <li>Adds this object to {@link #numberToDepartureMap}</li>
+   *   <li>Calls {@link #updateTrainDepartureList()}</li>
+   *   <li>Calls {@link #sortByDepartureTime()}</li>
+   * </ul>
    */
   public void fillTrainDepartureList() {
     try {
-      File datafile = new File("Data.txt");
+      File datafile = new File("TrainDepartureData.txt");
       Scanner read = new Scanner(datafile);
       read.nextLine();
       while (read.hasNextLine()) {
-        String line = read.nextLine();
+        String line = read.nextLine().trim();
+        if (line.isEmpty()) {
+          continue;
+        }
         String[] data = line.split(",");
         LocalTime departureTime = LocalTime.parse(data[0], formatter);
         String lineName = data[1];
@@ -306,15 +304,17 @@ public class TrainFactory {
                 trainNumber, track, delay);
         numberToDepartureMap.put(trainNumber, trainDeparture);
         updateTrainDepartureList();
+        sortByDepartureTime();
       }
+      read.close();
     } catch (Exception e) {
       System.out.println("File not found");
     }
   }
 
   /**
-   * Comparator class for sorting train departures by departure time.
-   * Used in the sortByDepartureTime() method.
+   * Comparator class for comparing objects by departure time.
+   * Used in {@link #sortByDepartureTime()}
    */
   public static class TrainDepartureComparator implements Comparator<TrainDeparture> {
     @Override

@@ -1,6 +1,7 @@
 package edu.ntnu.stud;
 
 import java.util.HashMap;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalTime;
@@ -49,7 +50,7 @@ public class TrainFactoryTest {
 
     @Test
     void testDepartureFromDestination() {
-        ArrayList<TrainDeparture> foundDepartures = trainFactory.departureFromDestination("Trondheim");
+        List<TrainDeparture> foundDepartures = trainFactory.departureFromDestination("Trondheim");
         assertNotNull(foundDepartures);
         assertEquals(1, foundDepartures.size());
         assertEquals("Trondheim", foundDepartures.get(0).getDestination());

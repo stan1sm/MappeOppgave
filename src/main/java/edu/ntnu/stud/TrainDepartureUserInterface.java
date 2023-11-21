@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class TrainDepartureUserInterface {
   /**
    * Runs the setCURentTime method, which prompts the user to input a current time.
    * Initialize the user interface. Fills the "options" hashmap, with keys and different methods.
-   * fills the train departure list with data from the "Data.txt" file.
+   * fills the train departure list with data from the "TrainDepartureData.txt" file.
    */
   public void init() {
     setCurrentTime();
@@ -94,10 +95,10 @@ public class TrainDepartureUserInterface {
     final String line = lineInput();
     System.out.println("Enter track (0 if not set): ");
     final int track = numberInput();
-    if (trainFactory.checkLineExists(line)) {
+    if (!trainFactory.departureTimesFromLine(line).isEmpty()) {
       System.out.println("Enter departure time (HH:mm): ");
       departureTime = departureTimeExistingLine(line);
-    } else if (trainFactory.checkTrackExists(track) && track != 0) {
+    } else if (track != 0 && !trainFactory.departureTimesFromTrack(track).isEmpty()) {
       System.out.println("Enter departure time (HH:mm): ");
       departureTime = departureTimeExistingTrack(track);
     } else {
@@ -155,7 +156,7 @@ public class TrainDepartureUserInterface {
    * <p>
    * @param departureList the list of departures to be printed.
    */
-  public void printAnyDepartures(ArrayList<TrainDeparture> departureList) {
+  public void printAnyDepartures(List<TrainDeparture> departureList) {
     System.out.println(tableHeader());
     System.out.println(departureList.stream()
             .map(trainDeparture -> trainDeparture.toString()
@@ -211,7 +212,7 @@ public class TrainDepartureUserInterface {
   public void departureFromDestination() {
     System.out.println("Enter destination");
     String destination = textInput();
-    ArrayList<TrainDeparture> foundDepartures = trainFactory.departureFromDestination(destination);
+    List<TrainDeparture> foundDepartures = trainFactory.departureFromDestination(destination);
     if (foundDepartures != null) {
       printAnyDepartures(foundDepartures);
     } else {

@@ -36,12 +36,14 @@ public class TrainFactory {
   /**
    * Adds a new train departure with provided parameters to the system.
    *
-   *
    *<p>Creates a new trainDeparture using the given parameters,
    * and adds it to the numberToDepartureMap.
    * also calls the {@link #updateTrainDepartureList()}
    * receives parameters from
    * {@link TrainDepartureUserInterface#addTrainDeparture()}
+   *
+   *<p>If the track is 0, the constructor for {@link TrainDeparture} without track is used.
+   * if the track is not 0, the constructor for {@link TrainDeparture} with track is used.
    *
    * @param departureTime the departure time of the train
    * @param line the line the train is operating on
@@ -64,13 +66,17 @@ public class TrainFactory {
   }
 
   /**
-   * Finds a specific train-departure using the train number,
-   * and sets its track to the given track.
-   * receives parameters from
-   * {@link TrainDepartureUserInterface#assignTrack()}
+   * Sets the delay of a specific TrainDeparture.
    *
-   * @param trainNumber the train number of the train departure to be assigned a track.
-   * @param track       the track number to be assigned to the train departure.
+   *<p>Receives parameters from,
+   * {@link TrainDepartureUserInterface#addDelay()}
+   * <ul>
+   *   <li>Selects TrainDeparture using {@link #departureFromNumber(int)}</li>
+   *   <li>Sets the delay of the TrainDeparture to the given delay</li>
+   * </ul>
+   *
+   * @param trainNumber the train number of the train departure to be assigned a delay.
+   * @param track the delay to be assigned to the train departure.
    */
   public void assignTrack(int trainNumber, int track) {
     departureFromNumber(trainNumber).setTrack(track);
@@ -78,27 +84,36 @@ public class TrainFactory {
   }
 
 
+  //TODO: FIX THIS METHOD, it goes on and on...
   /**
-   * Finds a specific train-departure using the train number, and sets its delay to the given delay.
-   * receives parameters from
+   * Sets the delay of a specific TrainDeparture.
+   *
+   *<p>Receives parameters from,
    * {@link TrainDepartureUserInterface#addDelay()}
+   * <ul>
+   *   <li>Selects TrainDeparture using {@link #departureFromNumber(int)}</li>
+   *   <li>Sets the delay of the TrainDeparture to the given delay</li>
+   * </ul>
    *
    * @param trainNumber the train number of the train departure to be assigned a delay.
    * @param delay       the delay to be assigned to the train departure.
    */
   public void addDelay(int trainNumber, LocalTime delay) {
     departureFromNumber(trainNumber).setDelay(delay);
-    departureFromNumber(trainNumber);
   }
 
   /**
-   * Receives a train number parameter from
-   * {@link TrainDepartureUserInterface#departureFromNumber()}
-   * and returns the train departure with the given train number.
-   * returns null if a train departure with the given train number doesn't exist.
+   * Finds a TrainDeparture object using the given train number.
    *
-   * @param trainNumber the train number for the train-departure to be found.
-   * @return trainDeparture
+   *<p>Receives a train number parameter from
+   * {@link TrainDepartureUserInterface#departureFromNumber()}
+   * if the train number is found in {@link #numberToDepartureMap}
+   * returns the TrainDeparture associated with the train number.
+   * if the train number is not found, returns {@code null}
+   *
+   * @param trainNumber the train number for the TrainDeparture to be found.
+   * @return a TrainDeparture object with the given train number.
+   *         or {@code null} if the key/value pair is not found.
    */
   public TrainDeparture departureFromNumber(int trainNumber) {
     try {
@@ -109,16 +124,16 @@ public class TrainFactory {
   }
 
   /**
+   * Finds all train departures with the given destination.
    *
-   * Receives a destination parameter from
+   *<p>Receives a destination parameter from
    * {@link TrainDepartureUserInterface#departureFromDestination()}
-   * converts the trainDepartureList ArrayList to a stream, checks Objects
-   * in the stream for the given destination, and collects them to a list.
-   * if the list is empty, the method returns null.
-   * if not, the method returns the list.
+   * filters {@link #trainDepartureList} by destination
+   * ignores case sensitivity, creates a list of all found departures
    *
    * @param destination the destination of the train departure to be found.
-   * @return trainDeparture
+   * @return a list with TrainDeparture objects that have the specified destination.
+   *         returns {@code null} if the list is empty.
    */
   public List<TrainDeparture> departureFromDestination(String destination) {
     List<TrainDeparture> foundDepartures = trainDepartureList.stream()

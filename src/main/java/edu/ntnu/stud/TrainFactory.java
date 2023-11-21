@@ -1,6 +1,13 @@
 package edu.ntnu.stud;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -66,13 +73,13 @@ public class TrainFactory {
   }
 
   /**
-   * Sets the delay of a specific TrainDeparture.
+   * Sets the track of a specific TrainDeparture.
    *
    *<p>Receives parameters from,
    * {@link TrainDepartureUserInterface#addDelay()}
    * <ul>
    *   <li>Selects TrainDeparture using {@link #departureFromNumber(int)}</li>
-   *   <li>Sets the delay of the TrainDeparture to the given delay</li>
+   *   <li>Sets the track of the TrainDeparture to the given track</li>
    * </ul>
    *
    * @param trainNumber the train number of the train departure to be assigned a delay.
@@ -84,7 +91,7 @@ public class TrainFactory {
   }
 
 
-  //TODO: FIX THIS METHOD, it goes on and on...
+
   /**
    * Sets the delay of a specific TrainDeparture.
    *
@@ -281,12 +288,24 @@ public class TrainFactory {
     sortByDepartureTime();
   }
 
+
+  public void writeTextToFile() {
+    String fileName = "TrainDepartureData.txt";
+    String textToWrite = "Hello, this is some text that will be written to the file!";
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+      writer.write(textToWrite);
+      System.out.println("Text has been written to the file: " + fileName);
+      System.out.println("Current Working Directory: " + System.getProperty("user.dir"));
+    } catch (IOException e) {
+      System.err.println("Error writing to file: " + e.getMessage());
+    }
+  }
+
   /**
    * Reads data from a file and adds the information to the system.
-   *
-   * <p>Creates a new File object from,
-   * <a href="\MappeOppgave\TrainDepartureData.txt">TrainDepartureData.txt</a>
-   * and a new Scanner object from the file.
+   * <p>
+   * Reads "TrainDepartureData.txt" from the current working directory.
    * The first line of the file is skipped, as it contains the column names.
    * Each line is split into an array of strings, and variables are created
    * from the array values. A new {@link TrainDeparture} object is created
@@ -298,32 +317,29 @@ public class TrainFactory {
    *   <li>Calls {@link #sortByDepartureTime()}</li>
    * </ul>
    */
-  public void fillTrainDepartureList() {
-    try {
-      File datafile = new File("TrainDepartureData.txt");
-      Scanner read = new Scanner(datafile);
-      read.nextLine();
-      while (read.hasNextLine()) {
-        String line = read.nextLine().trim();
-        if (line.isEmpty()) {
-          continue;
-        }
+  public void fillTrainDepartureListFromFile() {
+    Path filePath = Paths.get("TrainDepartureData.txt");
+    try (BufferedReader reader = Files.newBufferedReader(filePath);) {
+      reader.readLine(); // skip first line
+
+      String line = reader.readLine().trim();
+      while (line != null) {
         String[] data = line.split(",");
         LocalTime departureTime = LocalTime.parse(data[0], formatter);
-        String lineName = data[1];
-        String destination = data[2];
-        int trainNumber = Integer.parseInt(data[3]);
-        int track = Integer.parseInt(data[4]);
-        LocalTime delay = LocalTime.parse(data[5], formatter);
+        String lineName = data[1].trim();
+        String destination = data[2].trim();
+        int trainNumber = Integer.parseInt(data[3].trim());
+        int track = Integer.parseInt(data[4].trim());
+        LocalTime delay = LocalTime.parse(data[5].trim(), formatter);
+        line = reader.readLine();
         TrainDeparture trainDeparture = new TrainDeparture(departureTime, lineName, destination,
-                trainNumber, track, delay);
+          trainNumber, track, delay);
         numberToDepartureMap.put(trainNumber, trainDeparture);
         updateTrainDepartureList();
         sortByDepartureTime();
       }
-      read.close();
-    } catch (Exception e) {
-      System.out.println("File not found");
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
   }
 

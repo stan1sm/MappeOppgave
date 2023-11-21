@@ -39,9 +39,10 @@ public class TrainDepartureUserInterface {
     options.put(5, this::departureFromNumber);
     options.put(6, this::departureFromDestination);
     options.put(7, this::updateCurrentTime);
-    options.put(8, trainFactory::fillTrainDepartureList);
+    options.put(8, trainFactory::fillTrainDepartureListFromFile);
     options.put(9, trainFactory::sortByDepartureTime);
-    trainFactory.fillTrainDepartureList();
+    options.put(10,trainFactory::writeTextToFile);
+    trainFactory.fillTrainDepartureListFromFile();
   }
 
   /**
@@ -321,6 +322,7 @@ public class TrainDepartureUserInterface {
         System.out.println("Enter delay: ");
         LocalTime delay = timeInput();
         trainFactory.addDelay(trainNumber, delay);
+        break;
       } else if (trainNumber == 0) {
         break;
       } else {

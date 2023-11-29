@@ -4,7 +4,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -17,7 +16,7 @@ public class TrainDepartureUserInterface {
 
   private final Scanner input = new Scanner(System.in);
   private final HashMap<Integer, Runnable> options = new HashMap<>();
-  private final TrainFactory trainFactory = new TrainFactory();
+  private final TrainRegistry trainRegistry = new TrainRegistry();
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   private static final Pattern digits = Pattern.compile("\\D+");
 
@@ -31,7 +30,7 @@ public class TrainDepartureUserInterface {
    */
   public void init() {
     setCurrentTime();
-    System.out.println(trainFactory.getCurrentTime());
+    System.out.println(trainRegistry.getCurrentTime());
     options.put(1, this::printDepartureOverview);
     options.put(2, this::addTrainDeparture);
     options.put(3, this::assignTrack);
@@ -39,10 +38,10 @@ public class TrainDepartureUserInterface {
     options.put(5, this::departureFromNumber);
     options.put(6, this::departureFromDestination);
     options.put(7, this::updateCurrentTime);
-    options.put(8, trainFactory::fillTrainDepartureListFromFile);
-    options.put(9, trainFactory::sortByDepartureTime);
-    options.put(10,trainFactory::writeTextToFile);
-    trainFactory.fillTrainDepartureListFromFile();
+    options.put(8, trainRegistry::fillTrainDepartureListFromFile);
+    options.put(9, trainRegistry::sortByDepartureTime);
+    options.put(10, trainRegistry::writeTextToFile);
+    trainRegistry.fillTrainDepartureListFromFile();
   }
 
   /**
@@ -86,7 +85,7 @@ public class TrainDepartureUserInterface {
    * If the line or track already exists, the departure time is received using methods
    * that are specific for each case.
    * Once all variables are set, the
-   * {@link edu.ntnu.stud.TrainFactory#addDeparture(LocalTime, String, String, int, int, LocalTime)}
+   * {@link TrainRegistry#addDeparture(LocalTime, String, String, int, int, LocalTime)}
    * is called
    * which creates a new train departure using the given parameters.
    */
@@ -96,10 +95,10 @@ public class TrainDepartureUserInterface {
     final String line = lineInput();
     System.out.println("Enter track (0 if not set): ");
     final int track = numberInput();
-    if (!trainFactory.departureTimesFromLine(line).isEmpty()) {
+    if (!trainRegistry.departureTimesFromLine(line).isEmpty()) {
       System.out.println("Enter departure time (HH:mm): ");
       departureTime = departureTimeExistingLine(line);
-    } else if (track != 0 && !trainFactory.departureTimesFromTrack(track).isEmpty()) {
+    } else if (track != 0 && !trainRegistry.departureTimesFromTrack(track).isEmpty()) {
       System.out.println("Enter departure time (HH:mm): ");
       departureTime = departureTimeExistingTrack(track);
     } else {
@@ -112,7 +111,7 @@ public class TrainDepartureUserInterface {
     final String destination = textInput();
     System.out.println("Enter train number: ");
     final int trainNumber = trainNumberFromInput();
-    trainFactory.addDeparture(departureTime, line, destination, trainNumber, track, delay);
+    trainRegistry.addDeparture(departureTime, line, destination, trainNumber, track, delay);
   }
 
   /**
@@ -121,7 +120,7 @@ public class TrainDepartureUserInterface {
    * @return A string containing the table header.
    */
   public String tableHeader() {
-    String info = "Current Time: " + trainFactory.getCurrentTime() + "\n";
+    String info = "Current Time: " + trainRegistry.getCurrentTime() + "\n";
     info += ("+---------------+-----------------+--------"
       + "------+----------+-------------------+------------+\n");
     info += ("|      Time     |    Destination  |     Track"
@@ -133,7 +132,7 @@ public class TrainDepartureUserInterface {
 
   /**
    * Calls
-   * {@link edu.ntnu.stud.TrainFactory#removeDeparted()}
+   * {@link TrainRegistry#removeDeparted()}
    * which removes all departures that have already departed.
    * (Their departure time + delay is less than the current time).
    * <p>
@@ -142,10 +141,10 @@ public class TrainDepartureUserInterface {
    * and {@link edu.ntnu.stud.TrainDeparture#toString()}
    */
   public void printDepartureOverview() {
-    trainFactory.removeDeparted();
+    trainRegistry.removeDeparted();
     System.out.println(tableHeader());
 
-    System.out.println(trainFactory.getTrainDepartures().stream()
+    System.out.println(trainRegistry.getTrainDepartures().stream()
         .map(trainDeparture -> trainDeparture.toString()
           + "+---------------+-----------------+--------------"
           + "+----------+-------------------+------------+")
@@ -179,18 +178,18 @@ public class TrainDepartureUserInterface {
 
   /**
     * Prompts the user to input a train number, which is sent to
-   * {@link edu.ntnu.stud.TrainFactory#departureFromNumber(int)}
+   * {@link TrainRegistry#departureFromNumber(int)}
    * if the return from this method is not equal to null,
    * the departure prints (with the table header above it)
    * @see #printSingleDeparture(TrainDeparture)
-   * if the method in trainFactory returns null,
+   * if the method in trainRegistry returns null,
    * ("Train number not found") is displayed.
    */
   public void departureFromNumber() {
     while (true) {
       System.out.println("Enter train number");
       int trainNumber = numberInput();
-      TrainDeparture trainDeparture = trainFactory.departureFromNumber(trainNumber);
+      TrainDeparture trainDeparture = trainRegistry.departureFromNumber(trainNumber);
       if (trainDeparture != null) {
         printSingleDeparture(trainDeparture);
         break;
@@ -203,17 +202,17 @@ public class TrainDepartureUserInterface {
 
   /**
    * Prompts the user to input a destination. User input sent to
-   * {@link edu.ntnu.stud.TrainFactory#departureFromDestination(String)}
+   * {@link TrainRegistry#departureFromDestination(String)}
    * if the return from this method is not equal to null,
    * the departure prints (with the table header above it)
-   * @see #printAnyDepartures(ArrayList)
-   * if the method in trainFactory returns null,
+   * @see #printAnyDepartures(List)
+   * if the method in trainRegistry returns null,
    * ("No departure with this destination") is displayed.
    */
   public void departureFromDestination() {
     System.out.println("Enter destination");
     String destination = textInput();
-    List<TrainDeparture> foundDepartures = trainFactory.departureFromDestination(destination);
+    List<TrainDeparture> foundDepartures = trainRegistry.departureFromDestination(destination);
     if (foundDepartures != null) {
       printAnyDepartures(foundDepartures);
     } else {
@@ -225,23 +224,23 @@ public class TrainDepartureUserInterface {
    * Prompts the user to input a current time,
    * @see #timeInput()
    * which is sent to
-   * {@link edu.ntnu.stud.TrainFactory#setCurrentTime(LocalTime)}
+   * {@link TrainRegistry#setCurrentTime(LocalTime)}
    * <p>
    * After this the
-   * {@link edu.ntnu.stud.TrainFactory#removeDeparted()}
+   * {@link TrainRegistry#removeDeparted()}
    * is called.
    */
   public void setCurrentTime() {
     System.out.println("Enter current time (HH:mm): ");
-    trainFactory.setCurrentTime(timeInput());
-    trainFactory.removeDeparted();
+    trainRegistry.setCurrentTime(timeInput());
+    trainRegistry.removeDeparted();
   }
 
   /**
    * Prompts the user to input a new current time,
    * @see #timeInput()
    * input sent to
-   * {@link edu.ntnu.stud.TrainFactory#setCurrentTime(LocalTime)}
+   * {@link TrainRegistry#setCurrentTime(LocalTime)}
    * <p>
    *If the input is before the current time,
    * the user is prompted to input a new time.
@@ -252,12 +251,12 @@ public class TrainDepartureUserInterface {
     while (true) {
       System.out.println("Enter new current time (HH:mm): ");
       LocalTime time = timeInput();
-      if (time.isBefore(trainFactory.getCurrentTime())) {
+      if (time.isBefore(trainRegistry.getCurrentTime())) {
         System.out.println("Cannot set time before current time");
-      } else if (time.equals(trainFactory.getCurrentTime())) {
+      } else if (time.equals(trainRegistry.getCurrentTime())) {
         System.out.println("Time is already set to this time");
       } else {
-        trainFactory.setCurrentTime(time);
+        trainRegistry.setCurrentTime(time);
         break;
       }
     }
@@ -267,12 +266,12 @@ public class TrainDepartureUserInterface {
    * Prompts the user to input a train number,
    * @see #numberInput()
    * input sent to
-   * {@link edu.ntnu.stud.TrainFactory#departureFromNumber(int)}
-   * in the trainFactory class. If the return from this method is not null,
+   * {@link TrainRegistry#departureFromNumber(int)}
+   * in the trainRegistry class. If the return from this method is not null,
    * the user is prompted to input a track, then both inputs are sent to
-   * {@link edu.ntnu.stud.TrainFactory#assignTrack(int, int)}
+   * {@link TrainRegistry#assignTrack(int, int)}
    * If the return from
-   * {@link edu.ntnu.stud.TrainFactory#departureFromNumber(int)}
+   * {@link TrainRegistry#departureFromNumber(int)}
    * is null,
    * the user is prompted to input a new train number.
    * If the input is 0, the user is returned to the main menu.
@@ -281,10 +280,10 @@ public class TrainDepartureUserInterface {
     while (true) {
       System.out.println("Enter train number (0 to exit): ");
       int trainNumber = numberInput();
-      if (trainFactory.departureFromNumber(trainNumber) != null) {
+      if (trainRegistry.departureFromNumber(trainNumber) != null) {
         System.out.println("Enter track: ");
         int track = numberInput();
-        trainFactory.assignTrack(trainNumber, track);
+        trainRegistry.assignTrack(trainNumber, track);
         break;
       } else if (trainNumber == 0) {
         break;
@@ -300,15 +299,15 @@ public class TrainDepartureUserInterface {
    * Prompts the user to input a train number,
    * @see #numberInput()
    * input sent to
-   * {@link edu.ntnu.stud.TrainFactory#departureFromNumber(int)}
+   * {@link TrainRegistry#departureFromNumber(int)}
    * If the return is not null,
    * the user is prompted to input a delay,
    * @see #timeInput()
    * and both inputs are sent to
-   * {@link edu.ntnu.stud.TrainFactory#addDelay(int, LocalTime)}
+   * {@link TrainRegistry#addDelay(int, LocalTime)}
    *
    * If the return from
-   * {@link edu.ntnu.stud.TrainFactory#departureFromNumber(int)}
+   * {@link TrainRegistry#departureFromNumber(int)}
    * method is null,
    * the user is prompted to input a new train number.
    *
@@ -318,10 +317,10 @@ public class TrainDepartureUserInterface {
     while (true) {
       System.out.println("Enter train number (0 to exit): ");
       int trainNumber = numberInput();
-      if (trainFactory.departureFromNumber(trainNumber) != null) {
+      if (trainRegistry.departureFromNumber(trainNumber) != null) {
         System.out.println("Enter delay: ");
         LocalTime delay = timeInput();
-        trainFactory.addDelay(trainNumber, delay);
+        trainRegistry.addDelay(trainNumber, delay);
         break;
       } else if (trainNumber == 0) {
         break;
@@ -345,7 +344,7 @@ public class TrainDepartureUserInterface {
     int trainNumber;
     while (true) {
       trainNumber = numberInput();
-      if (trainFactory.departureFromNumber(trainNumber) != null) {
+      if (trainRegistry.departureFromNumber(trainNumber) != null) {
         System.out.println("Train number already exists");
       } else {
         break;
@@ -379,7 +378,7 @@ public class TrainDepartureUserInterface {
    * already exists. Prompts the user to input a departure time,
    * @see #timeInput()
    * input is sent to
-   * {@link edu.ntnu.stud.TrainFactory#checkDepartureTimeExistsLine(String, LocalTime)}
+   * {@link TrainRegistry#checkDepartureTimeExistsLine(String, LocalTime)}
    * if the return from this method is true,
    * it means that a departure on this line with this departure time
    * already exists, and the user is prompted to input a new departure time.
@@ -390,7 +389,7 @@ public class TrainDepartureUserInterface {
    */
   public LocalTime departureTimeExistingLine(String line) {
     LocalTime departureTime = timeInput();
-    if (trainFactory.checkDepartureTimeExistsLine(line, departureTime)) {
+    if (trainRegistry.checkDepartureTimeExistsLine(line, departureTime)) {
       System.out.println("Departure time on this line already exists\nTry Again: ");
       departureTime = departureTimeExistingLine(line);
     } else {
@@ -404,7 +403,7 @@ public class TrainDepartureUserInterface {
    * already exists. Prompts the user to input a departure time,
    * @see #timeInput()
    * input is sent to
-   * {@link edu.ntnu.stud.TrainFactory#checkDepartureTimeExistsTrack(int, LocalTime)}
+   * {@link TrainRegistry#checkDepartureTimeExistsTrack(int, LocalTime)}
    * if the return from this method is true,
    * it means that a departure on this track with this departure time
    * already exists, and the user is prompted to input a new departure time.
@@ -415,7 +414,7 @@ public class TrainDepartureUserInterface {
    */
   public LocalTime departureTimeExistingTrack(int track) {
     LocalTime departureTime = timeInput();
-    if (trainFactory.checkDepartureTimeExistsTrack(track, departureTime)) {
+    if (trainRegistry.checkDepartureTimeExistsTrack(track, departureTime)) {
       System.out.println("Departure time on this track already exists\nTry Again: ");
       departureTime = departureTimeExistingTrack(track);
     } else {

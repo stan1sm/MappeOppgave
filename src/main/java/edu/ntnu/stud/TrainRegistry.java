@@ -9,20 +9,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
 /**
- * The TrainFactory represents a registry for train departures.
+ * The TrainRegistry represents a registry for train departures.
  * it is responsible for storing all created train departures and
  * performing actions on them which alter their state.
  *
  */
-public class TrainFactory {
+public class TrainRegistry {
   private final HashMap<Integer, TrainDeparture> numberToDepartureMap = new HashMap<>();
   private final ArrayList<TrainDeparture> trainDepartureList
       = new ArrayList<>(numberToDepartureMap.values());
@@ -186,8 +183,7 @@ public class TrainFactory {
             .toList();
     toRemove.forEach(numberToDepartureMap::remove);
 
-    trainDepartureList.removeIf(trainDeparture ->
-            trainDeparture.getDepartureTimeWithDelay().isBefore(currentTime));
+    updateTrainDepartureList();
   }
 
   /**

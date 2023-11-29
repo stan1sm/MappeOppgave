@@ -35,13 +35,13 @@ public class TrainDeparture {
    */
   TrainDeparture(LocalTime departureTime, String line, String destination,
           int trainNumber, int track, LocalTime delay) {
-    if (!timePattern.matcher(departureTime.toString()).matches()) {
-      throw new DateTimeException("Departure time must be in the format HH:mm");
+    if (departureTime == null || !timePattern.matcher(departureTime.toString()).matches()) {
+      throw new DateTimeException("Departure time cannot be empty, and must be in the format HH:mm");
     } else {
       this.departureTime = departureTime;
     }
-    if (!timePattern.matcher(delay.toString()).matches()) {
-      throw new DateTimeException("Delay must be in the format HH:mm");
+    if (delay == null || !timePattern.matcher(delay.toString()).matches()) {
+      throw new DateTimeException("Delay cannot be empty, and must be in the format HH:mm");
     } else {
       this.delay = delay;
     }
@@ -60,7 +60,11 @@ public class TrainDeparture {
     } else {
       this.track = track;
     }
-    this.trainNumber = trainNumber;
+    if (trainNumber <= 0) {
+      throw new IllegalArgumentException("Train number cannot be less than or equal to 0");
+    } else {
+      this.trainNumber = trainNumber;
+    }
   }
 
 
@@ -80,6 +84,7 @@ public class TrainDeparture {
                  int trainNumber, LocalTime delay) {
     this(departureTime, line, destination, trainNumber, -1, delay);
   }
+
 
   /**
    * Gets the departure time of the train.

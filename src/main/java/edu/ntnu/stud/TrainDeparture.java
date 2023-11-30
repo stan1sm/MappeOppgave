@@ -36,7 +36,8 @@ public class TrainDeparture {
   TrainDeparture(LocalTime departureTime, String line, String destination,
           int trainNumber, int track, LocalTime delay) {
     if (departureTime == null || !timePattern.matcher(departureTime.toString()).matches()) {
-      throw new DateTimeException("Departure time cannot be empty, and must be in the format HH:mm");
+      throw new
+              DateTimeException("Departure time cannot be empty, and must be in the format HH:mm");
     } else {
       this.departureTime = departureTime;
     }

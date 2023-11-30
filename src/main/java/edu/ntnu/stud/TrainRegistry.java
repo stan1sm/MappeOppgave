@@ -9,7 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -283,6 +286,10 @@ public class TrainRegistry {
   }
 
 
+  /**
+   * Writes text to a file.
+   */
+  //TODO: finish this method, figure out if i want it or not...
   public void writeTextToFile() {
     String fileName = "TrainDepartureData.txt";
     String textToWrite = "Hello, this is some text that will be written to the file!";
@@ -298,8 +305,8 @@ public class TrainRegistry {
 
   /**
    * Reads data from a file and adds the information to the system.
-   * <p>
-   * Reads "TrainDepartureData.txt" from the current working directory.
+   *
+   *<p>Reads "TrainDepartureData.txt" from the current working directory.
    * The first line of the file is skipped, as it contains the column names.
    * Each line is split into an array of strings, and variables are created
    * from the array values. A new {@link TrainDeparture} object is created
@@ -313,7 +320,7 @@ public class TrainRegistry {
    */
   public void fillTrainDepartureListFromFile() {
     Path filePath = Paths.get("TrainDepartureData.txt");
-    try (BufferedReader reader = Files.newBufferedReader(filePath);) {
+    try (BufferedReader reader = Files.newBufferedReader(filePath)) {
       reader.readLine(); // skip first line
 
       String line = reader.readLine().trim();
@@ -327,7 +334,7 @@ public class TrainRegistry {
         LocalTime delay = LocalTime.parse(data[5].trim(), formatter);
         line = reader.readLine();
         TrainDeparture trainDeparture = new TrainDeparture(departureTime, lineName, destination,
-          trainNumber, track, delay);
+            trainNumber, track, delay);
         numberToDepartureMap.put(trainNumber, trainDeparture);
         updateTrainDepartureList();
         sortByDepartureTime();

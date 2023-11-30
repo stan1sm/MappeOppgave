@@ -2,7 +2,6 @@ package edu.ntnu.stud;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -71,7 +70,7 @@ public class TrainDepartureUserInterface {
         options.get(choice).run();
       } else if (choice == 0) {
         System.out.println("Exiting...");
-        System.exit(0);
+        break;
       } else {
         System.out.println("Invalid choice");
       }
@@ -135,8 +134,8 @@ public class TrainDepartureUserInterface {
    * {@link TrainRegistry#removeDeparted()}
    * which removes all departures that have already departed.
    * (Their departure time + delay is less than the current time).
-   * <p>
-   * Prints the table header first using the {@link #tableHeader()} method.
+   *
+   * <p>Prints the table header first using the {@link #tableHeader()} method.
    * Prints the departure overview using a stream
    * and {@link edu.ntnu.stud.TrainDeparture#toString()}
    */
@@ -153,8 +152,8 @@ public class TrainDepartureUserInterface {
 
   /**
    * First prints the table header using the {@link #tableHeader()} method.
-   * <p>
-   * @param departureList the list of departures to be printed.
+   *
+   * <p>@param departureList the list of departures to be printed.
    */
   public void printAnyDepartures(List<TrainDeparture> departureList) {
     System.out.println(tableHeader());
@@ -177,10 +176,11 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-    * Prompts the user to input a train number, which is sent to
-   * {@link TrainRegistry#departureFromNumber(int)}
+   * Prompts the user to input a train number, which is sent to
+   * {@link TrainRegistry#departureFromNumber(int)}.
    * if the return from this method is not equal to null,
    * the departure prints (with the table header above it)
+   *
    * @see #printSingleDeparture(TrainDeparture)
    * if the method in trainRegistry returns null,
    * ("Train number not found") is displayed.
@@ -205,9 +205,10 @@ public class TrainDepartureUserInterface {
    * {@link TrainRegistry#departureFromDestination(String)}
    * if the return from this method is not equal to null,
    * the departure prints (with the table header above it)
+   *
    * @see #printAnyDepartures(List)
    * if the method in trainRegistry returns null,
-   * ("No departure with this destination") is displayed.
+   *("No departure with this destination") is displayed.
    */
   public void departureFromDestination() {
     System.out.println("Enter destination");
@@ -222,7 +223,8 @@ public class TrainDepartureUserInterface {
 
   /**
    * Prompts the user to input a current time,
-   * @see #timeInput()
+   *
+   * @see #timeInput().
    * which is sent to
    * {@link TrainRegistry#setCurrentTime(LocalTime)}
    * <p>

@@ -181,10 +181,11 @@ public class TrainDepartureUserInterface {
    * if the return from this method is not equal to null,
    * the departure prints (with the table header above it)
    *
-   * @see #printSingleDeparture(TrainDeparture)
-   * if the method in trainRegistry returns null,
-   * ("Train number not found") is displayed.
+   * @see #printSingleDeparture(TrainDeparture).
+   * If the method in trainRegistry returns null,
+   *("Train number not found") is displayed.
    */
+
   public void departureFromNumber() {
     while (true) {
       System.out.println("Enter train number");

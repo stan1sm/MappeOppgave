@@ -149,12 +149,12 @@ public class TrainDepartureUserInterface {
    */
   public String tableHeader() {
     String info = "Current Time: " + trainRegistry.getCurrentTime() + "\n";
-    info += ("+---------------+-----------------+--------"
-      + "------+----------+-------------------+------------+\n");
-    info += ("|      Time     |    Destination  |     Track"
-      + "    |   Line   |    Train Number   |    Delay   |\n");
-    info += ("+---------------+-----------------+--------"
-      + "------+----------+-------------------+------------+");
+    info += ("+----------------+----------+---------------------"
+            + "+-----------------+------------+------------+\n");
+    info += ("| Departure Time |    Line  |     Train Number    "
+            + "|   Destination   |    Delay   |    Track   |\n");
+    info += ("+----------------+----------+---------------------"
+            + "+-----------------+------------+------------+");
     return info;
   }
 
@@ -176,8 +176,8 @@ public class TrainDepartureUserInterface {
 
     System.out.println(trainRegistry.getTrainDepartures().stream()
         .map(trainDeparture -> trainDeparture.toString()
-          + "+---------------+-----------------+--------------"
-          + "+----------+-------------------+------------+")
+          + "+----------------+----------+---------------------"
+                + "+-----------------+------------+------------+")
         .collect(Collectors.joining("\n")));
   }
 
@@ -193,8 +193,8 @@ public class TrainDepartureUserInterface {
     System.out.println(tableHeader());
     System.out.println(departureList.stream()
             .map(trainDeparture -> trainDeparture.toString()
-                    + "+---------------+-----------------+--------------"
-                    + "+----------+-------------------+------------+")
+                    + "+----------------+----------+---------------------"
+                    + "+-----------------+------------+------------+")
             .collect(Collectors.joining("\n")));
   }
 

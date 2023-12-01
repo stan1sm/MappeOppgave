@@ -134,6 +134,7 @@ public class TrainDepartureUserInterface {
    * {@link TrainRegistry#removeDeparted()}
    * which removes all departures that have already departed.
    * (Their departure time + delay is less than the current time).
+   * this is done to prevent the user from seeing departures that have already departed.
    *
    * <p>Prints the table header first using the {@link #tableHeader()} method.
    * Prints the departure overview using a stream
@@ -176,14 +177,14 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a train number, which is sent to
+   * Prompts the user to input a train number, which is then sent to
    * {@link TrainRegistry#departureFromNumber(int)}.
-   * if the return from this method is not equal to null,
-   * the departure prints (with the table header above it)
+   * If the return from this method is not equal to null,
+   * the departure information is printed (along with the table header above it).
    *
-   * @see #printSingleDeparture(TrainDeparture).
-   * If the method in trainRegistry returns null,
-   *("Train number not found") is displayed.
+   * @see #printSingleDeparture(TrainDeparture)
+   *      If the method in trainRegistry returns null,
+   *      "Train number not found" is displayed.
    */
 
   public void departureFromNumber() {
@@ -208,8 +209,8 @@ public class TrainDepartureUserInterface {
    * the departure prints (with the table header above it)
    *
    * @see #printAnyDepartures(List)
-   * if the method in trainRegistry returns null,
-   *("No departure with this destination") is displayed.
+   *      if the method in trainRegistry returns null,
+   *      ("No departure with this destination") is displayed.
    */
   public void departureFromDestination() {
     System.out.println("Enter destination");
@@ -223,15 +224,15 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a current time,
+   * Prompts the user to input a current time.
    *
-   * @see #timeInput().
-   * which is sent to
+   *<p>using the method {@link #timeInput()}
+   * the input is sent to
    * {@link TrainRegistry#setCurrentTime(LocalTime)}
-   * <p>
-   * After this the
+   *
+   *<p>After this the
    * {@link TrainRegistry#removeDeparted()}
-   * is called.
+   * is called in order to remove all departures that have already departed.
    */
   public void setCurrentTime() {
     System.out.println("Enter current time (HH:mm): ");
@@ -240,15 +241,19 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a new current time,
-   * @see #timeInput()
-   * input sent to
-   * {@link TrainRegistry#setCurrentTime(LocalTime)}
-   * <p>
-   *If the input is before the current time,
-   * the user is prompted to input a new time.
-   * If the input is equal to the current time, the user is prompted to input a new time.
-   * If the input is after the current time, the current time is set to the input.
+   * Method used to update the current time in the application.
+   * Prompts the user to input a new current time.
+   * using the method {@link #timeInput()}
+   *
+   * <ul>
+   *     <li>if the input is before or equal to the current time,
+   *     the user is prompted to input a new time.</li>
+   *     <li>if the input is after the current time (valid input),
+   *     the input is sent to {@link TrainRegistry#setCurrentTime(LocalTime)},
+   *     which sets the current time to the input</li>
+   *     <li>{@link TrainRegistry#removeDeparted()} is called to remove all departures
+   *     that departed prior to the updated time.</li>
+   * </ul>
    */
   public void updateCurrentTime() {
     while (true) {
@@ -260,24 +265,28 @@ public class TrainDepartureUserInterface {
         System.out.println("Time is already set to this time");
       } else {
         trainRegistry.setCurrentTime(time);
+        trainRegistry.removeDeparted();
         break;
       }
     }
   }
 
   /**
-   * Prompts the user to input a train number,
-   * @see #numberInput()
-   * input sent to
-   * {@link TrainRegistry#departureFromNumber(int)}
-   * in the trainRegistry class. If the return from this method is not null,
-   * the user is prompted to input a track, then both inputs are sent to
-   * {@link TrainRegistry#assignTrack(int, int)}
-   * If the return from
-   * {@link TrainRegistry#departureFromNumber(int)}
-   * is null,
-   * the user is prompted to input a new train number.
-   * If the input is 0, the user is returned to the main menu.
+   * Method that collects user input for assigning a track to a train departure.
+   * <ol>
+   *     <li>Prompts user to input a train number, with {@link #numberInput()}</li>
+   *     <ul>
+   *         <li>If the input is 0 the user is returned to the main menu</li>
+   *     </ul>
+   *     <li>input sent to {@link TrainRegistry#departureFromNumber(int)}</li>
+   *     <ul>
+   *         <li>if the return from this method is null
+   *         user is prompted to input a new train number</li>
+   *         <li>If the return is not null, user is prompted to input a track
+   *         with {@link #numberInput()}</li>
+   *     </ul>
+   *     <li>both inputs are sent to {@link TrainRegistry#assignTrack(int, int)}</li>
+   * </ol>
    */
   public void assignTrack() {
     while (true) {
@@ -299,22 +308,21 @@ public class TrainDepartureUserInterface {
 
 
   /**
-   * Prompts the user to input a train number,
-   * @see #numberInput()
-   * input sent to
-   * {@link TrainRegistry#departureFromNumber(int)}
-   * If the return is not null,
-   * the user is prompted to input a delay,
-   * @see #timeInput()
-   * and both inputs are sent to
-   * {@link TrainRegistry#addDelay(int, LocalTime)}
-   *
-   * If the return from
-   * {@link TrainRegistry#departureFromNumber(int)}
-   * method is null,
-   * the user is prompted to input a new train number.
-   *
-   * If the input is 0, the user is returned to the main menu.
+   * Method that collects user input for adding delay to a train departure.
+   * <ol>
+   *     <li>Prompts user to input a train number, with {@link #numberInput()}</li>
+   *     <ul>
+   *         <li>If the input is 0 the user is returned to the main menu</li>
+   *     </ul>
+   *     <li>input sent to {@link TrainRegistry#departureFromNumber(int)}</li>
+   *     <ul>
+   *         <li>if the return from this method is null
+   *         user is prompted to input a new train number</li>
+   *         <li>If the return is not null, user is prompted to input a delay
+   *         with {@link #timeInput()}</li>
+   *     </ul>
+   *     <li>both inputs are sent to {@link TrainRegistry#addDelay(int, LocalTime)}</li>
+   * </ol>
    */
   public void addDelay() {
     while (true) {
@@ -336,10 +344,20 @@ public class TrainDepartureUserInterface {
 
 
   /**
-   * Prompts the user to input a train number,
-   * @see #numberInput()
-   * which is validated in a try catch block.
-   * if the input is invalid, prompts the user for a new train number.
+   * Method that is used when creating a new train departure,
+   * where the same train number cannot be used twice.
+   *
+   * <ol>
+   *     <li>Prompts the user to input a train number,
+   *     with {@link #numberInput()}</li>
+   *     <li>Input sent to {@link TrainRegistry#departureFromNumber(int)}</li>
+   *     <ul>
+   *         <li>If the return from this method is not null,
+   *     the user is prompted to input a new train number</li>
+   *     <li>If the return is null, the loop exits and the train number is returned</li>
+   *     </ul>
+   * </ol>
+   * 
    *
    * @return trainNumber
    */
@@ -357,7 +375,9 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a line, which is validated in a while loop.
+   * Method that is used to ask for a line input when creating a new train departure.
+   *
+   * <p>Prompts the user to input a line, which is validated in a while loop.
    * if the input is invalid, prompts the user for a new line.
    * if the input is valid, the line is made into uppercase and returned
    *
@@ -377,15 +397,19 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Method that is used if the line for the train departure that is being created
-   * already exists. Prompts the user to input a departure time,
-   * @see #timeInput()
-   * input is sent to
-   * {@link TrainRegistry#checkDepartureTimeExistsLine(String, LocalTime)}
-   * if the return from this method is true,
-   * it means that a departure on this line with this departure time
-   * already exists, and the user is prompted to input a new departure time.
-   * if the return is false, this method returns the departure time.
+   * Method that is used to set a departure time,
+   * if a train departure on the given line already exists
+   * (because two departures on the same line cannot have the same departure time).
+   * 
+   * <ol>
+   *     <li>Prompts the user to input a departure time, with {@link #timeInput()}</li>
+   *     <li>Input sent to {@link TrainRegistry#checkDepartureTimeExistsLine(String, LocalTime)}</li>
+   *     <ul>
+   *         <li>If the return from this method is true,
+   *         the user is prompted to input a new departure time</li>
+   *         <li>If the return is false, the loop exits and the departure time is returned</li>
+   *     </ul>
+   * </ol>
    *
    * @param line the line for the train departure that is being created
    * @return departureTime
@@ -402,15 +426,19 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Method that is used if the track for the train departure that is being created
-   * already exists. Prompts the user to input a departure time,
-   * @see #timeInput()
-   * input is sent to
-   * {@link TrainRegistry#checkDepartureTimeExistsTrack(int, LocalTime)}
-   * if the return from this method is true,
-   * it means that a departure on this track with this departure time
-   * already exists, and the user is prompted to input a new departure time.
-   * if the return is false, this method returns the departure time.
+   * Method that is used to set a departure time,
+   * if a train departure on the given track already exists
+   * (because two departures on the same track cannot have the same departure time).
+   *
+   * <ol>
+   *     <li>Prompts the user to input a departure time, with {@link #timeInput()}</li>
+   *     <li>Input sent to {@link TrainRegistry#checkDepartureTimeExistsTrack(int, LocalTime)}</li>
+   *     <ul>
+   *         <li>If the return from this method is true,
+   *         the user is prompted to input a new departure time</li>
+   *         <li>If the return is false, the loop exits and the departure time is returned</li>
+   *     </ul>
+   * </ol>
    *
    * @param track the track for the train departure that is being created
    * @return departureTime
@@ -427,11 +455,14 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a time, which is validated in a try catch block.
+   * Method that used to gather user input for a time.
+   *
+   * <p>Prompts the user to input a time, which is validated in a try catch block,
+   * by checking if the input matches the format "HH:mm".
    * the try catch is in a while loop, so if the input is invalid,
    * the user is prompted to input a new time.
    *
-   * @return time
+   * @return time LocalTime object with the time input by the user.
    */
   public LocalTime timeInput() {
     LocalTime time;
@@ -448,7 +479,9 @@ public class TrainDepartureUserInterface {
   }
 
   /**
-   * Prompts the user to input a number, which is validated in a try catch block.
+   * Method that used to gather user input for a number.
+   *
+   *<p>Prompts the user to input a number, which is validated in a try catch block.
    * the try catch is in a while loop, so if the input is invalid,
    * the user is prompted to input a new number.
    *

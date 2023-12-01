@@ -192,26 +192,33 @@ public class TrainDeparture {
    */
   public String toString() {
     StringBuilder info = new StringBuilder();
-    int destinationLength = destination.length();
+    final int destinationLength = destination.length();
     if (delay != LocalTime.of(0, 0)) {
       info.append("| ").append(departureTime).append("(+")
-        .append(delay).append(")").append(String.format("%" + 2 + "s", " | "));
+        .append(delay).append(")").append(String.format("%" + 4 + "s", " | "));
     } else {
       info.append("| ").append(String.format("%" + 4 + "s", " "))
-        .append(departureTime).append(String.format("%" + 7 + "s", " | "));
-    }
-    info.append(destination).append(String.format("%" + (18 - destinationLength) + "s", " | "));
-    if (track == -1) {
-      info.append("No Track Yet").append(String.format("%" + 2 + "s", " | "));
-    } else {
-      info.append(String.format("%" + 6 + "s", " "))
-        .append(track).append(String.format("%" + 8 + "s", " | "));
+        .append(departureTime).append(String.format("%" + 8 + "s", " | "));
     }
     info.append(String.format("%" + 3 + "s", " "))
-      .append(line).append(String.format("%" + 6 + "s", " | "));
+            .append(line).append(String.format("%" + 6 + "s", " | "));
     info.append(String.format("%" + 8 + "s", " "))
-      .append(trainNumber).append(String.format("%" + 11 + "s", " | "));
-    info.append(delay).append(String.format("%" + 7 + "s", "|")).append("\n");
+            .append(trainNumber).append(String.format("%" + 13 + "s", " | "));
+    info.append(destination).append(String.format("%" + (18 - destinationLength) + "s", " | "));
+    if (delay.equals(LocalTime.of(0, 0))) {
+      info.append(String.format("%" + 13 + "s", " | "));
+    } else {
+      info.append(delay).append(String.format("%" + 7 + "s", "|"));
+    }
+    if (track == -1) {
+      info.append(" ").append(String.format("%" + 12 + "s", " | ")).append("\n");
+    } else if (delay.equals(LocalTime.of(0, 0))) {
+      info.append(String.format("%" + 5 + "s", " "))
+        .append(track).append(String.format("%" + 7 + "s", " | ")).append("\n");
+    } else {
+      info.append(String.format("%" + 6 + "s", " "))
+        .append(track).append(String.format("%" + 7 + "s", " | ")).append("\n");
+    }
     return info.toString();
   }
 }

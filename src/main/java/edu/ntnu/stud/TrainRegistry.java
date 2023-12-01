@@ -17,10 +17,21 @@ import java.util.stream.Collectors;
 
 
 /**
- * The TrainRegistry represents a registry for train departures.
- * it is responsible for storing all created train departures and
- * performing actions on them which alter their state.
+ * Class that represents a registry of TrainDeparture objects.
+ * <ul>
+ *     <li>Has methods for adding, removing, and modifying TrainDeparture objects.</li>
+ *     <li>Has methods that are used for searching for specific TrainDeparture objects</li>
+ * </ul>
  *
+ * <p>Contains inner class {@link TrainDepartureComparator} that is used for sorting
+ * {@link #trainDepartureList} by departure time.
+ *
+ *<p>No direct user interaction, all methods receive parameters from
+ * {@link TrainDepartureUserInterface}
+ *
+ * @see TrainDeparture
+ * @see TrainDepartureUserInterface
+ * @see TrainDepartureComparator
  */
 public class TrainRegistry {
   private final HashMap<Integer, TrainDeparture> numberToDepartureMap = new HashMap<>();

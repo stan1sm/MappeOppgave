@@ -30,25 +30,30 @@ public class TrainRegistry {
   private LocalTime currentTime = null;
 
   /**
-   * Returns the ArrayList of train departures.
+   * Method that returns the TrainDepartureList.
    *
-   * @return trainDepartureList
+   * @return trainDepartureList ArrayList with TrainDeparture objects.
    */
   public ArrayList<TrainDeparture> getTrainDepartures() {
     return trainDepartureList;
   }
 
   /**
-   * Adds a new train departure with provided parameters to the system.
+   * Method that adds a new TrainDeparture object to the system.
    *
    *<p>Creates a new trainDeparture using the given parameters,
    * and adds it to the numberToDepartureMap.
-   * also calls the {@link #updateTrainDepartureList()}
-   * receives parameters from
+   * also calls{@link #updateTrainDepartureList()}
+   *
+   * <p>Receives parameters from
    * {@link TrainDepartureUserInterface#addTrainDeparture()}
    *
-   *<p>If the track is 0, the constructor for {@link TrainDeparture} without track is used.
-   * if the track is not 0, the constructor for {@link TrainDeparture} with track is used.
+   *<ul>
+   *     <li>If the track is 0, the constructor for
+   *     {@link TrainDeparture} without track is used.</li>
+   *     <li>If the track is not 0, the constructor for
+   *     {@link TrainDeparture} with track is used.</li>
+   *</ul>
    *
    * @param departureTime the departure time of the train
    * @param line the line the train is operating on
@@ -71,13 +76,13 @@ public class TrainRegistry {
   }
 
   /**
-   * Sets the track of a specific TrainDeparture.
+   * Method that sets the track of a specific TrainDeparture.
    *
    *<p>Receives parameters from,
    * {@link TrainDepartureUserInterface#addDelay()}
    * <ul>
-   *   <li>Selects TrainDeparture using {@link #departureFromNumber(int)}</li>
-   *   <li>Sets the track of the TrainDeparture to the given track</li>
+   *   <li>Selects TrainDeparture using {@link #departureFromNumber(int)}
+   *   and sets the track of the TrainDeparture to the given track</li>
    * </ul>
    *
    * @param trainNumber the train number of the train departure to be assigned a delay.
@@ -85,19 +90,16 @@ public class TrainRegistry {
    */
   public void assignTrack(int trainNumber, int track) {
     departureFromNumber(trainNumber).setTrack(track);
-    departureFromNumber(trainNumber);
   }
 
-
-
   /**
-   * Sets the delay of a specific TrainDeparture.
+   * Method that sets the delay of a specific TrainDeparture.
    *
    *<p>Receives parameters from,
    * {@link TrainDepartureUserInterface#addDelay()}
    * <ul>
-   *   <li>Selects TrainDeparture using {@link #departureFromNumber(int)}</li>
-   *   <li>Sets the delay of the TrainDeparture to the given delay</li>
+   *   <li>Selects TrainDeparture using {@link #departureFromNumber(int)}
+   *   and sets the delay of the TrainDeparture to the given delay</li>
    * </ul>
    *
    * @param trainNumber the train number of the train departure to be assigned a delay.
@@ -108,13 +110,15 @@ public class TrainRegistry {
   }
 
   /**
-   * Finds a TrainDeparture object using the given train number.
+   * Method that find a specific TrainDeparture using the train number.
    *
    *<p>Receives a train number parameter from
    * {@link TrainDepartureUserInterface#departureFromNumber()}
-   * if the train number is found in {@link #numberToDepartureMap}
-   * returns the TrainDeparture associated with the train number.
-   * if the train number is not found, returns {@code null}
+   * <ul>
+   *     <li>If the train number is found in {@link #numberToDepartureMap}
+   *      returns the TrainDeparture associated with the train number.</li>
+   *      <li>If the train number is not found, returns {@code null}</li>
+   * </ul>
    *
    * @param trainNumber the train number for the TrainDeparture to be found.
    * @return a TrainDeparture object with the given train number.
@@ -129,12 +133,13 @@ public class TrainRegistry {
   }
 
   /**
-   * Finds all train departures with the given destination.
+   * Method that finds all TrainDepartures with a specific destination.
    *
    *<p>Receives a destination parameter from
    * {@link TrainDepartureUserInterface#departureFromDestination()}
    * filters {@link #trainDepartureList} by destination
-   * ignores case sensitivity, creates a list of all found departures
+   *
+   *<p>Ignores case sensitivity, creates a list of all found departures
    *
    * @param destination the destination of the train departure to be found.
    * @return a list with TrainDeparture objects that have the specified destination.
@@ -149,9 +154,11 @@ public class TrainRegistry {
   }
 
   /**
-   * Receives a time parameter from
+   * Method that sets the current time of the application.
+   *
+   *<p>Receives a time parameter from
    * {@link TrainDepartureUserInterface#setCurrentTime()}
-   *and sets the current time to the given time.
+   * and sets the current time to the given time.
    *
    * @param time the time to be set as current time.
    */
@@ -160,7 +167,7 @@ public class TrainRegistry {
   }
 
   /**
-   * Returns the current time.
+   * Method that returns the current time of the application.
    *
    * @return currentTime
    */
@@ -169,14 +176,14 @@ public class TrainRegistry {
   }
 
   /**
-   * Removed departures that have departed from the system.
+   * Method that removes all departures that have departed.
    *
    *<p>This method uses a stream to check if any train departures have departed.
    * <ul>
    *   <li>Identifies departures where departure time + delay is less then the current time</li>
    *   <li>Adds these departures to a List "toRemove"</li>
-   *   <li>Removes all departures in "toRemove" from the numberToDepartureMap
-   *   and the "trainDepartureList" arraylist</li>
+   *   <li>Removes all departures in "toRemove" from {@link #numberToDepartureMap}</li>
+   *   and {@link #trainDepartureList}</li>
    * </ul>
    */
   public void removeDeparted() {
@@ -190,7 +197,7 @@ public class TrainRegistry {
   }
 
   /**
-   * Sorts the train departure list by ascending departure time,
+   * Method that sorts {@link #trainDepartureList} by departure time.
    *
    *<p>this method uses the {@link TrainDepartureComparator} class to sort the list.
    * note that the {@link #numberToDepartureMap} is not sorted, as it is not used in the
@@ -201,13 +208,14 @@ public class TrainRegistry {
   }
 
   /**
-   * Returns departure times for departures on a specific line.
+   * Method that returns the departure times for all departures on a specific line.
    *
-   *<p><ul>
+   *<ul>
    *   <li>Receives a line parameter from {@link TrainDepartureUserInterface}</li>
    *   <li>Filters {@link #trainDepartureList} by line</li>
-   *   <li>Collects all LocalTime values to a list</li>
-   *   </ul>
+   *   <li>Collects all LocalTime values to a list,
+   *   the list is later returned</li>
+   *</ul>
    *
    * @param line the line of which departure times are to be found.
    * @return a list of departure times for departures on the given line.
@@ -220,12 +228,13 @@ public class TrainRegistry {
   }
 
   /**
-   * Returns departure times for departures on a specific track.
+   * Method that returns the departure times for all departures on a specific track.
    *
    *<p><ul>
    *   <li>Receives a track parameter from {@link TrainDepartureUserInterface}</li>
    *   <li>Filters {@link #trainDepartureList} by track</li>
-   *   <li>Collects all LocalTime values to a list</li>
+   *   <li>Collects all LocalTime values to a list,
+   *   the list is later returned.</li>
    *   </ul>
    *
    * @param track the track of which departure times are to be found.
@@ -239,7 +248,7 @@ public class TrainRegistry {
   }
 
   /**
-   * Checks if a given departure time exists on a given track.
+   * Method that checks if a given departure time exists on a given track.
    *
    * <p>Retrieves a list from {@link #departureTimesFromTrack(int)} and checks if the list
    * contains the given departure time.
@@ -254,7 +263,7 @@ public class TrainRegistry {
   }
 
   /**
-   * Checks if a given departure time exists on a given line.
+   * Method that checks if a given departure time exists on a given line.
    *
    * <p>Retrieves a list from {@link #departureTimesFromLine(String)} and checks if the list
    * contains the given departure time.
@@ -269,7 +278,8 @@ public class TrainRegistry {
   }
 
   /**
-   * Updates the train departure list.
+   * Method that updates {@link #trainDepartureList}. So that it reflects the values in
+   * {@link #numberToDepartureMap}.
    *
    *<p><ul>
    *   <li>Clears the trainDepartureList</li>
@@ -304,7 +314,7 @@ public class TrainRegistry {
   }
 
   /**
-   * Reads data from a file and adds the information to the system.
+   * Method that reads a file and creates {@link TrainDeparture} objects from the data.
    *
    *<p>Reads "TrainDepartureData.txt" from the current working directory.
    * The first line of the file is skipped, as it contains the column names.

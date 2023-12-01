@@ -9,7 +9,22 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * A user interface for the train departure application.
+ * TrainDepartureUserInterface lets users interact with the application.
+ *
+ * <p>The class is responsible for gathering user input,
+ * that is required in order to use the different functions that the application provides.
+ * It also displays information to the user.
+ *
+ *<p>The class uses a HashMap to store the different options for the user.
+ * And uses a Scanner in order to gather user input.
+ *
+ *<p>All input is validated in their respective methods.
+ * This is done in order to prevent the user from inputting invalid data.
+ *
+ * <p>This class assumes that the TrainRegistry class is working,
+ * in order to manage TrainDeparture-objects.
+ *
+ * @see TrainRegistry
  */
 public class TrainDepartureUserInterface {
 

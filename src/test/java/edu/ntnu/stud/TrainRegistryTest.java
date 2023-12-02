@@ -36,7 +36,6 @@ public class TrainRegistryTest {
         assertEquals(LocalTime.of(0, 10), trainRegistry.departureFromNumber(1).getDelay());
     }
 
-    //TODO: FIX THIS TEST
     @Test
     void testDepartureFromNumber() {
         assertEquals(trainRegistry.getNumberToDepartureMap().get(1), trainRegistry.departureFromNumber(1));

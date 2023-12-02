@@ -316,24 +316,6 @@ public class TrainRegistry {
     sortByDepartureTime();
   }
 
-
-  /**
-   * Writes text to a file.
-   */
-  //TODO: finish this method, figure out if i want it or not...
-  public void writeTextToFile() {
-    String fileName = "TrainDepartureData.txt";
-    String textToWrite = "Hello, this is some text that will be written to the file!";
-
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-      writer.write(textToWrite);
-      System.out.println("Text has been written to the file: " + fileName);
-      System.out.println("Current Working Directory: " + System.getProperty("user.dir"));
-    } catch (IOException e) {
-      System.err.println("Error writing to file: " + e.getMessage());
-    }
-  }
-
   /**
    * Method that reads a file and creates {@link TrainDeparture} objects from the data.
    *

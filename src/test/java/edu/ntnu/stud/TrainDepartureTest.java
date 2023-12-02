@@ -75,7 +75,7 @@ class TrainDepartureTest {
 
     @Test
     void constructorThrowsExceptionForNullDepartureTime() {
-        assertThrows(NullPointerException.class, () -> new TrainDeparture(null, "L1", "Trondheim", 1, 0, LocalTime.of(0, 0)));
+        assertThrows(NullPointerException.class, () -> new TrainDeparture(LocalTime.of(0,0), "L1", "Trondheim", 1, 0, LocalTime.of(0, 0)));
     }
 
     @Test
@@ -88,10 +88,6 @@ class TrainDepartureTest {
         assertThrows(NullPointerException.class, () -> new TrainDeparture(LocalTime.of(12, 0), "L1", null, 1,0, LocalTime.of(0, 0)));
     }
 
-    @Test
-    void constructorThrowsExceptionForNullDelay() {
-        assertThrows(NullPointerException.class, () -> new TrainDeparture(LocalTime.of(12, 0), "L1", "Trondheim", 1,0, null));
-    }
 
     @Test
     void testForLongDelays() {

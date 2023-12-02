@@ -11,14 +11,9 @@ import java.util.ArrayList;
 public class TrainRegistryTest {
     private TrainRegistry trainRegistry;
 
-    ArrayList<TrainDeparture> trainDepartureList;
-    HashMap<Integer, TrainDeparture> numberToDepartureMap;
-
     @BeforeEach
     void setUp() {
         trainRegistry = new TrainRegistry();
-        trainDepartureList = new ArrayList<>();
-        numberToDepartureMap = new HashMap<>();
 
         trainRegistry.addDeparture(LocalTime.of(12,0), "L1", "Trondheim", 1, 1, LocalTime.of(0, 0));
         trainRegistry.addDeparture(LocalTime.of(10,0), "L2", "Stavanger", 2, 2, LocalTime.of(0, 0));
@@ -44,8 +39,7 @@ public class TrainRegistryTest {
     //TODO: FIX THIS TEST
     @Test
     void testDepartureFromNumber() {
-        System.out.println(numberToDepartureMap);
-        assertEquals(numberToDepartureMap.get(1), trainRegistry.departureFromNumber(1));
+        assertEquals(trainRegistry.getNumberToDepartureMap().get(1), trainRegistry.departureFromNumber(1));
     }
 
     @Test
@@ -66,8 +60,8 @@ public class TrainRegistryTest {
     void testRemoveDeparted(){
         trainRegistry.setCurrentTime(LocalTime.of(12, 30));
         trainRegistry.removeDeparted();
-        assertEquals(0, trainDepartureList.size());
-        assertEquals(0, numberToDepartureMap.size());
+        assertEquals(0, trainRegistry.getTrainDepartures().size());
+        assertEquals(0, trainRegistry.getNumberToDepartureMap().size());
     }
 
     @Test

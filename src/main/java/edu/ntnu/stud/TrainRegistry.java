@@ -50,6 +50,16 @@ public class TrainRegistry {
   }
 
   /**
+   * Method that returns the numberToDepartureMap.
+   *
+   * <p>Used for testing purposes.
+   * @return numberToDepartureMap HashMap with TrainDeparture objects.
+   */
+  public HashMap<Integer, TrainDeparture> getNumberToDepartureMap() {
+      return numberToDepartureMap;
+    }
+
+  /**
    * Method that adds a new TrainDeparture object to the system.
    *
    *<p>Creates a new trainDeparture using the given parameters,

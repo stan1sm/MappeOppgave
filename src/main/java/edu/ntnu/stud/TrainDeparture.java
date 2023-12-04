@@ -16,7 +16,7 @@ public class TrainDeparture {
   private final int trainNumber;
   private int track;
   private LocalTime delay;
-  private static final Pattern timePattern = Pattern.compile("([01]?('\\d')|2[0-3]):[0-5]('\\d')");
+  private static final Pattern timePattern = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
 
 
 

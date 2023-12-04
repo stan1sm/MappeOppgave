@@ -33,8 +33,10 @@ public class TrainDepartureUserInterface {
   private final TrainRegistry trainRegistry = new TrainRegistry();
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
   private static final Pattern digits = Pattern.compile("\\D+");
-
-
+  private static final String ASK_FOR_TIME = "Enter departure time (HH:mm): ";
+  private static final String TABLE_LINE = "+----------------+----------+---------------------"
+          + "+-----------------+------------+------------+";
+  private static final String NUMBER_NOT_FOUND = "Train number not found";
 
 
   /**
@@ -58,7 +60,6 @@ public class TrainDepartureUserInterface {
     options.put(7, this::updateCurrentTime);
     options.put(8, trainRegistry::fillTrainDepartureListFromFile);
     options.put(9, trainRegistry::sortByDepartureTime);
-    options.put(10, trainRegistry::writeTextToFile); //TODO: maybe remove this...
     trainRegistry.fillTrainDepartureListFromFile();
   }
 
@@ -124,13 +125,13 @@ public class TrainDepartureUserInterface {
     System.out.println("Enter track (0 if not set): ");
     final int track = numberInput();
     if (!trainRegistry.departureTimesFromLine(line).isEmpty()) {
-      System.out.println("Enter departure time (HH:mm): ");
+      System.out.println(ASK_FOR_TIME);
       departureTime = departureTimeExistingLine(line);
     } else if (track != 0 && !trainRegistry.departureTimesFromTrack(track).isEmpty()) {
-      System.out.println("Enter departure time (HH:mm): ");
+      System.out.println(ASK_FOR_TIME);
       departureTime = departureTimeExistingTrack(track);
     } else {
-      System.out.println("Enter departure time (HH:mm): ");
+      System.out.println(ASK_FOR_TIME);
       departureTime = timeInput();
     }
     System.out.println("Enter delay (HH:mm): ");
@@ -149,12 +150,10 @@ public class TrainDepartureUserInterface {
    */
   public String tableHeader() {
     String info = "Current Time: " + trainRegistry.getCurrentTime() + "\n";
-    info += ("+----------------+----------+---------------------"
-            + "+-----------------+------------+------------+\n");
+    info += (TABLE_LINE + "\n");
     info += ("| Departure Time |    Line  |     Train Number    "
             + "|   Destination   |    Delay   |    Track   |\n");
-    info += ("+----------------+----------+---------------------"
-            + "+-----------------+------------+------------+");
+    info += (TABLE_LINE);
     return info;
   }
 
@@ -176,8 +175,7 @@ public class TrainDepartureUserInterface {
 
     System.out.println(trainRegistry.getTrainDepartures().stream()
         .map(trainDeparture -> trainDeparture.toString()
-          + "+----------------+----------+---------------------"
-                + "+-----------------+------------+------------+")
+          + TABLE_LINE)
         .collect(Collectors.joining("\n")));
   }
 
@@ -236,7 +234,7 @@ public class TrainDepartureUserInterface {
         printSingleDeparture(trainDeparture);
         break;
       } else {
-        System.out.println("Train number not found");
+        System.out.println(NUMBER_NOT_FOUND);
       }
     }
   }
@@ -335,20 +333,23 @@ public class TrainDepartureUserInterface {
    * </ol>
    */
   public void assignTrack() {
-    while (true) {
-      System.out.println("Enter train number (0 to exit): ");
+    boolean trackExit = false;
+    while (!trackExit){
+        System.out.println("Enter train number (0 to exit): ");
       int trainNumber = numberInput();
-      if (trainRegistry.departureFromNumber(trainNumber) != null) {
-        System.out.println("Enter track: ");
-        int track = numberInput();
-        trainRegistry.assignTrack(trainNumber, track);
-        break;
-      } else if (trainNumber == 0) {
-        break;
-      } else {
-        System.out.println("Train number not found");
-        assignTrack();
-      }
+        if (trainNumber == 0) {
+            trackExit = true;
+        }
+        else{
+          if (trainRegistry.departureFromNumber(trainNumber) != null) {
+            System.out.println("Enter track: ");
+            int track = numberInput();
+            trainRegistry.assignTrack(trainNumber, track);
+            trackExit = true;
+          } else {
+            System.out.println(NUMBER_NOT_FOUND);
+          }
+        }
     }
   }
 
@@ -370,20 +371,23 @@ public class TrainDepartureUserInterface {
    * </ol>
    */
   public void addDelay() {
-    while (true) {
+    boolean delayExit = false;
+    while (!delayExit){
       System.out.println("Enter train number (0 to exit): ");
-      int trainNumber = numberInput();
-      if (trainRegistry.departureFromNumber(trainNumber) != null) {
-        System.out.println("Enter delay: ");
-        LocalTime delay = timeInput();
-        trainRegistry.addDelay(trainNumber, delay);
-        break;
-      } else if (trainNumber == 0) {
-        break;
-      } else {
-        System.out.println("Train number not found");
-        addDelay();
-      }
+        int trainNumber = numberInput();
+        if (trainNumber == 0) {
+            delayExit = true;
+        }
+        else{
+          if (trainRegistry.departureFromNumber(trainNumber) != null) {
+            System.out.println("Enter delay (HH:mm): ");
+            LocalTime delay = timeInput();
+            trainRegistry.addDelay(trainNumber, delay);
+            delayExit = true;
+          } else {
+            System.out.println(NUMBER_NOT_FOUND);
+          }
+        }
     }
   }
 

@@ -1,8 +1,6 @@
 package edu.ntnu.stud;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,15 +21,12 @@ import java.util.stream.Collectors;
  *     <li>Has methods that are used for searching for specific TrainDeparture objects</li>
  * </ul>
  *
- * <p>Contains inner class {@link TrainDepartureComparator} that is used for sorting
- * {@link #trainDepartureList} by departure time.
  *
  *<p>No direct user interaction, all methods receive parameters from
  * {@link TrainDepartureUserInterface}
  *
  * @see TrainDeparture
  * @see TrainDepartureUserInterface
- * @see TrainDepartureComparator
  */
 public class TrainRegistry {
   private final HashMap<Integer, TrainDeparture> numberToDepartureMap = new HashMap<>();
@@ -220,12 +215,12 @@ public class TrainRegistry {
   /**
    * Method that sorts {@link #trainDepartureList} by departure time.
    *
-   *<p>this method uses the {@link TrainDepartureComparator} class to sort the list.
+   *<p>this method uses  class to sort the list.
    * note that the {@link #numberToDepartureMap} is not sorted, as it is not used in the
    * user interface.
    */
   public void sortByDepartureTime() {
-    trainDepartureList.sort(new TrainDepartureComparator());
+    trainDepartureList.sort(Comparator.comparing(TrainDeparture::getDepartureTime));
   }
 
   /**
@@ -357,15 +352,5 @@ public class TrainRegistry {
     }
   }
 
-  /**
-   * Comparator class for comparing objects by departure time.
-   * Used in {@link #sortByDepartureTime()}
-   */
-  public static class TrainDepartureComparator implements Comparator<TrainDeparture> {
-    @Override
-    public int compare(TrainDeparture o1, TrainDeparture o2) {
-      return o1.getDepartureTime().compareTo(o2.getDepartureTime());
-    }
-  }
 }
 

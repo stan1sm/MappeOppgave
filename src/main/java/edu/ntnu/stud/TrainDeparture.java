@@ -16,7 +16,7 @@ public class TrainDeparture {
   private final int trainNumber;
   private int track;
   private LocalTime delay;
-  private static final Pattern timePattern = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
+  private static final Pattern timePattern = Pattern.compile("([01]?('\\d')|2[0-3]):[0-5]('\\d')");
 
 
 
@@ -209,7 +209,8 @@ public class TrainDeparture {
             .append(line).append(String.format("%" + 6 + "s", " | "));
     info.append(String.format("%" + 8 + "s", " "))
             .append(trainNumber).append(String.format("%" + 13 + "s", " | "));
-    info.append(destination).append(String.format("%" + (18 - destinationLength) + "s", " | "));
+    info.append(destination)
+            .append(String.format("%" + (18 - destinationLength) + "s", " | "));
     if (delay.equals(LocalTime.of(0, 0))) {
       info.append(String.format("%" + 13 + "s", " | "));
     } else {

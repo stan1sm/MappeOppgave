@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 
 /**
@@ -40,7 +40,7 @@ public class TrainRegistry {
    *
    * @return trainDepartureList ArrayList with TrainDeparture objects.
    */
-  public ArrayList<TrainDeparture> getTrainDepartures() {
+  public List<TrainDeparture> getTrainDepartures() {
     return trainDepartureList;
   }
 
@@ -50,7 +50,7 @@ public class TrainRegistry {
    * <p>Used for testing purposes.
    * @return numberToDepartureMap HashMap with TrainDeparture objects.
    */
-  public HashMap<Integer, TrainDeparture> getNumberToDepartureMap() {
+  public Map<Integer, TrainDeparture> getNumberToDepartureMap() {
       return numberToDepartureMap;
     }
 
@@ -164,7 +164,7 @@ public class TrainRegistry {
   public List<TrainDeparture> departureFromDestination(String destination) {
     List<TrainDeparture> foundDepartures = trainDepartureList.stream()
             .filter(trainDeparture -> trainDeparture.getDestination().equalsIgnoreCase(destination))
-            .collect(Collectors.toList());
+            .toList();
 
     return foundDepartures.isEmpty() ? null : foundDepartures;
   }
@@ -348,7 +348,7 @@ public class TrainRegistry {
         sortByDepartureTime();
       }
     } catch (IOException e) {
-      throw new RuntimeException(e);
+        System.out.println("Error reading file");
     }
   }
 

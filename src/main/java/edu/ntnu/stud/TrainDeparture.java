@@ -135,9 +135,12 @@ public class TrainDeparture {
    * @throws IllegalArgumentException If the track number is less than or equal to 0.
    */
   public void setTrack(int track) {
-    if (track <= 0) {
+    if (track < 0) {
       throw new IllegalArgumentException("Track cannot be less than 0");
-    } else {
+    } else if (track == 0){
+      this.track = -1;
+    }
+    else {
       this.track = track;
     }
   }

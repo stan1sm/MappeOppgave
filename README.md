@@ -37,18 +37,16 @@ https://github.com/stan1sm/MappeOppgave
 [//]: # (TODO: Describe how to run your project here. What is the main class? What is the main method?
 What is the input and output of the program? What is the expected behaviour of the program?)
 <h3>In InteLLiJ IDEA</h3>
-<p style="background-color:gray;">
-  When in TrainDisPatchAPp press shift+f9.  
-</p>
-
-```markdown
-<details>
-<summary>Click to expand!</summary>
-
-Your text here.
-
-</details>
+<p>
+  Windows: Navigate to
+  ```markdown
+  src/main/java/edu/ntnu/stud/TrainDispatchApp.java 
 ```
+  ```markdown
+  Shift+F9
+  ```
+  to Run.
+</p>
 ## How to run the tests
 
 [//]: # (TODO: Describe how to run the tests here.)

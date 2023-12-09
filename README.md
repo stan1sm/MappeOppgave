@@ -36,7 +36,10 @@ https://github.com/stan1sm/MappeOppgave
 
 [//]: # (TODO: Describe how to run your project here. What is the main class? What is the main method?
 What is the input and output of the program? What is the expected behaviour of the program?)
-
+<h2>In InteLLiJ IDEA</h2>
+<p style="background-color:gray;">
+  When in TrainDisPatchAPp press shift+f9.  
+</p>
 ## How to run the tests
 
 [//]: # (TODO: Describe how to run the tests here.)

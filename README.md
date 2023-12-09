@@ -37,15 +37,21 @@ https://github.com/stan1sm/MappeOppgave
 [//]: # (TODO: Describe how to run your project here. What is the main class? What is the main method?
 What is the input and output of the program? What is the expected behaviour of the program?)
 <h3>In InteLLiJ IDEA</h3>
-<p>
+| Your text here |
+|----------------|
   Windows: Navigate to
-  ```markdown
+  `Shift+F9`
+```markdown
   src/main/java/edu/ntnu/stud/TrainDispatchApp.java 
 ```
-  ```markdown
+<p>
+  then
+</p>
+  <div style="background-color: #f4f4f4; padding: 10px;">
   Shift+F9
-  ```
-  to Run.
+  </div>
+<p>
+  To run the application.
 </p>
 ## How to run the tests
 

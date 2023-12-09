@@ -37,9 +37,40 @@ https://github.com/stan1sm/MappeOppgave
 [//]: # (TODO: Describe how to run your project here. What is the main class? What is the main method?
 What is the input and output of the program? What is the expected behaviour of the program?)
 
+### In IntelliJ IDEA:
+  ## Windows
+  * Navigate to `src/main/java/edu/ntnu/stud/TrainDispatchApp.java`
+  * `SHIFT+F10` to run the application.
+
+  ### macOS
+  * Navigate to `src/main/java/edu/ntnu/stud/TrainDispatchApp.java`
+  * `control+R` to run the application.
+
+### In Terminal
+  1. Make sure maven is installed, you can check this with `mvn --version`
+     You can install maven by following `https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html`
+  2. Navigate to `"\MappeOppgave\target"`
+  3. Run `"java -cp .\TrainDispatchSystem-1.0-SNAPSHOT.jar edu.ntnu.stud.TrainDispatchApp"`
+
 ## How to run the tests
 
 [//]: # (TODO: Describe how to run the tests here.)
+### In InTelliJ IDEA:
+  ### Windows
+  1. Navigate to `src/test/java/edu/ntnu/stud/TrainDepartureTest.java` to test the TrainDeparture class  
+     or to `src/test/java/edu/ntnu/stud/TrainRegistryTest.java` to test the TrainRegistry class.
+  2. Press `SHIFT + F10` to run the test class.
+
+  ### macOS
+  1. Navigate to `src/test/java/edu/ntnu/stud/TrainDepartureTest.java` to test the TrainDeparture class  
+     or to `src/test/java/edu/ntnu/stud/TrainRegistryTest.java` to test the TrainRegistry class.
+  2. Press `control + R` to run the test class.
+
+## In Terminal:
+ * Run all tests with: `mvn test`
+ * Test trainDeparture class with `mvn -Dtest=TrainDepartureTest test`
+ * Test TrainRegistry class with `mvn -Dtest=TrainRegistryTest test`
+
 
 ## References
 

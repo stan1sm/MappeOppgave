@@ -327,7 +327,7 @@ public class TrainRegistry {
    * </ul>
    */
   public void fillTrainDepartureListFromFile() {
-    Path filePath = Paths.get("TrainDepartureData.txt");
+    Path filePath = Paths.get("src/main/resources/TrainDepartureData.txt");
     try (BufferedReader reader = Files.newBufferedReader(filePath)) {
       reader.readLine(); // skip first line
 

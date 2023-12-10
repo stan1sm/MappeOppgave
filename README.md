@@ -41,8 +41,18 @@ https://github.com/stan1sm/MappeOppgave
 
 [//]: # (TODO: Describe how to run your project here. What is the main class? What is the main method?
 What is the input and output of the program? What is the expected behaviour of the program?)
+The main class which also contains the main method is `TrainDispatchApp`  
+Upon running the program, it will ask to input the current time, this is used for initializing the program.
 
-### In IntelliJ IDEA:
+### Creating a `.txt` data file:  
+Before running the application you can add your train depetartures to,  
+`src/main/resources/TrainDepartureData.txt`, this way the departures will automatically be added  
+to the registry upon starting the program.  
+NOTE: Your data has to follow the format specified on the first line in `TrainDepartureData.txt`.
+
+### Running the Project:
+
+### In IntelliJ IDEA GUI:
   ### Windows
   * Navigate to `src/main/java/edu/ntnu/stud/TrainDispatchApp.java`
   * `SHIFT+F10` to run the application.
@@ -51,17 +61,15 @@ What is the input and output of the program? What is the expected behaviour of t
   * Navigate to `src/main/java/edu/ntnu/stud/TrainDispatchApp.java`
   * `control+R` to run the application.
 
-### In Terminal
+### In Terminal:  
   1. Make sure maven is installed, you can check this with `mvn --version`  
      You can install maven by following `https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html`
   3. Build the project with `mvn package`  
-  4. Navigate to `"\MappeOppgave\target"`
+  4. Navigate to `\MappeOppgave\target`
   5. Run `"java -cp .\TrainDispatchSystem-1.0-SNAPSHOT.jar edu.ntnu.stud.TrainDispatchApp"`
 
 ## How to run the tests
-
-[//]: # (TODO: Describe how to run the tests here.)
-### In InTelliJ IDEA:
+### In InTelliJ IDEA GUI:
   ### Windows
   1. Navigate to `src/test/java/edu/ntnu/stud/TrainDepartureTest.java` to test the TrainDeparture class  
      or to `src/test/java/edu/ntnu/stud/TrainRegistryTest.java` to test the TrainRegistry class.
@@ -72,7 +80,8 @@ What is the input and output of the program? What is the expected behaviour of t
      or to `src/test/java/edu/ntnu/stud/TrainRegistryTest.java` to test the TrainRegistry class.
   2. Press `control + R` to run the test class.
 
-## In Terminal:
+## In Terminal:  
+ * Navigate to `src/main/java/edu/ntnu/stud`
  * Run all tests with: `mvn test`
  * Test trainDeparture class with `mvn -Dtest=TrainDepartureTest test`
  * Test TrainRegistry class with `mvn -Dtest=TrainRegistryTest test`
@@ -82,3 +91,9 @@ What is the input and output of the program? What is the expected behaviour of t
 
 [//]: # (TODO: Include references here, if any. For example, if you have used code from the course book, include a reference to the chapter.
 Or if you have used code from a website or other source, include a link to the source.)
+GeeksForGeeks, September 8, 2023 “Stream in Java”, https://www.geeksforgeeks.org/stream-in-java/
+https://stackoverflow.com/questions/31432948/print-list-items-with-java-streams
+https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html
+https://introcs.cs.princeton.edu/java/stdlib/In.java.html
+
+

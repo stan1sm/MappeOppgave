@@ -1,35 +1,40 @@
 # Portfolio project IDATA1003 - 2023
-This file uses Mark Down syntax. For more information see [here](https://www.markdownguide.org/basic-syntax/).
 
-STUDENT NAME = "Stanislovas Mockus"  
-STUDENT ID = "106361"
+STUDENT NAME = Stanislovas Mockus  
+STUDENT ID = 106361
 
 ## Project description
 
-[//]: # (TODO: Write a short description of your project/product here.)
-A train departure overview application written in Java. Produces a formatted overview of train departures and offers options to find, sort and add train departures using user input. 
+A train departure overview application written in Java.  
+Produces a formatted overview of train departures and offers options to find, sort and add train departures using user input. 
+
 ## Project structure
 
 [//]: # (TODO: Describe the structure of your project here. How have you used packages in your structure. Where are all sourcefiles stored. Where are all JUnit-test classes stored. etc.)
-<p>
-  Used Packages:
-  <br>
-  'java.util' Package:
-  <br>
-  Used for managing data structures, ArrayLists, HashMaps and Collections which store and sort different train departure information.
-  Also used to implement a Scanner object which is used to retrieve user input.
-  <br>
-  'java.time' Package:
-  <br>
-  Used to create and mofidy LocalTime objects which manage departure times, delays and the applications internal system time.
-  <br>
-  Project Files Path: src/main/java/edu/ntnu/stud
-  <br>
-  Test Files Path: src/test/java/edu/ntnu/stud
-</p>
+  ### Used Packages:
+  `java.util` used in order to:
+  * Manage data structures, ArrayLists, HashMaps and Collections which store and sort different train departure information.
+  * Implement a Scanner object which is used to retrieve user input.
+
+`java.time` used in order to:
+  * Create and modify LocalTime objects which manage departure times, delays and the applications internal system time.
+  * Format user input in order to create LocalTime variables.
+
+`java.io` used in order to:
+  * Implement a BufferedReader object (in order to read data from a file)
+  * Handle Input/Output operations that might throw an exception.
+
+`java.nio` used in order to:
+  * Creating _Path_ variables.
+  * Defining the location of a file.
+  * Operate on files.
+
+  Project Files Path: `src/main/java/edu/ntnu/stud`  
+  
+  Test Files Path: `src/test/java/edu/ntnu/stud`
+  
 ## Link to repository
 
-[//]: # (TODO: Include a link to your repository here.)
 https://github.com/stan1sm/MappeOppgave
 
 ## How to run the project
@@ -38,7 +43,7 @@ https://github.com/stan1sm/MappeOppgave
 What is the input and output of the program? What is the expected behaviour of the program?)
 
 ### In IntelliJ IDEA:
-  ## Windows
+  ### Windows
   * Navigate to `src/main/java/edu/ntnu/stud/TrainDispatchApp.java`
   * `SHIFT+F10` to run the application.
 
@@ -47,10 +52,11 @@ What is the input and output of the program? What is the expected behaviour of t
   * `control+R` to run the application.
 
 ### In Terminal
-  1. Make sure maven is installed, you can check this with `mvn --version`
+  1. Make sure maven is installed, you can check this with `mvn --version`  
      You can install maven by following `https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html`
-  2. Navigate to `"\MappeOppgave\target"`
-  3. Run `"java -cp .\TrainDispatchSystem-1.0-SNAPSHOT.jar edu.ntnu.stud.TrainDispatchApp"`
+  3. Build the project with `mvn package`  
+  4. Navigate to `"\MappeOppgave\target"`
+  5. Run `"java -cp .\TrainDispatchSystem-1.0-SNAPSHOT.jar edu.ntnu.stud.TrainDispatchApp"`
 
 ## How to run the tests
 

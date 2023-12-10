@@ -1,4 +1,4 @@
-//TrainDeparture(LocalTime departureTime, String line, String destination, int trainNumber, int track, LocalTime delay)
+DepartureTime (HH:mm), Line, Destination, TrainNumber, Track, Delay(HH:mm)... DO NOT REMOVE THIS LINE
 13:00, A1, Oslo, 1, 0, 00:00
 12:30,F1,Oslo,2,5,00:00
 10:20,B1,Bergen,3,7,00:15

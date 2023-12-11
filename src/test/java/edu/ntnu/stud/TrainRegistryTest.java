@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalTime;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TrainRegistryTest {
+class TrainRegistryTest {
     private TrainRegistry trainRegistry;
 
     @BeforeEach
@@ -32,6 +32,7 @@ public class TrainRegistryTest {
     void testAddDelay() {
         trainRegistry.addDelay(1, LocalTime.of(0, 10));
         assertEquals(LocalTime.of(0, 10), trainRegistry.departureFromNumber(1).getDelay());
+        assertEquals(LocalTime.of(12, 10), trainRegistry.departureFromNumber(1).getDepartureTimeWithDelay());
     }
 
     @Test
@@ -65,6 +66,7 @@ public class TrainRegistryTest {
     void testSortByDepartureTime(){
         trainRegistry.sortByDepartureTime();
         assertEquals(LocalTime.of(10,0), trainRegistry.getTrainDepartures().get(0).getDepartureTime());
+        assertEquals(LocalTime.of(12,0), trainRegistry.getTrainDepartures().get(1).getDepartureTime());
     }
 
 

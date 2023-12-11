@@ -1,6 +1,5 @@
 package edu.ntnu.stud;
 
-import java.io.FileNotFoundException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -124,7 +123,7 @@ public class TrainDepartureUserInterface {
     System.out.println("Enter line: ");
     final String line = lineInput();
     System.out.println("Enter track (0 if not set): ");
-    final int track = numberInput();
+    final int track = trackFromInput();
     if (!trainRegistry.departureTimesFromLine(line).isEmpty()) {
       System.out.println(ASK_FOR_TIME);
       departureTime = departureTimeExistingLine(line);
@@ -141,6 +140,7 @@ public class TrainDepartureUserInterface {
     final String destination = textInput();
     System.out.println("Enter train number: ");
     final int trainNumber = trainNumberFromInput();
+    System.out.println("Adding Departure...");
     trainRegistry.addDeparture(departureTime, line, destination, trainNumber, track, delay);
   }
 
@@ -416,11 +416,38 @@ public class TrainDepartureUserInterface {
       trainNumber = numberInput();
       if (trainRegistry.departureFromNumber(trainNumber) != null) {
         System.out.println("Train number already exists");
-      } else {
+      } else if (trainNumber < 0){
+        System.out.println("Train number cannot be negative");
+      }
+      else {
         break;
       }
     }
     return trainNumber;
+  }
+
+  /**
+   * Method that is used to ask for a track input when creating a new train departure.
+   *
+   * <p>Prompts the user to input a number, which is validated in a while loop.
+   * in {@link #numberInput()}.
+   *
+   * <p>Checks if the number is negative, if it is, the user is prompted to input a new number.
+   * if the number is positive, the loop exits and the number is returned.
+   * @return track (a positive integer)
+   */
+  public int trackFromInput() {
+    int track;
+    while (true) {
+      track = numberInput();
+      if (track < 0){
+        System.out.println("Track number cannot be negative");
+      }
+      else {
+        break;
+      }
+    }
+    return track;
   }
 
   /**

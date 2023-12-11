@@ -63,7 +63,7 @@ NOTE: Your data has to follow the format specified on the first line in `TrainDe
 
 ### In Terminal:  
   1. Make sure maven is installed, you can check this with `mvn --version`  
-     You can install maven by following `https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html`
+     You can install maven by following _https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html_
   3. Build the project with `mvn package`  
   4. Navigate to `\MappeOppgave\target`
   5. Run `"java -cp .\TrainDispatchSystem-1.0-SNAPSHOT.jar edu.ntnu.stud.TrainDispatchApp"`

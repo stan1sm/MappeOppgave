@@ -91,9 +91,9 @@ NOTE: Your data has to follow the format specified on the first line in `TrainDe
 
 [//]: # (TODO: Include references here, if any. For example, if you have used code from the course book, include a reference to the chapter.
 Or if you have used code from a website or other source, include a link to the source.)
-GeeksForGeeks, September 8, 2023 “Stream in Java”, https://www.geeksforgeeks.org/stream-in-java/
-https://stackoverflow.com/questions/31432948/print-list-items-with-java-streams
-https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html
+GeeksForGeeks, September 8, 2023 “Stream in Java”, https://www.geeksforgeeks.org/stream-in-java/  
+https://stackoverflow.com/questions/31432948/print-list-items-with-java-streams  
+https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html  
 https://introcs.cs.princeton.edu/java/stdlib/In.java.html
 
 

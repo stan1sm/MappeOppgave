@@ -15,6 +15,19 @@ class TrainDepartureTest {
         trainDeparture = new TrainDeparture(LocalTime.of(12,0), "L1", "Trondheim", 1,  LocalTime.of(0, 0));
     }
 
+    private void createTrainWithNullDepartureTime() {
+        LocalTime invalidDepartureTime = LocalTime.of(0, 0);
+        new TrainDeparture(invalidDepartureTime, "L1", "Trondheim", 1, 0, LocalTime.of(0, 0));
+    }
+
+    private void createTrainWithNullLine() {
+        new TrainDeparture(LocalTime.of(12, 0), null, "Trondheim", 1, 0, LocalTime.of(0, 0));
+    }
+
+    private void createTrainWithNullDestination() {
+        new TrainDeparture(LocalTime.of(12, 0), "L1", null, 1, 0, LocalTime.of(0, 0));
+    }
+
     @Test
     void getDepartureTime() {
         assertEquals(LocalTime.of(12, 0), trainDeparture.getDepartureTime());
@@ -63,8 +76,16 @@ class TrainDepartureTest {
     }
 
     @Test
-    void setDelayThrowsException() {
-        assertThrows(DateTimeException.class, () -> trainDeparture.setDelay(LocalTime.of(0, -1)));
+    void testSetDelayValidTime() {
+        assertDoesNotThrow(() -> trainDeparture.setDelay(LocalTime.of(0, 1)));
+        assertEquals(LocalTime.of(0, 1), trainDeparture.getDelay());
+    }
+
+    @Test
+    void testSetDelayInvalidTime() {
+        LocalTime invalidTime = LocalTime.of(0, 0);
+        DateTimeException exception = assertThrows(DateTimeException.class, () -> trainDeparture.setDelay(invalidTime));
+        assertEquals("Cannot update delay to 00:00", exception.getMessage());
     }
 
     @Test
@@ -73,19 +94,21 @@ class TrainDepartureTest {
         assertEquals(LocalTime.of(12, 1), trainDeparture.getDepartureTimeWithDelay());
     }
 
+
     @Test
     void constructorThrowsExceptionForNullDepartureTime() {
-        assertThrows(NullPointerException.class, () -> new TrainDeparture(LocalTime.of(0,0), "L1", "Trondheim", 1, 0, LocalTime.of(0, 0)));
+        assertThrows(NullPointerException.class, this::createTrainWithNullDepartureTime);
     }
+
 
     @Test
     void constructorThrowsExceptionForNullLine() {
-        assertThrows(NullPointerException.class, () -> new TrainDeparture(LocalTime.of(12, 0), null, "Trondheim", 1, 0, LocalTime.of(0, 0)));
+        assertThrows(NullPointerException.class, this::createTrainWithNullLine);
     }
 
     @Test
     void constructorThrowsExceptionForNullDestination() {
-        assertThrows(NullPointerException.class, () -> new TrainDeparture(LocalTime.of(12, 0), "L1", null, 1,0, LocalTime.of(0, 0)));
+        assertThrows(NullPointerException.class, this::createTrainWithNullDestination);
     }
 
 
@@ -95,9 +118,4 @@ class TrainDepartureTest {
         assertEquals(LocalTime.of(1, 0), trainDeparture.getDepartureTimeWithDelay());
     }
 
-
-    @Test
-    void setDelayThrowsExceptionForExactZero() {
-        assertThrows(DateTimeException.class, () -> trainDeparture.setDelay(LocalTime.of(0, 0)));
-    }
 }
